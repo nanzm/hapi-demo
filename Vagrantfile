@@ -12,7 +12,7 @@ Vagrant.configure(2) do |config|
 
   # set custom name to remove "folder+default+timestamp"
   config.vm.provider "virtualbox" do |v|
-    v.name = "future-coffee_vagrant"
+    v.name = "futureflix_vagrant"
   end
 
   # MongoDB
