@@ -61,7 +61,7 @@ server.register([
     partialsPath: Path.resolve(viewsPath, 'partials'),
     isCached: process.env.NODE_ENV === 'production',
     context: {
-      title: 'Future Coffee '
+      title: 'Futureflix'
     }
   })
 
