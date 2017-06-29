@@ -1,0 +1,34 @@
+lib-cov
+*.seed
+*.log
+*.csv
+*.dat
+*.out
+*.pid
+*.gz
+.github-todos
+
+pids
+logs
+results
+
+npm-debug.log
+node_modules
+
+# code coverage folder
+coverage
+
+# Image uploads
+public/static/img/user/
+public/static/img/recipes/
+
+
+# IDEA IntelliJ/Webstorm
+.idea
+*.iml
+
+# Vagrant
+.vagrant
+
+# VS Code
+.vscode
