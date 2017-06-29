@@ -1,6 +1,5 @@
 'use strict'
 
-const Users = require('../../users-db')
 const Hoek = require('hoek')
 const User = require('./../models').User
 

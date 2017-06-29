@@ -5,7 +5,6 @@ const Bcrypt = require('bcrypt')
 const When = require('when')
 const Boom = require('boom')
 const User = require('./../models').User
-const Users = require('../../users-db')
 const ErrorExtractor = require('../../utils/error-extractor')
 
 const Handler = {
