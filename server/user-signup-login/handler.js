@@ -1,10 +1,11 @@
 'use strict'
 
 const Joi = require('joi')
-const Bcrypt = require('bcrypt')
 const When = require('when')
 const Boom = require('boom')
+const Crypto = require('crypto')
 const User = require('./../models').User
+const Mailer = require('./../../utils/mailer')
 const ErrorExtractor = require('../../utils/error-extractor')
 
 const Handler = {
@@ -234,7 +235,34 @@ const Handler = {
       // generate pw reset token, set pw reset deadline
       // send pw reset mail to user
 
-      return reply()
+      User.findByEmail(payload.email).then(user => {
+        if (!user) {
+          const error = Boom.create(400, 'Email address is not registered', {
+            email: { message: 'Email address is not registered' }
+          })
+
+          return When.reject(error)
+        }
+
+        user.resetPasswordToken = Crypto.randomBytes(20).toString('hex')
+        user.resetPasswordExpires = Date.now() + 1000 * 60 * 60 // 1 hour from now
+
+        return user.save()
+      }).then(user => {
+        const resetURL = `http://${request.headers.host}/reset-password/${user.resetPasswordToken}`
+        return Mailer.send('forgot-password', request.user, 'Futureflix - Password Reset', { resetURL })
+      }).then(() => {
+        return reply.view('forgot-password', {
+          successmessage: 'A password reset mail with instructions is on its way to your to your inbox.'
+        })
+      }).catch(err => {
+        const status = err.isBoom ? err.output.statusCode : 400
+
+        return reply.view('forgot-password', {
+          email: payload.email,
+          errors: err.data
+        }).code(status)
+      })
     },
     validate: {
       options: {
@@ -243,13 +271,12 @@ const Handler = {
       },
       payload: {
         email: Joi.string().required().label('Email address'),
-        password: Joi.string().min(6).required().label('Password')
       },
       failAction: (request, reply, source, error) => {
         const errors = ErrorExtractor(error)
         const email = request.payload.email
 
-        return reply.view('login', {
+        return reply.view('forgot-password', {
           email,
           errors
         }).code(400)
