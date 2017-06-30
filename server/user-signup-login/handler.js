@@ -277,7 +277,7 @@ const Handler = {
       })
     },
     validate: {
-      query: {
+      params: {
         resetToken: Joi.string().required().label('Password reset token')
       }
     }

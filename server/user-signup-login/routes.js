@@ -40,7 +40,7 @@ const Routes = [
   },
   {
     method: 'GET',
-    path: '/reset-password',
+    path: '/reset-password/{resetToken*}',
     config: Handler.showResetPassword
   },
   {
