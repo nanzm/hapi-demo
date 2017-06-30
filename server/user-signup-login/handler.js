@@ -190,7 +190,136 @@ const Handler = {
           errors
         }).code(400)
       }
-    }  },
+    }
+  },
+
+  showForgotPassword: {
+    auth: {
+      mode: 'try',
+      strategy: 'session'
+    },
+    plugins: {
+      'hapi-auth-cookie': {
+        redirectTo: false
+      }
+    },
+    handler: function (request, reply) {
+      if (request.auth.isAuthenticated) {
+        return reply.redirect('/profile')
+      }
+
+      return reply.view('forgot-password')
+    }
+  },
+
+  forgotPassword: {
+    auth: {
+      mode: 'try',
+      strategy: 'session'
+    },
+    plugins: {
+      'hapi-auth-cookie': {
+        redirectTo: false
+      }
+    },
+    handler: function (request, reply) {
+      if (request.auth.isAuthenticated) {
+        return reply.redirect('/profile')
+      }
+
+      // shortcut
+      const payload = request.payload
+
+      // TODO
+      // generate pw reset token, set pw reset deadline
+      // send pw reset mail to user
+
+      return reply()
+    },
+    validate: {
+      options: {
+        stripUnknown: true,
+        abortEarly: false
+      },
+      payload: {
+        email: Joi.string().required().label('Email address'),
+        password: Joi.string().min(6).required().label('Password')
+      },
+      failAction: (request, reply, source, error) => {
+        const errors = ErrorExtractor(error)
+        const email = request.payload.email
+
+        return reply.view('login', {
+          email,
+          errors
+        }).code(400)
+      }
+    }
+  },
+
+  showResetPassword: {
+    auth: {
+      mode: 'try',
+      strategy: 'session'
+    },
+    plugins: {
+      'hapi-auth-cookie': {
+        redirectTo: false
+      }
+    },
+    handler: function (request, reply) {
+      if (request.auth.isAuthenticated) {
+        return reply.redirect('/profile')
+      }
+
+      return reply.view('reset-password', {
+        resetToken: request.query.resetToken
+      })
+    },
+    validate: {
+      query: {
+        resetToken: Joi.string().required().label('Password reset token')
+      }
+    }
+  },
+
+  resetPassword: {
+    auth: {
+      mode: 'try',
+      strategy: 'session'
+    },
+    plugins: {
+      'hapi-auth-cookie': {
+        redirectTo: false
+      }
+    },
+    handler: function (request, reply) {
+      if (request.auth.isAuthenticated) {
+        return reply.redirect('/profile')
+      }
+
+      return reply()
+    },
+    validate: {
+      options: {
+        stripUnknown: true,
+        abortEarly: false
+      },
+      payload: {
+        email: Joi.string().required().label('Email address'),
+        password: Joi.string().min(6).required().label('Password')
+      },
+      failAction: (request, reply, source, error) => {
+        const errors = ErrorExtractor(error)
+        const email = request.payload.email
+
+        return reply.view('login', {
+          email,
+          errors
+        }).code(400)
+      }
+    }
+  },
 
   logout: {
     auth: 'session',
