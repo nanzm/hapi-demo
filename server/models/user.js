@@ -72,16 +72,15 @@ userSchema.methods.comparePassword = function (candidatePassword) {
   })
 }
 
-userSchema.methods.generatePassword = function () {
+userSchema.methods.hashPassword = function () {
   const self = this
 
   return Bcrypt.genSalt(SALT_WORK_FACTOR).then(salt => {
-    return Bcrypt.hash(self.password, salt).then(hash => {
-      self.password = hash
-      return When.resolve(self)
-    })
+    return Bcrypt.hash(self.password, salt)
+  }).then(hash => {
+    self.password = hash
+    return When.resolve(self)
   }).catch(err => {
-    console.log(err)
     return When.reject(Boom.badRequest('There was an error while hashing your password'))
   })
 }

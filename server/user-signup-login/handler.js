@@ -75,7 +75,7 @@ const Handler = {
           scope: [ 'user' ]
         })
 
-        return newUser.generatePassword()
+        return newUser.hashPassword()
       }).then(user => {
         return user.save()
       }).then(user => {
