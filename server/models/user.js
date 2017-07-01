@@ -90,6 +90,12 @@ userSchema.methods.generateAuthToken = () => {
   return When.resolve(this)
 }
 
+userSchema.methods.resetPassword = function () {
+  this.resetPasswordToken = Crypto.randomBytes(20).toString('hex')
+  this.resetPasswordDeadline = Date.now() + 1000 * 60 * 60 // 1 hour from now
+  return this
+}
+
 /**
  * Virtuals
  */

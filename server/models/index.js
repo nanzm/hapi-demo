@@ -7,7 +7,8 @@ const User = require('./user')
 Mongoose.Promise = global.Promise
 
 // Connect to our database and handle an bad connections
-Mongoose.createConnection('mongodb://localhost/future-coffee')
+//Mongoose.createConnection('mongodb://localhost/future-coffee', { useMongoClient: true })
+Mongoose.connect('mongodb://localhost/future-coffee')
 
 Mongoose.connection.on('error', err => {
   console.error(`⚡️ 🚨 ⚡️ 🚨 ⚡️ 🚨 → ${err.message}`)
