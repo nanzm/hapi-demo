@@ -98,7 +98,7 @@ const Handler = {
         abortEarly: false
       },
       payload: {
-        email: Joi.string().required().label('Email address'),
+    email: Joi.string().email({ minDomainAtoms: 2 }).required().label('Email address'),
         password: Joi.string().min(6).required().label('Password')
       },
       failAction: (request, reply, source, error) => {
