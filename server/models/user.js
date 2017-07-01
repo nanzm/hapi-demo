@@ -51,6 +51,15 @@ const userSchema = new Schema({
 userSchema.statics.findByEmail = function (email) {
   return this.findOne({ email })
 }
+
+userSchema.statics.findByPasswordResetToken = function (resetToken) {
+  return this.findOne({
+    resetPasswordToken: resetToken,
+    resetPasswordDeadline: { $gt: Date.now() }
+  })
+}
+
+
 /**
  * Instance Methods
  */
