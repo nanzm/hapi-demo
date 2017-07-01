@@ -45,7 +45,7 @@ const Routes = [
   },
   {
     method: 'POST',
-    path: '/reset-password',
+    path: '/reset-password/{resetToken*}',
     config: Handler.resetPassword
   },
   {

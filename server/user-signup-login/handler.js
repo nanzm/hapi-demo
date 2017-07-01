@@ -293,12 +293,21 @@ const Handler = {
       }
 
       return reply.view('reset-password', {
-        resetToken: request.query.resetToken
+        resetToken: request.params.resetToken
       })
     },
     validate: {
       params: {
         resetToken: Joi.string().required().label('Password reset token')
+      },
+      failAction: (request, reply, source, error) => {
+        const errors = ErrorExtractor(error)
+        const resetToken = request.params.resetToken
+
+        return reply.view('reset-password', {
+          resetToken,
+          errors
+        }).code(400)
       }
     }
   },
@@ -318,7 +327,31 @@ const Handler = {
         return reply.redirect('/profile')
       }
 
-      return reply()
+      return User.findByPasswordResetToken(request.params.resetToken).then(user => {
+        if (!user) {
+          const error = Boom.create(400, '', {
+            resetToken: { message: 'Your password reset token is invalid, please request a new one.' }
+          })
+
+          return When.reject(error)
+        }
+
+        user.password = request.payload.password
+        return user.hashPassword()
+      }).then(user => {
+        return user.save()
+      }).then(user => {
+        request.cookieAuth.set({ id: user.id })
+
+        return reply.view('reset-password-success')
+      }).catch(err => {
+        console.log(err)
+        const status = err.isBoom ? err.output.statusCode : 400
+
+        return reply.view('reset-password', {
+          errors: err.data
+        }).code(status)
+      })
     },
     validate: {
       options: {
@@ -326,15 +359,18 @@ const Handler = {
         abortEarly: false
       },
       payload: {
-        email: Joi.string().required().label('Email address'),
-        password: Joi.string().min(6).required().label('Password')
+        password: Joi.string().min(6).required().label('Password'),
+        passwordConfirm: Joi.string().min(6).valid(Joi.ref('password')).required().options({
+          language: {
+            any: { allowOnly: 'must match password' }
+          }
+        }).label('Confirm password')
       },
       failAction: (request, reply, source, error) => {
         const errors = ErrorExtractor(error)
-        const email = request.payload.email
 
-        return reply.view('login', {
-          email,
+        return reply.view('reset-password', {
+          resetToken: request.params.resetToken,
           errors
         }).code(400)
       }
