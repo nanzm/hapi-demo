@@ -231,11 +231,7 @@ const Handler = {
       // shortcut
       const payload = request.payload
 
-      // TODO
-      // generate pw reset token, set pw reset deadline
-      // send pw reset mail to user
-
-      User.findByEmail(payload.email).then(user => {
+      return User.findByEmail(payload.email).then(user => {
         if (!user) {
           const error = Boom.create(400, 'Email address is not registered', {
             email: { message: 'Email address is not registered' }
@@ -244,17 +240,14 @@ const Handler = {
           return When.reject(error)
         }
 
-        user.resetPasswordToken = Crypto.randomBytes(20).toString('hex')
-        user.resetPasswordExpires = Date.now() + 1000 * 60 * 60 // 1 hour from now
+        user.resetPassword()
 
         return user.save()
       }).then(user => {
         const resetURL = `http://${request.headers.host}/reset-password/${user.resetPasswordToken}`
-        return Mailer.send('forgot-password', request.user, 'Futureflix - Password Reset', { resetURL })
+        return Mailer.send('password-reset', user, 'Futureflix - Password Reset', { resetURL })
       }).then(() => {
-        return reply.view('forgot-password', {
-          successmessage: 'A password reset mail with instructions is on its way to your to your inbox.'
-        })
+        return reply.view('forgot-password-email-sent')
       }).catch(err => {
         const status = err.isBoom ? err.output.statusCode : 400
 
@@ -270,7 +263,7 @@ const Handler = {
         abortEarly: false
       },
       payload: {
-        email: Joi.string().required().label('Email address'),
+        email: Joi.string().email({ minDomainAtoms: 2 }).required().label('Email address'),
       },
       failAction: (request, reply, source, error) => {
         const errors = ErrorExtractor(error)
