@@ -3,16 +3,19 @@
 exports.register = (server, options, next) => {
   // declare dependencies
   server.dependency([ 'authentication' ])
+
+  // decorate the request and pass responsibility to hapi
+  // that no other plugin uses request.user
   server.decorate('request', 'user', {})
 
   server.ext('onPostAuth', function (request, reply) {
+    // user successfully authenticated?
     if (request.auth.isAuthenticated) {
-      // add user object to response data and make it available to views
-      // the "request.auth.credentials" object is set due to the validateFunc
-      // within the "authentication" plugin
+      // add user object to request by using its credentials
       request.user = request.auth.credentials
     }
 
+    // continue request lifecycle
     return reply.continue()
   })
 
