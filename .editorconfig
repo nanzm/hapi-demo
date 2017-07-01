@@ -19,7 +19,7 @@ indent_size = 2
 [*.md]
 trim_trailing_whitespace = false
 
-[*.html]
+[*.hbs]
 indent_size = 4
 
 [*.css]
