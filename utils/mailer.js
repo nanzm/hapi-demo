@@ -7,7 +7,7 @@ const When = require('when')
 const Nodemailer = require('nodemailer')
 const PostmarkTransport = require('nodemailer-postmark-transport')
 const htmlToText = require('html-to-text')
-const Templates = Path.resolve(__dirname, '..', 'email-templates')
+const Templates = Path.resolve(__dirname, '..', 'server', 'email-templates')
 const Handlebars = require('handlebars')
 const Promisify = require('es6-promisify')
 
@@ -22,8 +22,8 @@ const Transporter = Nodemailer.createTransport(PostmarkTransport({
  * options: data which will be used to replace the placeholders within the template
  **/
 const prepareTemplate = (filename, options = {}) => {
-  return When.promise(function (resolve, reject) {
-    const filePath = Path.resolve(Templates, filename)
+  return When.promise((resolve, reject) => {
+    const filePath = Path.resolve(Templates, `${filename}.html`)
 
     Fs.readFile(filePath, 'utf8', (err, fileContent) => {
       if (err) {
