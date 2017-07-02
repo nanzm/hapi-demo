@@ -11,7 +11,7 @@ Mongoose.Promise = global.Promise
 Mongoose.connect('mongodb://localhost/future-coffee')
 
 Mongoose.connection.on('error', err => {
-  console.error(`⚡️ 🚨 ⚡️ 🚨 ⚡️ 🚨 → ${err.message}`)
+  console.error(`⚡️ 🚨 ⚡️ 🚨 ⚡️ 🚨 ⚡️ 🚨 ⚡️ 🚨 → ${err.message}`)
 })
 
 // use ES6 shorthands: "propertyName: variableName" equals "propertyName"
