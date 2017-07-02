@@ -3,7 +3,7 @@
 const Hoek = require('hoek')
 const User = require('./../models').User
 
-exports.register = function (server, options, next) {
+exports.register = (server, options, next) => {
   // declare dependency to hapi-auth-cookie and bell
   server.register([
     {
@@ -13,9 +13,8 @@ exports.register = function (server, options, next) {
     Hoek.assert(!err, 'Cannot register authentication plugin')
 
     /**
-     * Register session based auth strategy to store
-     * credentials received from GitLab and keep
-     * the user logged in
+     * Register cookie-based session auth to remember
+     * the logged in user
      */
     server.auth.strategy('session', 'cookie', {
       password: 'ThisIsASecretPasswordForTheAuthCookie',
@@ -24,9 +23,10 @@ exports.register = function (server, options, next) {
       isSecure: process.env.NODE_ENV === 'production',
       validateFunc: (request, session, callback) => {
         // validate the existing session
-        // this simple example checks the “users db” for an entry
+        // we only store the user’s id within the session
         const userId = session.id
 
+        // user lookup and return credentials if available
         User.findById(userId).then(user => {
           if (!user) {
             return callback(null, false)
