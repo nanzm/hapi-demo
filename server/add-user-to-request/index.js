@@ -8,7 +8,7 @@ exports.register = (server, options, next) => {
   // that no other plugin uses request.user
   server.decorate('request', 'user', {})
 
-  server.ext('onPostAuth', function (request, reply) {
+  server.ext('onPostAuth', (request, reply) => {
     // user successfully authenticated?
     if (request.auth.isAuthenticated) {
       // add user object to request by using its credentials
