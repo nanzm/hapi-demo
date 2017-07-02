@@ -89,7 +89,7 @@ userSchema.methods.hashPassword = function () {
   }).then(hash => {
     self.password = hash
     return When.resolve(self)
-  }).catch(err => {
+  }).catch(() => {
     return When.reject(Boom.badRequest('There was an error while hashing your password'))
   })
 }
