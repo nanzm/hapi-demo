@@ -60,7 +60,7 @@ server.register([
       hbs: require('handlebars')
     },
     path: viewsPath,
-    layoutPath: Path.resolve(viewsPath),
+    layoutPath: Path.resolve(viewsPath, 'layouts'),
     layout: 'layout',
     partialsPath: Path.resolve(viewsPath, 'partials'),
     isCached: process.env.NODE_ENV === 'production',
