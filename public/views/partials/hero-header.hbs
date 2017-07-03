@@ -1,12 +1,17 @@
 <nav class="nav has-shadow">
     <div class="nav-left">
+        <a class="nav-item" href="/">
+            <img src="/images/aperture-white.svg" alt="">
+            &nbsp;
+            Futureflix
+        </a>
     </div>
 
-    <div class="nav-center">
-        <a class="nav-item" href="/movies">
+    <div class="nav-center nav-menu">
+        <a class="nav-item is-tab" href="/movies">
             Movies
         </a>
-        <a class="nav-item" href="/series">
+        <a class="nav-item is-tab" href="/series">
             Series
         </a>
     </div>
@@ -30,9 +35,6 @@
                 Profile
             </a>
             <a class="nav-item is-tab" href="/logout">
-                <figure class="image is-16x16" style="margin-right: 8px;">
-                    <img src="/images/log-out.svg" alt="">
-                </figure>
                 Logout
             </a>
         {{else}}
