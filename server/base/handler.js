@@ -3,6 +3,21 @@
 const Boom = require('boom')
 
 const Handler = {
+  index: {
+    auth: {
+      mode: 'try',
+      strategy: 'session'
+    },
+    plugins: {
+      'hapi-auth-cookie': {
+        redirectTo: false
+      }
+    },
+    handler: function (request, reply) {
+      reply.view('index', null, { layout: 'hero' })
+    }
+  },
+
   css: {
     handler: {
       directory: { path: './public/css' }

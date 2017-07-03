@@ -8,21 +8,6 @@ const Mailer = require('./../../utils/mailer')
 const ErrorExtractor = require('../../utils/error-extractor')
 
 const Handler = {
-  index: {
-    auth: {
-      mode: 'try',
-      strategy: 'session'
-    },
-    plugins: {
-      'hapi-auth-cookie': {
-        redirectTo: false
-      }
-    },
-    handler: function (request, reply) {
-      reply.view('index')
-    }
-  },
-
   showSignup: {
     auth: {
       mode: 'try',
