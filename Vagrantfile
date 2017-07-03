@@ -63,7 +63,6 @@ Vagrant.configure(2) do |config|
     sudo echo "bind 0.0.0.0" >> /etc/redis/redis.conf
     sudo update-rc.d redis-server defaults
     sudo systemctl restart redis-server
-
   SHELL
 
 end
