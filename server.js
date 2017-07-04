@@ -19,16 +19,22 @@ server.connection({
 // register plugins to server instance
 server.register([
   {
-    register: require('./server/authentication')
-  },
-  {
     register: require('inert')
   },
   {
     register: require('vision')
   },
   {
+    register: require('hapi-dev-errors'),
+    options: {
+      showErrors: process.env.NODE_ENV !== 'production'
+    }
+  },
+  {
     register: require('./server/base')
+  },
+  {
+    register: require('./server/authentication')
   },
   {
     register: require('./server/add-user-to-request')
@@ -41,12 +47,6 @@ server.register([
   },
   {
     register: require('./server/user-profile')
-  },
-  {
-    register: require('hapi-dev-errors'),
-    options: {
-      showErrors: process.env.NODE_ENV !== 'production'
-    }
   }
 ], err => {
   if (err) {
