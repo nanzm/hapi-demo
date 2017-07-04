@@ -11,6 +11,14 @@ button.button, input[type=submit].button {
     font-weight: 500;
 }
 
+label.is-danger {
+    color: #ff3860;
+}
+
+.error {
+    color: #ff3860;
+}
+
 .field:not(:last-child) {
     margin-bottom: 1.75rem;
 }
