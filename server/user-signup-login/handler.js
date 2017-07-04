@@ -9,10 +9,6 @@ const ErrorExtractor = require('../../utils/error-extractor')
 
 const Handler = {
   showSignup: {
-    auth: {
-      mode: 'try',
-      strategy: 'session'
-    },
     plugins: {
       'hapi-auth-cookie': {
         redirectTo: false
@@ -28,10 +24,6 @@ const Handler = {
   },
 
   signup: {
-    auth: {
-      mode: 'try',
-      strategy: 'session'
-    },
     plugins: {
       'hapi-auth-cookie': {
         redirectTo: false
@@ -98,10 +90,6 @@ const Handler = {
   },
 
   showLogin: {
-    auth: {
-      mode: 'try',
-      strategy: 'session'
-    },
     plugins: {
       'hapi-auth-cookie': {
         redirectTo: false
@@ -117,10 +105,6 @@ const Handler = {
   },
 
   login: {
-    auth: {
-      mode: 'try',
-      strategy: 'session'
-    },
     plugins: {
       'hapi-auth-cookie': {
         redirectTo: false
@@ -198,10 +182,6 @@ const Handler = {
   },
 
   forgotPassword: {
-    auth: {
-      mode: 'try',
-      strategy: 'session'
-    },
     plugins: {
       'hapi-auth-cookie': {
         redirectTo: false
@@ -262,10 +242,6 @@ const Handler = {
   },
 
   showResetPassword: {
-    auth: {
-      mode: 'try',
-      strategy: 'session'
-    },
     plugins: {
       'hapi-auth-cookie': {
         redirectTo: false
@@ -297,10 +273,6 @@ const Handler = {
   },
 
   resetPassword: {
-    auth: {
-      mode: 'try',
-      strategy: 'session'
-    },
     plugins: {
       'hapi-auth-cookie': {
         redirectTo: false

@@ -16,7 +16,7 @@ exports.register = (server, options, next) => {
      * Register cookie-based session auth to remember
      * the logged in user
      */
-    server.auth.strategy('session', 'cookie', {
+    server.auth.strategy('session', 'cookie', 'try', {
       password: 'ThisIsASecretPasswordForTheAuthCookie',
       redirectTo: '/login',
       appendNext: true, // appends the current URL to the query param "next". Set to a string to use a different query param name

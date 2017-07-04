@@ -4,10 +4,6 @@ const Boom = require('boom')
 
 const Handler = {
   index: {
-    auth: {
-      mode: 'try',
-      strategy: 'session'
-    },
     plugins: {
       'hapi-auth-cookie': {
         redirectTo: false
@@ -19,24 +15,44 @@ const Handler = {
   },
 
   css: {
+    plugins: {
+      'hapi-auth-cookie': {
+        redirectTo: false
+      }
+    },
     handler: {
       directory: { path: './public/css' }
     }
   },
 
   js: {
+    plugins: {
+      'hapi-auth-cookie': {
+        redirectTo: false
+      }
+    },
     handler: {
       directory: { path: './public/js' }
     }
   },
 
   images: {
+    plugins: {
+      'hapi-auth-cookie': {
+        redirectTo: false
+      }
+    },
     handler: {
       directory: { path: './public/images' }
     }
   },
 
   missing: {
+    plugins: {
+      'hapi-auth-cookie': {
+        redirectTo: false
+      }
+    },
     handler: (request, reply) => {
       const accept = request.raw.req.headers.accept
 
