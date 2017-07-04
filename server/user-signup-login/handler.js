@@ -37,8 +37,10 @@ const Handler = {
       // shortcut
       const payload = request.payload
 
+      // check whether the email address is already registered
       User.findByEmail(payload.email).then(user => {
         if (user) {
+          // create an error object that matches our error structure
           const error = Boom.create(409, 'Email address is already registered', {
             email: { message: 'Email address is already registered' }
           })
@@ -46,18 +48,21 @@ const Handler = {
           return When.reject(error)
         }
 
+        // create a new user
         const newUser = new User({
           email: payload.email,
           password: payload.password,
           scope: [ 'user' ]
         })
 
+        // don’t store the plain password in your DB, hash it!
         return newUser.hashPassword()
       }).then(user => {
         return user.save()
       }).then(user => {
         request.cookieAuth.set({ id: user.id })
 
+        // \o/ wohoo, sign up successful
         return reply.redirect('/profile')
       }).catch(err => {
         const status = err.isBoom ? err.output.statusCode : 400
@@ -74,11 +79,13 @@ const Handler = {
         abortEarly: false
       },
       payload: {
-    email: Joi.string().email({ minDomainAtoms: 2 }).required().label('Email address'),
+        email: Joi.string().email({ minDomainAtoms: 2 }).required().label('Email address'),
         password: Joi.string().min(6).required().label('Password')
       },
       failAction: (request, reply, source, error) => {
+        // prepare formatted error object
         const errors = ErrorExtractor(error)
+        // remember the user’s email address and pre-fill for comfort reasons
         const email = request.payload.email
 
         return reply.view('signup', {
