@@ -4,8 +4,8 @@ const Hapi = require('hapi')
 const Path = require('path')
 const Dotenv = require('dotenv')
 
-// import environmental variables from local .env file
-Dotenv.config({ path: '.env' })
+// import environment variables from local secrets.env file
+Dotenv.config({ path: 'secrets.env' })
 
 // create new server instance
 const server = new Hapi.Server()

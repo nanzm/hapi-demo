@@ -18,10 +18,8 @@ node_modules
 # code coverage folder
 coverage
 
-# Image uploads
-public/static/img/user/
-public/static/img/recipes/
-
+# Secrets
+secrets.env
 
 # IDEA IntelliJ/Webstorm
 .idea
