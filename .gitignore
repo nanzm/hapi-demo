@@ -12,8 +12,8 @@ pids
 logs
 results
 
-npm-debug.log
 node_modules
+npm-debug.log
 
 # code coverage folder
 coverage
@@ -23,7 +23,6 @@ secrets.env
 
 # IDEA IntelliJ/Webstorm
 .idea
-*.iml
 
 # Vagrant
 .vagrant
