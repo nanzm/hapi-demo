@@ -47,6 +47,9 @@ server.register([
   },
   {
     register: require('./server/user-profile')
+  },
+  {
+    register: require('./server/movies')
   }
 ], err => {
   if (err) {
