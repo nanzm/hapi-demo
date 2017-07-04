@@ -14,7 +14,7 @@ const Handler = {
         redirectTo: false
       }
     },
-    handler: function (request, reply) {
+    handler: (request, reply) => {
       if (request.auth.isAuthenticated) {
         return reply.redirect('/profile')
       }
@@ -29,7 +29,7 @@ const Handler = {
         redirectTo: false
       }
     },
-    handler: function (request, reply) {
+    handler: (request, reply) => {
       if (request.auth.isAuthenticated) {
         return reply.redirect('/profile')
       }
@@ -95,7 +95,7 @@ const Handler = {
         redirectTo: false
       }
     },
-    handler: function (request, reply) {
+    handler: (request, reply) => {
       if (request.auth.isAuthenticated) {
         return reply.redirect('/profile')
       }
@@ -110,7 +110,7 @@ const Handler = {
         redirectTo: false
       }
     },
-    handler: function (request, reply) {
+    handler: (request, reply) => {
       if (request.auth.isAuthenticated) {
         return reply.redirect('/profile')
       }
@@ -172,7 +172,7 @@ const Handler = {
         redirectTo: false
       }
     },
-    handler: function (request, reply) {
+    handler: (request, reply) => {
       if (request.auth.isAuthenticated) {
         return reply.redirect('/profile')
       }
@@ -187,7 +187,7 @@ const Handler = {
         redirectTo: false
       }
     },
-    handler: function (request, reply) {
+    handler: (request, reply) => {
       if (request.auth.isAuthenticated) {
         return reply.redirect('/profile')
       }
@@ -247,7 +247,7 @@ const Handler = {
         redirectTo: false
       }
     },
-    handler: function (request, reply) {
+    handler: (request, reply) => {
       if (request.auth.isAuthenticated) {
         return reply.redirect('/profile')
       }
@@ -278,7 +278,7 @@ const Handler = {
         redirectTo: false
       }
     },
-    handler: function (request, reply) {
+    handler: (request, reply) => {
       if (request.auth.isAuthenticated) {
         return reply.redirect('/profile')
       }
@@ -335,7 +335,7 @@ const Handler = {
 
   logout: {
     auth: 'session',
-    handler: function (request, reply) {
+    handler: (request, reply) => {
       request.cookieAuth.clear()
       reply.redirect('/')
     }
