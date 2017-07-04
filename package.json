@@ -38,7 +38,7 @@
     "joi": "~10.6.0",
     "lodash": "~4.17.4",
     "md5": "~2.2.1",
-    "mongoose": "~4.11.0",
+    "mongoose": "~4.10.8",
     "nodemailer": "~4.0.1",
     "nodemailer-postmark-transport": "~1.2.0",
     "pug": "~2.0.0-rc.2",
