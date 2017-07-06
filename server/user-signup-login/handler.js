@@ -63,7 +63,7 @@ const Handler = {
         request.cookieAuth.set({ id: user.id })
 
         // \o/ wohoo, sign up successful
-        return reply.redirect('/profile')
+        return reply.view('signup-success')
       }).catch(err => {
         const status = err.isBoom ? err.output.statusCode : 400
 

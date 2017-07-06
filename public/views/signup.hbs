@@ -51,36 +51,36 @@
             </div>
             --}}
 
-    <div class="field">
-        <label class="label {{#if errors.email}}is-danger{{/if}}" for="email">
-            {{#if errors.email}}
-                {{errors.email.message}}
-            {{else}}
-                Email
-            {{/if}}
-        </label>
-        <p class="control has-icons-left has-icons-right">
-            <input class="input {{#if errors.email}}is-danger{{else}}{{#if
-                email}}is-success{{/if}}{{/if}}" type="text" placeholder="Your personal email address"
-                   id="email" name="email"
-                   value="{{email}}">
-            <span class="icon is-small is-left">
+            <div class="field">
+                <label class="label {{#if errors.email}}is-danger{{/if}}" for="email">
+                    {{#if errors.email}}
+                        {{errors.email.message}}
+                    {{else}}
+                        Email
+                    {{/if}}
+                </label>
+                <p class="control has-icons-left has-icons-right">
+                    <input class="input {{#if errors.email}}is-danger{{else}}{{#if
+                        email}}is-success{{/if}}{{/if}}" type="text" placeholder="Your personal email address"
+                           id="email" name="email"
+                           value="{{email}}">
+                    <span class="icon is-small is-left">
                 <i class="fa fa-envelope-o"></i>
             </span>
-            <span class="icon is-small is-right">
-                {{#if errors.email}}
-                    <i class="fa fa-warning"></i>
-                {{else}}
-                    {{#if email}}
-                        <i class="fa fa-check"></i>
-                    {{/if}}
-                {{/if}}
-            </span>
-        </p>
-        {{#unless email}}
-            <p class="help">You’ll receive account related emails. No spam. Promise!</p>
-        {{/unless}}
-    </div>
+                    <span class="icon is-small is-right">
+                        {{#if errors.email}}
+                            <i class="fa fa-warning"></i>
+                        {{else}}
+                            {{#if email}}
+                                <i class="fa fa-check"></i>
+                            {{/if}}
+                        {{/if}}
+                    </span>
+                </p>
+                {{#unless email}}
+                    <p class="help">You’ll receive account related emails. No spam. Promise!</p>
+                {{/unless}}
+            </div>
 
             <div class="field">
                 <label class="label {{#if errors.password}}is-danger{{/if}}" for="password">
