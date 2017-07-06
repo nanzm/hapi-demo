@@ -50,6 +50,9 @@ server.register([
   },
   {
     register: require('./server/movies')
+  },
+  {
+    register: require('./server/tv-shows')
   }
 ], err => {
   if (err) {
