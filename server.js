@@ -10,6 +10,7 @@ Dotenv.config({ path: Path.resolve(__dirname, 'secrets.env') })
 
 // configure logger
 Laabr.format('log', ':time :level :message')
+Laabr.format('onPostStart', ':time :level :message at: :host[uri]');
 
 // create new server instance
 const server = new Hapi.Server()
@@ -87,11 +88,8 @@ server.register([
 
   // start your server
   server.start(err => {
-
     if (err) {
       throw err
     }
-
-    server.log('info', 'Server running at: ' + server.info.uri)
   })
 })
