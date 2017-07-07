@@ -2,10 +2,14 @@
 
 const Hapi = require('hapi')
 const Path = require('path')
+const Laabr = require('laabr')
 const Dotenv = require('dotenv')
 
 // import environment variables from local secrets.env file
 Dotenv.config({ path: Path.resolve(__dirname, 'secrets.env') })
+
+// configure logger
+Laabr.format('log', ':time :level :message')
 
 // create new server instance
 const server = new Hapi.Server()
@@ -28,6 +32,12 @@ server.register([
     register: require('hapi-dev-errors'),
     options: {
       showErrors: process.env.NODE_ENV !== 'production'
+    }
+  },
+  {
+    register: Laabr.plugin,
+    options: {
+      colored: true
     }
   },
   {
@@ -82,6 +92,6 @@ server.register([
       throw err
     }
 
-    console.log('Server running at: ' + server.info.uri)
+    server.log('info', 'Server running at: ' + server.info.uri)
   })
 })
