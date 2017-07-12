@@ -11,7 +11,7 @@ Mongoose.connect(process.env.DATABASE)
 
 // listen for connection errors and print the message
 Mongoose.connection.on('error', err => {
-  console.error(`⚡️ 🚨 ⚡️ 🚨 ⚡️ 🚨 ⚡️ 🚨 ⚡️ 🚨 → ${err.message}`)
+  console.error(`⚡️ 🚨 ⚡️ 🚨 ⚡️ 🚨 ⚡️ 🚨 ⚡️ 🚨  → ${err.message}`)
 })
 
 // use ES6 shorthands: "propertyName: variableName" equals "propertyName"
