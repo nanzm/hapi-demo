@@ -4,8 +4,8 @@ const Joi = require('joi')
 const When = require('when')
 const Boom = require('boom')
 const User = require('./../models').User
-const Mailer = require('./../../utils/mailer')
-const ErrorExtractor = require('../../utils/error-extractor')
+const Mailer = require('../utils/mailer')
+const ErrorExtractor = require('../utils/error-extractor')
 
 const Handler = {
   showSignup: {
