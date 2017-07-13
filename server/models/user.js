@@ -4,7 +4,6 @@ const Mongoose = require('mongoose')
 const Schema = Mongoose.Schema
 const Bcrypt = require('bcrypt')
 const Boom = require('boom')
-const When = require('when')
 const Md5 = require('md5')
 const Crypto = require('crypto')
 const Validator = require('validator')
@@ -68,16 +67,16 @@ userSchema.methods.comparePassword = function (candidatePassword) {
 
   return Bcrypt.compare(candidatePassword, self.password).then(isMatch => {
     if (isMatch) {
-      return When.resolve(self)
+      return Promise.resolve(self)
     }
 
-    return When.reject(Boom.badRequest('The entered password is not correct'))
+    return Promise.reject(Boom.badRequest('The entered password is not correct'))
   }).catch(err => {
     err = Boom.create(400, err.message, {
       password: { message: err.message }
     })
 
-    return When.reject(err)
+    return Promise.reject(err)
   })
 }
 
@@ -88,15 +87,15 @@ userSchema.methods.hashPassword = function () {
     return Bcrypt.hash(self.password, salt)
   }).then(hash => {
     self.password = hash
-    return When.resolve(self)
+    return Promise.resolve(self)
   }).catch(() => {
-    return When.reject(Boom.badRequest('There was an error while hashing your password'))
+    return Promise.reject(Boom.badRequest('There was an error while hashing your password'))
   })
 }
 
 userSchema.methods.generateAuthToken = () => {
   this.authToken = Crypto.randomBytes(20).toString('hex')
-  return When.resolve(this)
+  return Promise.resolve(this)
 }
 
 userSchema.methods.resetPassword = function () {

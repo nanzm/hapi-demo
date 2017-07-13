@@ -1,7 +1,6 @@
 'use strict'
 
 const Joi = require('joi')
-const When = require('when')
 const Boom = require('boom')
 const User = require('./../models').User
 const Mailer = require('../utils/mailer')
@@ -45,7 +44,7 @@ const Handler = {
             email: { message: 'Email address is already registered' }
           })
 
-          return When.reject(error)
+          return Promise.reject(error)
         }
 
         // create a new user
@@ -131,7 +130,7 @@ const Handler = {
             email: { message: 'Email address is not registered' }
           })
 
-          return When.reject(error)
+          return Promise.reject(error)
         }
 
         return user.comparePassword(payload.password)
@@ -208,7 +207,7 @@ const Handler = {
             email: { message: 'Email address is not registered' }
           })
 
-          return When.reject(error)
+          return Promise.reject(error)
         }
 
         user.resetPassword()
@@ -296,7 +295,7 @@ const Handler = {
             resetToken: { message: 'Your password reset token is invalid, please request a new one.' }
           })
 
-          return When.reject(error)
+          return Promise.reject(error)
         }
 
         user.password = request.payload.password

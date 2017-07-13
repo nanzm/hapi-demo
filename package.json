@@ -44,8 +44,7 @@
     "nodemailer-postmark-transport": "~1.2.0",
     "pug": "~2.0.0-rc.2",
     "validator": "~7.2.0",
-    "vision": "~4.1.1",
-    "when": "~3.7.8"
+    "vision": "~4.1.1"
   },
   "keywords": [
     "hapi",

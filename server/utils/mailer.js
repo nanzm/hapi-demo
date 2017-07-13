@@ -3,7 +3,6 @@
 const Fs = require('fs')
 const Path = require('path')
 const Boom = require('boom')
-const When = require('when')
 const Nodemailer = require('nodemailer')
 const PostmarkTransport = require('nodemailer-postmark-transport')
 const htmlToText = require('html-to-text')
@@ -22,7 +21,7 @@ const Transporter = Nodemailer.createTransport(PostmarkTransport({
  * options: data which will be used to replace the placeholders within the template
  **/
 const prepareTemplate = (filename, options = {}) => {
-  return When.promise((resolve, reject) => {
+  return Promise.promise((resolve, reject) => {
     const filePath = Path.resolve(Templates, `${filename}.html`)
 
     Fs.readFile(filePath, 'utf8', (err, fileContent) => {
@@ -51,7 +50,7 @@ const prepareTemplate = (filename, options = {}) => {
 
 exports.send = (template, user, subject, data) => {
   return prepareTemplate(template, data).then(({ html, text }) => {
-    return When.resolve({
+    return Promise.resolve({
       from: `Marcus Poehls <marcus@futurestud.io>`,
       to: user.email,
       subject: subject,
