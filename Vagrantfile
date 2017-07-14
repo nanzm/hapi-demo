@@ -16,7 +16,7 @@ Vagrant.configure(2) do |config|
   config.vm.network "forwarded_port", guest: 6379, host: 6379
 
   # Create a private network, which allows host-only access to the machine
-  # using a specific IP.
+  # using a specific IP
   config.vm.network "private_network", ip: "192.168.33.10"
 
   # Provisioning
@@ -27,7 +27,7 @@ Vagrant.configure(2) do |config|
     echo "deb [ arch=amd64,arm64 ] http://repo.mongodb.org/apt/ubuntu xenial/mongodb-org/3.4 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-3.4.list
     sudo apt-get update
 
-    # MondogDB Install & Setup
+    # MongoDB Install & Setup
     sudo apt-get install -y mongodb-org
 
     # content for systemd mongodb.service
