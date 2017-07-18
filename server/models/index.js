@@ -6,7 +6,7 @@ const User = require('./user')
 // tell Mongoose to use ES6 promises
 Mongoose.Promise = global.Promise
 
-// Connect to our database and handle an bad connections
+// Connect to your database
 Mongoose.connect(process.env.DATABASE)
 
 // listen for connection errors and print the message
