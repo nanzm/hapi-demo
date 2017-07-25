@@ -4,7 +4,7 @@ const Hoek = require('hoek')
 const User = require('./../models').User
 
 exports.register = (server, options, next) => {
-  // declare dependency to hapi-auth-cookie and bell
+  // declare dependencies to auth related hapi plugins (hapi-auth-*/bell/…)
   server.register([
     {
       register: require('hapi-auth-cookie')
