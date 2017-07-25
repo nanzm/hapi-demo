@@ -15,8 +15,9 @@ exports.register = (server, options, next) => {
   ], err => {
     Hoek.assert(!err, 'Cannot register authentication plugins')
 
-
-    // TODO implement basic auth
+    /**
+     * Basic authentication strategy for username and password
+     */
     server.auth.strategy('simple', 'basic', {
       validateFunc: (request, email, password, callback) => {
         User.findByEmail(email).then(user => {
@@ -28,7 +29,6 @@ exports.register = (server, options, next) => {
         })
       }
     })
-
 
     /**
      * Register cookie-based session auth to remember
