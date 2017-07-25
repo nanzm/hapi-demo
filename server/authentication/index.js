@@ -8,13 +8,26 @@ exports.register = (server, options, next) => {
   server.register([
     {
       register: require('hapi-auth-cookie')
+    },
+    {
+      register: require('hapi-auth-basic')
     }
   ], err => {
     Hoek.assert(!err, 'Cannot register authentication plugins')
 
 
     // TODO implement basic auth
-
+    server.auth.strategy('simple', 'basic', {
+      validateFunc: (request, email, password, callback) => {
+        User.findByEmail(email).then(user => {
+          return user.comparePassword(password)
+        }).then(user => {
+          callback(null, true, user)
+        }).catch(err => {
+          callback(err, false)
+        })
+      }
+    })
 
 
     /**
