@@ -1,5 +1,7 @@
 'use strict'
 
+const Boom = require('boom')
+
 const Handler = {
   index: {
     plugins: {
@@ -42,6 +44,18 @@ const Handler = {
     },
     handler: {
       directory: { path: './public/images' }
+    }
+  },
+
+  missing: {
+    handler: (request, reply) => {
+      const accept = request.headers.accept
+
+      if (accept && accept.match(/json/)) {
+        return reply(Boom.notFound('Fuckity fuck, this resource isn’t available.'))
+      }
+
+      reply.view('404').code(404)
     }
   }
 }

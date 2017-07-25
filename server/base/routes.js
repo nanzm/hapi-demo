@@ -22,7 +22,13 @@ const Routes = [
     method: 'GET',
     path: '/images/{path*}',
     config: Handler.images
+  },
+  {
+    method: ['GET'],
+    path: '/{path*}',
+    config: Handler.missing
   }
+
 ]
 
 module.exports = Routes
