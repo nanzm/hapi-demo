@@ -1,7 +1,5 @@
 'use strict'
 
-const Boom = require('boom')
-
 const Handler = {
   index: {
     plugins: {
