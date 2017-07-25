@@ -10,7 +10,12 @@ exports.register = (server, options, next) => {
       register: require('hapi-auth-cookie')
     }
   ], err => {
-    Hoek.assert(!err, 'Cannot register authentication plugin')
+    Hoek.assert(!err, 'Cannot register authentication plugins')
+
+
+    // TODO implement basic auth
+
+
 
     /**
      * Register cookie-based session auth to remember
