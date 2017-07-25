@@ -6,12 +6,12 @@ exports.register = (server, options, next) => {
   server.dependency([ 'vision' ])
 
   server.route(Routes)
-  server.log('info', 'Plugin registered: assets')
+  server.log('info', 'Plugin registered: base routes & assets')
 
   next()
 }
 
 exports.register.attributes = {
-  name: 'assets',
+  name: 'base-routes-assets',
   version: '1.0.0'
 }
