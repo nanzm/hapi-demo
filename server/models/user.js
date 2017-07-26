@@ -48,13 +48,7 @@ const userSchema = new Schema({
  * Statics
  */
 userSchema.statics.findByEmail = function (email) {
-  return this.findOne({ email }).then(user => {
-    if (!user) {
-      return Promise.reject(Boom.notFound('Email address not registered'))
-    }
-
-    return Promise.resolve(user)
-  })
+  return this.findOne({ email })
 }
 
 userSchema.statics.findByPasswordResetToken = function (resetToken) {

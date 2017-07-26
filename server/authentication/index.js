@@ -1,6 +1,7 @@
 'use strict'
 
 const Hoek = require('hoek')
+const Boom = require('boom')
 const User = require('./../models').User
 
 exports.register = (server, options, next) => {
@@ -21,6 +22,10 @@ exports.register = (server, options, next) => {
     server.auth.strategy('simple', 'basic', {
       validateFunc: (request, email, password, callback) => {
         User.findByEmail(email).then(user => {
+          if (!user) {
+            return Promise.reject(Boom.badRequest('No user registered with this email address'))
+          }
+
           return user.comparePassword(password)
         }).then(user => {
           callback(null, true, user)
