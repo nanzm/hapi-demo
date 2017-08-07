@@ -23,7 +23,7 @@ const Handler = {
         title: 'A Monster Calls',
         year: 2016,
         rating: 'PG13'
-      }).test()
+      })
     }
   }
 }
