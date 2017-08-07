@@ -1,6 +1,7 @@
 'use strict'
 
 const Hoek = require('hoek')
+const Boom = require('boom')
 const User = require('./../models').User
 
 exports.register = (server, options, next) => {
@@ -8,6 +9,9 @@ exports.register = (server, options, next) => {
   server.register([
     {
       register: require('hapi-auth-cookie')
+    },
+    {
+      register: require('hapi-auth-basic')
     }
   ], err => {
     Hoek.assert(!err, 'Cannot register authentication plugins')
@@ -15,7 +19,21 @@ exports.register = (server, options, next) => {
     /**
      * Basic authentication strategy for username and password
      */
-    // TODO implement here
+    server.auth.strategy('basic', 'basic', {
+      validateFunc: (request, email, password, callback) => {
+        User.findByEmail(email).then(user => {
+          if (!user) {
+            return Promise.reject(Boom.badRequest('There is no user with the given email address'))
+          }
+
+          return user.comparePassword(password)
+        }).then(user => {
+          return callback(null, true, user)
+        }).catch(err => {
+          return callback(err, false)
+        })
+      }
+    })
 
     /**
      * Register cookie-based session auth to remember
