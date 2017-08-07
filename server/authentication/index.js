@@ -55,7 +55,7 @@ exports.register = (server, options, next) => {
             return callback(null, false)
           }
 
-          callback(err, true, user)
+          return callback(err, true, user)
         }).catch(() => {
           return callback(null, false)
         })
