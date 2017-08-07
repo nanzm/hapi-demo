@@ -1,7 +1,6 @@
 'use strict'
 
 const Hoek = require('hoek')
-const Boom = require('boom')
 const User = require('./../models').User
 
 exports.register = (server, options, next) => {
@@ -9,9 +8,6 @@ exports.register = (server, options, next) => {
   server.register([
     {
       register: require('hapi-auth-cookie')
-    },
-    {
-      register: require('hapi-auth-basic')
     }
   ], err => {
     Hoek.assert(!err, 'Cannot register authentication plugins')
@@ -26,8 +22,8 @@ exports.register = (server, options, next) => {
      * the logged in user
      */
     server.auth.strategy('session', 'cookie', 'try', {
-      password: 'ThisIsASecretPasswordForTheAuthCookie',
       redirectTo: '/login',
+      password: 'ThisIsASecretPasswordForTheAuthCookie',
       appendNext: true, // appends the current URL to the query param "next". Set to a string to use a different query param name
       isSecure: process.env.NODE_ENV === 'production',
       validateFunc: (request, session, callback) => {
