@@ -7,10 +7,8 @@ const Handler = {
         redirectTo: false
       }
     },
-    handler: function (request, reply) {
-      reply.view('movies/index', {
-
-      })
+    handler: (request, reply) => {
+      reply.view('movies/index')
     }
   },
 
@@ -20,12 +18,12 @@ const Handler = {
         redirectTo: false
       }
     },
-    handler: function (request, reply) {
+    handler: (request, reply) => {
       reply.view('movies/single', {
         title: 'A Monster Calls',
         year: 2016,
         rating: 'PG13'
-      })
+      }).test()
     }
   }
 }

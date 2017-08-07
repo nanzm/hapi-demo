@@ -50,14 +50,12 @@ exports.register = (server, options, next) => {
         const userId = session.id
 
         // user lookup and return credentials if available
-        User.findById(userId).then(user => {
-          if (!user) {
-            return callback(null, false)
+        User.findById(userId, function (err, user) {
+          if (!user || err) {
+            return callback(err, false)
           }
 
-          return callback(err, true, user)
-        }).catch(() => {
-          return callback(null, false)
+          callback(null, true, user)
         })
       }
     })

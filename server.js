@@ -31,7 +31,8 @@ server.register([
   {
     register: require('hapi-dev-errors'),
     options: {
-      showErrors: process.env.NODE_ENV !== 'production'
+      showErrors: process.env.NODE_ENV !== 'production',
+      template: 'server-error'
     }
   },
   {
@@ -41,10 +42,10 @@ server.register([
     }
   },
   {
-    register: require('./server/base')
+    register: require('./server/authentication')
   },
   {
-    register: require('./server/authentication')
+    register: require('./server/base')
   },
   {
     register: require('./server/add-user-to-request')
