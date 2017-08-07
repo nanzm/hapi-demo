@@ -19,21 +19,7 @@ exports.register = (server, options, next) => {
     /**
      * Basic authentication strategy for username and password
      */
-    server.auth.strategy('simple', 'basic', {
-      validateFunc: (request, email, password, callback) => {
-        User.findByEmail(email).then(user => {
-          if (!user) {
-            return Promise.reject(Boom.badRequest('No user registered with this email address'))
-          }
-
-          return user.comparePassword(password)
-        }).then(user => {
-          callback(null, true, user)
-        }).catch(err => {
-          callback(err, false)
-        })
-      }
-    })
+    // TODO implement here
 
     /**
      * Register cookie-based session auth to remember

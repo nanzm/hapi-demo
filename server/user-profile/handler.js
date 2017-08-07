@@ -3,7 +3,7 @@
 const Handler = {
   profile: {
     auth: 'session',
-    handler: function (request, reply) {
+    handler: (request, reply) => {
       reply.view('profile')
     }
   }
