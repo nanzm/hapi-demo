@@ -70,7 +70,7 @@ server.register([
     throw err
   }
 
-  const viewsPath = __dirname + '/public/views'
+  const viewsPath = Path.resolve(__dirname, 'public', 'views')
 
   server.views({
     engines: {
