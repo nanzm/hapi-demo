@@ -11,15 +11,9 @@ const Validator = require('validator')
 const SALT_WORK_FACTOR = 12
 
 const userSchema = new Schema({
-  username: {
-    type: String,
-    trim: true,
-    unique: true
-  },
   email: {
     type: String,
     unique: true,
-    lowercase: true,
     trim: true,
     required: true,
     validate: {
