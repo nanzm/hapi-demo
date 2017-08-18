@@ -32,7 +32,8 @@ server.register([
     register: require('hapi-dev-errors'),
     options: {
       showErrors: process.env.NODE_ENV !== 'production',
-      template: 'server-error'
+      useYouch: true
+      //template: 'server-error'
     }
   },
   {
