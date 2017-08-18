@@ -32,7 +32,7 @@
     "hapi": "~16.4.3",
     "hapi-auth-basic": "~4.2.0",
     "hapi-auth-cookie": "~7.0.0",
-    "hapi-dev-errors": "~1.1.0",
+    "hapi-dev-errors": "~1.2.0",
     "hoek": "~4.2.0",
     "html-to-text": "~3.3.0",
     "inert": "~4.2.1",
