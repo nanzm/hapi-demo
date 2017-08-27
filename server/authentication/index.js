@@ -23,7 +23,7 @@ exports.register = (server, options, next) => {
       validateFunc: (request, email, password, callback) => {
         User.findByEmail(email).then(user => {
           if (!user) {
-            return Promise.reject(Boom.badRequest('There is no user with the given email address'))
+            return Promise.reject(Boom.notFound('There is no user with the given email address'))
           }
 
           return user.comparePassword(password)
