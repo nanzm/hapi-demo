@@ -4,7 +4,7 @@ const Mongoose = require('mongoose')
 const Schema = Mongoose.Schema
 const Bcrypt = require('bcrypt')
 const Boom = require('boom')
-const Md5 = require('md5')
+const MD5 = require('md5')
 const Crypto = require('crypto')
 const Validator = require('validator')
 
@@ -102,7 +102,9 @@ userSchema.methods.resetPassword = function () {
  * Virtuals
  */
 userSchema.virtual('gravatar').get(function () {
-  const hash = Md5(this.email)
+  // create the MD5 hash from the user’s email address
+  const hash = MD5(this.email)
+  // return the ready-to-load avatar URL
   return `https://gravatar.com/avatar/${hash}?s=200`
 })
 
