@@ -5,7 +5,7 @@ const Boom = require('boom')
 const User = require('./../models').User
 
 exports.register = (server, options, next) => {
-  // declare dependencies to auth related hapi plugins (hapi-auth-*/bell/…)
+  // declare dependencies to hapi-auth-* plugins
   server.register([
     {
       register: require('hapi-auth-cookie')
