@@ -25,13 +25,20 @@ const userSchema = new Schema({
   name: String,
   password: String,
   url: String,
-  resetPasswordToken: String,
+  resetPasswordToken: {
+    type: String,
+    unique: true,
+    trim: true
+  },
   resetPasswordDeadline: Date,
   authToken: {
     type: String,
     default: Crypto.randomBytes(20).toString('hex')
   },
-  authTokenIssued: Date,
+  authTokenIssued: {
+    type: Date,
+    default: new Date.now()
+  },
   scope: [ String ]
   // hearts: [
   //   { type: Mongoose.Schema.ObjectId, ref: 'Store' }
@@ -51,7 +58,6 @@ userSchema.statics.findByPasswordResetToken = function (resetToken) {
     resetPasswordDeadline: { $gt: Date.now() }
   })
 }
-
 
 /**
  * Instance Methods
@@ -87,7 +93,7 @@ userSchema.methods.hashPassword = function () {
   })
 }
 
-userSchema.methods.generateAuthToken = () => {
+userSchema.methods.generateAuthToken = function () {
   this.authToken = Crypto.randomBytes(20).toString('hex')
   return Promise.resolve(this)
 }
