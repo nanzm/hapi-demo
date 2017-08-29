@@ -126,7 +126,7 @@ const Handler = {
 
       User.findByEmail(payload.email).then(user => {
         if (!user) {
-          const error = Boom.create(404, 'Email address is not registered', {
+          const error = Boom.create(404, '', {
             email: { message: 'Email address is not registered' }
           })
 
@@ -153,11 +153,13 @@ const Handler = {
         abortEarly: false
       },
       payload: {
-        email: Joi.string().required().label('Email address'),
+        email: Joi.string().email({ minDomainAtoms: 2 }).required().label('Email address'),
         password: Joi.string().min(6).required().label('Password')
       },
       failAction: (request, reply, source, error) => {
+        // prepare formatted error object
         const errors = ErrorExtractor(error)
+        // remember the user’s email address and pre-fill for comfort reasons
         const email = request.payload.email
 
         return reply.view('login', {
