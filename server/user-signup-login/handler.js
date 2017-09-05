@@ -205,7 +205,7 @@ const Handler = {
 
       return User.findByEmail(payload.email).then(user => {
         if (!user) {
-          const error = Boom.create(400, 'Email address is not registered', {
+          const error = Boom.create(404, 'Email address is not registered', {
             email: { message: 'Email address is not registered' }
           })
 
