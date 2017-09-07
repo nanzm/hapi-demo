@@ -39,7 +39,10 @@ server.register([
   {
     register: Laabr.plugin,
     options: {
-      colored: true
+      colored: true,
+      hapiPino: {
+        logPayload: false
+      }
     }
   },
   {
