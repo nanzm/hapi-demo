@@ -15,9 +15,6 @@ const Transporter = Nodemailer.createTransport(PostmarkTransport({
 }))
 const Templates = Path.resolve(__dirname, '..', 'email-templates')
 
-console.log(__dirname)
-console.log(Templates)
-
 /**
  * filename: email template name, without ".html" file ending. Email templates are located within "server/email-templates"
  * options: data which will be used to replace the placeholders within the template

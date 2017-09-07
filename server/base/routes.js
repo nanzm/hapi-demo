@@ -28,7 +28,6 @@ const Routes = [
     path: '/{path*}',
     config: Handler.missing
   }
-
 ]
 
 module.exports = Routes

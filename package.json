@@ -49,7 +49,10 @@
   "keywords": [
     "hapi",
     "node.js",
-    "tutorials"
+    "tutorial",
+    "tutorials",
+    "mongodb",
+    "futureflix"
   ],
   "license": "MIT",
   "scripts": {
