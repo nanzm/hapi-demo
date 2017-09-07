@@ -61,6 +61,8 @@ const Handler = {
       }).then(user => {
         request.cookieAuth.set({ id: user.id })
 
+        //Mailer.send('signup', user, '📺 Futureflix — It’s great to see you!', {})
+
         // \o/ wohoo, sign up successful
         return reply.view('signup-success')
       }).catch(err => {
@@ -217,7 +219,7 @@ const Handler = {
         return user.save()
       }).then(user => {
         const resetURL = `http://${request.headers.host}/reset-password/${user.resetPasswordToken}`
-        return Mailer.send('password-reset', user, 'Futureflix - Password Reset', { resetURL })
+        return Mailer.send('password-reset', user, '📺 Futureflix - Password Reset', { resetURL })
       }).then(() => {
         return reply.view('forgot-password-email-sent')
       }).catch(err => {
