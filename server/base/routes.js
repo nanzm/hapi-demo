@@ -24,7 +24,7 @@ const Routes = [
     config: Handler.images
   },
   {
-    method: ['GET'],
+    method: [ 'GET' ],
     path: '/{path*}',
     config: Handler.missing
   }

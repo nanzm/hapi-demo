@@ -61,11 +61,13 @@ const Handler = {
       }).then(user => {
         request.cookieAuth.set({ id: user.id })
 
-        //Mailer.send('signup', user, '📺 Futureflix — It’s great to see you!', {})
+        const discoverURL = `http://${request.headers.host}/discover`
+        Mailer.send('welcome', user, '📺 Futureflix — Great to see you!', { discoverURL })
 
         // \o/ wohoo, sign up successful
         return reply.view('signup-success')
       }).catch(err => {
+        console.log(err)
         const status = err.isBoom ? err.output.statusCode : 400
 
         return reply.view('signup', {

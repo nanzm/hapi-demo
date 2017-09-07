@@ -48,9 +48,11 @@
   },
   "keywords": [
     "hapi",
+    "hapi.js",
+    "node",
     "node.js",
-    "tutorial",
     "tutorials",
+    "tutorial",
     "mongodb",
     "futureflix"
   ],
