@@ -6,7 +6,6 @@ const Boom = require('boom')
 const Nodemailer = require('nodemailer')
 const Handlebars = require('handlebars')
 const htmlToText = require('html-to-text')
-const Promisify = require('es6-promisify')
 const PostmarkTransport = require('nodemailer-postmark-transport')
 const Transporter = Nodemailer.createTransport(PostmarkTransport({
   auth: {
@@ -47,15 +46,14 @@ const prepareTemplate = (filename, options = {}) => {
 
 exports.send = (template, user, subject, data) => {
   return prepareTemplate(template, data).then(({ html, text }) => {
-    return Promise.resolve({
+    const mailOptions = {
       from: `Marcus Poehls <marcus@futurestud.io>`,
       to: user.email,
       subject: subject,
       html,
       text
-    })
-  }).then(mailOptions => {
-    const send = Promisify(Transporter.sendMail, Transporter)
-    return send(mailOptions)
+    }
+
+    return Transporter.sendMail(mailOptions)
   })
 }
