@@ -67,7 +67,6 @@ const Handler = {
         // \o/ wohoo, sign up successful
         return reply.view('signup-success')
       }).catch(err => {
-        console.log(err)
         const status = err.isBoom ? err.output.statusCode : 400
 
         return reply.view('signup', {
