@@ -215,11 +215,9 @@ const Handler = {
           return Promise.reject(error)
         }
 
-        user.resetPassword()
-
-        return user.save()
-      }).then(user => {
-        const resetURL = `http://${request.headers.host}/reset-password/${user.resetPasswordToken}`
+        return user.resetPassword()
+      }).then(({ passwordResetToken, user }) => {
+        const resetURL = `http://${request.headers.host}/reset-password/${user.email}/${passwordResetToken}`
         return Mailer.send('password-reset', user, '📺 Futureflix - Password Reset', { resetURL })
       }).then(() => {
         return reply.view('forgot-password-email-sent')
@@ -264,18 +262,22 @@ const Handler = {
       }
 
       return reply.view('reset-password', {
+        email: request.params.email,
         resetToken: request.params.resetToken
       })
     },
     validate: {
       params: {
+        email: Joi.string().required().label('Email'),
         resetToken: Joi.string().required().label('Password reset token')
       },
       failAction: (request, reply, source, error) => {
         const errors = ErrorExtractor(error)
+        const email = request.params.email
         const resetToken = request.params.resetToken
 
         return reply.view('reset-password', {
+          email,
           resetToken,
           errors
         }).code(400)
@@ -294,16 +296,27 @@ const Handler = {
         return reply.redirect('/profile')
       }
 
-      return User.findByPasswordResetToken(request.params.resetToken).then(user => {
+      // shortcut
+      const payload = request.payload
+
+      return User.findByEmail(payload.email).then(user => {
         if (!user) {
           const error = Boom.create(400, '', {
-            resetToken: { message: 'Your password reset token is invalid, please request a new one.' }
+            resetToken: { message: 'Sorry, we can’t find a user with the credentials.' }
           })
 
           return Promise.reject(error)
         }
 
-        user.password = request.payload.password
+        return user.comparePasswordResetToken(payload.resetToken)
+      }).then(user => {
+        // remove password reset related data from user
+        user.passwordResetToken = undefined
+        user.passwordResetDeadline = undefined
+
+        // set new password
+        user.password = payload.password
+
         return user.hashPassword()
       }).then(user => {
         return user.save()
@@ -326,6 +339,8 @@ const Handler = {
         abortEarly: false
       },
       payload: {
+        email: Joi.string(),
+        resetToken: Joi.string().required(),
         password: Joi.string().min(6).required().label('Password'),
         passwordConfirm: Joi.string().min(6).valid(Joi.ref('password')).required().options({
           language: {
@@ -337,7 +352,8 @@ const Handler = {
         const errors = ErrorExtractor(error)
 
         return reply.view('reset-password', {
-          resetToken: request.params.resetToken,
+          email: request.payload.email,
+          resetToken: request.payload.resetToken,
           errors
         }).code(400)
       }

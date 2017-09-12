@@ -35,12 +35,12 @@ const Routes = [
   },
   {
     method: 'GET',
-    path: '/reset-password/{resetToken*}',
+    path: '/reset-password/{email}/{resetToken}',
     config: Handler.showResetPassword
   },
   {
     method: 'POST',
-    path: '/reset-password/{resetToken*}',
+    path: '/reset-password/{email}/{resetToken}',
     config: Handler.resetPassword
   },
   {

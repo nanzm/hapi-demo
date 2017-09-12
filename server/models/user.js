@@ -25,12 +25,12 @@ const userSchema = new Schema({
   name: String,
   password: String,
   url: String,
-  resetPasswordToken: {
+  passwordResetToken: {
     type: String,
     unique: true,
     trim: true
   },
-  resetPasswordDeadline: Date,
+  passwordResetDeadline: Date,
   authToken: {
     type: String,
     default: Crypto.randomBytes(20).toString('hex')
@@ -52,13 +52,6 @@ userSchema.statics.findByEmail = function (email) {
   return this.findOne({ email })
 }
 
-userSchema.statics.findByPasswordResetToken = function (resetToken) {
-  return this.findOne({
-    resetPasswordToken: resetToken,
-    resetPasswordDeadline: { $gt: Date.now() }
-  })
-}
-
 /**
  * Instance Methods
  */
@@ -70,7 +63,7 @@ userSchema.methods.comparePassword = function (candidatePassword) {
       return Promise.resolve(self)
     }
 
-    return Promise.reject(Boom.badRequest('The entered password is not correct'))
+    return Promise.reject(Boom.badRequest('The entered password is incorrect'))
   }).catch(err => {
     err = Boom.create(400, err.message, {
       password: { message: err.message }
@@ -99,9 +92,38 @@ userSchema.methods.generateAuthToken = function () {
 }
 
 userSchema.methods.resetPassword = function () {
-  this.resetPasswordToken = Crypto.randomBytes(20).toString('hex')
-  this.resetPasswordDeadline = Date.now() + 1000 * 60 * 60 // 1 hour from now
-  return this
+  let self = this
+  const passwordResetToken = Crypto.randomBytes(20).toString('hex')
+
+  return Bcrypt.genSalt(SALT_WORK_FACTOR).then(salt => {
+    return Bcrypt.hash(passwordResetToken, salt)
+  }).then(hash => {
+    self.passwordResetToken = hash
+    self.passwordResetDeadline = Date.now() + 1000 * 60 * 60 // 1 hour from now
+    return this.save().then(user => {
+      return Promise.resolve({ passwordResetToken, user })
+    })
+  }).catch(() => {
+    return Promise.reject(Boom.badRequest('An error occurred while hashing your password reset token'))
+  })
+}
+
+userSchema.methods.comparePasswordResetToken = function (resetToken) {
+  const self = this
+
+  return Bcrypt.compare(resetToken, self.passwordResetToken).then(isMatch => {
+    if (isMatch) {
+      return Promise.resolve(self)
+    }
+
+    return Promise.reject(Boom.badRequest('Your password reset token is invalid, please request a new one.'))
+  }).catch(err => {
+    err = Boom.create(400, err.message, {
+      password: { message: err.message }
+    })
+
+    return Promise.reject(err)
+  })
 }
 
 /**
