@@ -12,6 +12,9 @@ exports.register = (server, options, next) => {
     },
     {
       register: require('hapi-auth-basic')
+    },
+    {
+      register: require('bell')
     }
   ], err => {
     Hoek.assert(!err, 'Cannot register authentication plugins')
@@ -58,6 +61,36 @@ exports.register = (server, options, next) => {
           callback(null, true, user)
         })
       }
+    })
+
+    /**
+     * trakt.tv OAuth config
+     */
+    const uri = 'https://api.trakt.tv'
+    const user = uri + '/users/me'
+
+    server.auth.strategy('trakt', 'bell', {
+      provider: {
+        protocol: 'oauth2',
+        auth: uri + '/oauth/authorize',
+        token: uri + '/oauth/token',
+        headers: {
+          'trakt-api-version': 2,
+          'trakt-api-key': process.env.TRAKT_CLIENT_ID
+        },
+        profile: function (credentials, params, get, callback) {
+          const query = { extended: 'full' }
+
+          get(user, query, profile => {
+            credentials.profile = profile
+            return callback()
+          })
+        }
+      },
+      password: 'ThisIsASecretCookiePasswordForTrakt',
+      clientId: process.env.TRAKT_CLIENT_ID,
+      clientSecret: process.env.TRAKT_CLIENT_SECRET,
+      isSecure: process.env.NODE_ENV === 'production'
     })
 
     next()
