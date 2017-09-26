@@ -217,7 +217,8 @@ const Handler = {
 
         return user.resetPassword()
       }).then(({ passwordResetToken, user }) => {
-        const resetURL = `http://${request.headers.host}/reset-password/${user.email}/${passwordResetToken}`
+        const encodedEmail = encodeURIComponent(user.email)
+        const resetURL = `http://${request.headers.host}/reset-password/${encodedEmail}/${passwordResetToken}`
         return Mailer.send('password-reset', user, '📺 Futureflix - Password Reset', { resetURL })
       }).then(() => {
         return reply.view('forgot-password-email-sent')
@@ -262,18 +263,18 @@ const Handler = {
       }
 
       return reply.view('reset-password', {
-        email: request.params.email,
+        email: decodeURIComponent(request.params.email),
         resetToken: request.params.resetToken
       })
     },
     validate: {
       params: {
-        email: Joi.string().required().label('Email'),
-        resetToken: Joi.string().required().label('Password reset token')
+        email: Joi.string().required().trim().label('Email address'),
+        resetToken: Joi.string().required().trim().label('Password reset token')
       },
       failAction: (request, reply, source, error) => {
         const errors = ErrorExtractor(error)
-        const email = request.params.email
+        const email = decodeURIComponent(request.params.email)
         const resetToken = request.params.resetToken
 
         return reply.view('reset-password', {
@@ -298,8 +299,9 @@ const Handler = {
 
       // shortcut
       const payload = request.payload
+      const email = decodeURIComponent(payload.email)
 
-      return User.findByEmail(payload.email).then(user => {
+      return User.findByEmail(email).then(user => {
         if (!user) {
           const error = Boom.create(400, '', {
             resetToken: { message: 'Sorry, we can’t find a user with the credentials.' }
@@ -339,8 +341,8 @@ const Handler = {
         abortEarly: false
       },
       payload: {
-        email: Joi.string(),
-        resetToken: Joi.string().required(),
+        email: Joi.string().required().trim().label('Email address'),
+        resetToken: Joi.string().required().trim().label('Password reset token'),
         password: Joi.string().min(6).required().label('Password'),
         passwordConfirm: Joi.string().min(6).valid(Joi.ref('password')).required().options({
           language: {
@@ -352,7 +354,7 @@ const Handler = {
         const errors = ErrorExtractor(error)
 
         return reply.view('reset-password', {
-          email: request.payload.email,
+          email: decodeURIComponent(request.payload.email),
           resetToken: request.payload.resetToken,
           errors
         }).code(400)
