@@ -100,7 +100,8 @@ userSchema.methods.resetPassword = function () {
   }).then(hash => {
     self.passwordResetToken = hash
     self.passwordResetDeadline = Date.now() + 1000 * 60 * 60 // 1 hour from now
-    return this.save().then(user => {
+
+    return self.save().then(user => {
       return Promise.resolve({ passwordResetToken, user })
     })
   }).catch(() => {
