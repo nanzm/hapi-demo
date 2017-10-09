@@ -25,6 +25,11 @@ const Routes = [
   },
   {
     method: 'GET',
+    path: '/logout',
+    config: Handler.logout
+  },
+  {
+    method: 'GET',
     path: '/forgot-password',
     config: Handler.showForgotPassword
   },
@@ -42,11 +47,6 @@ const Routes = [
     method: 'POST',
     path: '/reset-password/{email}/{resetToken}',
     config: Handler.resetPassword
-  },
-  {
-    method: 'GET',
-    path: '/logout',
-    config: Handler.logout
   }
 ]
 
