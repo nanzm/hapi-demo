@@ -174,20 +174,12 @@ const Handler = {
   },
 
   showForgotPassword: {
-    auth: {
-      mode: 'try',
-      strategy: 'session'
-    },
     plugins: {
       'hapi-auth-cookie': {
         redirectTo: false
       }
     },
     handler: (request, reply) => {
-      if (request.auth.isAuthenticated) {
-        return reply.redirect('/profile')
-      }
-
       return reply.view('forgot-password')
     }
   },
@@ -340,9 +332,11 @@ const Handler = {
         stripUnknown: true,
         abortEarly: false
       },
-      payload: {
+      params: {
         email: Joi.string().required().trim().label('Email address'),
-        resetToken: Joi.string().required().trim().label('Password reset token'),
+        resetToken: Joi.string().required().trim().label('Password reset token')
+      },
+      payload: {
         password: Joi.string().min(6).required().label('Password'),
         passwordConfirm: Joi.string().min(6).valid(Joi.ref('password')).required().options({
           language: {
