@@ -209,8 +209,11 @@ const Handler = {
 
         return user.resetPassword()
       }).then(({ passwordResetToken, user }) => {
+        // encode email address to avoid issues with characters like "@"
         const encodedEmail = encodeURIComponent(user.email)
+        // compose the user specific password reset URL
         const resetURL = `http://${request.headers.host}/reset-password/${encodedEmail}/${passwordResetToken}`
+
         return Mailer.send('password-reset', user, '📺 Futureflix - Password Reset', { resetURL })
       }).then(() => {
         return reply.view('forgot-password-email-sent')
@@ -254,10 +257,7 @@ const Handler = {
         return reply.redirect('/profile')
       }
 
-      return reply.view('reset-password', {
-        email: decodeURIComponent(request.params.email),
-        resetToken: request.params.resetToken
-      })
+      return reply.view('reset-password')
     },
     validate: {
       params: {
@@ -266,12 +266,8 @@ const Handler = {
       },
       failAction: (request, reply, source, error) => {
         const errors = ErrorExtractor(error)
-        const email = decodeURIComponent(request.params.email)
-        const resetToken = request.params.resetToken
 
         return reply.view('reset-password', {
-          email,
-          resetToken,
           errors
         }).code(400)
       }
@@ -290,8 +286,8 @@ const Handler = {
       }
 
       // shortcut
-      const payload = request.payload
-      const email = decodeURIComponent(payload.email)
+      const params = request.params
+      const email = decodeURIComponent(params.email)
 
       return User.findByEmail(email).then(user => {
         if (!user) {
@@ -302,14 +298,14 @@ const Handler = {
           return Promise.reject(error)
         }
 
-        return user.comparePasswordResetToken(payload.resetToken)
+        return user.comparePasswordResetToken(params.resetToken)
       }).then(user => {
         // remove password reset related data from user
         user.passwordResetToken = undefined
         user.passwordResetDeadline = undefined
 
         // set new password
-        user.password = payload.password
+        user.password = request.payload.password
 
         return user.hashPassword()
       }).then(user => {
@@ -319,12 +315,9 @@ const Handler = {
 
         return reply.view('reset-password-success')
       }).catch(err => {
-        console.log(err)
         const status = err.isBoom ? err.output.statusCode : 400
 
-        return reply.view('reset-password', {
-          errors: err.data
-        }).code(status)
+        return reply.view('reset-password', { errors: err.data }).code(status)
       })
     },
     validate: {
@@ -347,11 +340,7 @@ const Handler = {
       failAction: (request, reply, source, error) => {
         const errors = ErrorExtractor(error)
 
-        return reply.view('reset-password', {
-          email: decodeURIComponent(request.payload.email),
-          resetToken: request.payload.resetToken,
-          errors
-        }).code(400)
+        return reply.view('reset-password', { errors }).code(400)
       }
     }
   },

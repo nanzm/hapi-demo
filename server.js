@@ -62,15 +62,12 @@ server.register([
   },
   {
     register: require('./server/user-profile')
-<<<<<<< HEAD
   },
   {
     register: require('./server/movies')
   },
   {
     register: require('./server/tv-shows')
-=======
->>>>>>> starter-kit/develop
   }
 ], err => {
   if (err) {
