@@ -261,7 +261,7 @@ const Handler = {
     },
     validate: {
       params: {
-        email: Joi.string().required().trim().label('Email address'),
+        email: Joi.string().email({ minDomainAtoms: 2 }).required().trim().label('Email address'),
         resetToken: Joi.string().required().trim().label('Password reset token')
       },
       failAction: (request, reply, source, error) => {
@@ -326,7 +326,7 @@ const Handler = {
         abortEarly: false
       },
       params: {
-        email: Joi.string().required().trim().label('Email address'),
+        email: Joi.string().email({ minDomainAtoms: 2 }).required().trim().label('Email address'),
         resetToken: Joi.string().required().trim().label('Password reset token')
       },
       payload: {
