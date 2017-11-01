@@ -18,6 +18,8 @@
         <h2>Your Profile</h2>
 
         <form method="POST">
+            <input type="hidden" name="crumb" value="{{crumb}}">
+
             <div class="field">
                 <label class="label {{#if errors.username}}is-danger{{/if}}" for="username">
                     {{#if errors.username}} {{errors.username.message}} {{else}} Username {{/if}}

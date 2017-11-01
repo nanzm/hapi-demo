@@ -25,13 +25,11 @@
         {{/if}}
 
         <form method="POST">
+            <input type="hidden" name="crumb" value="{{crumb}}">
+
             <div class="field">
                 <label class="label {{#if errors.email}}is-danger{{/if}}" for="email">
-                    {{#if errors.email}}
-                        {{errors.email.message}}
-                    {{else}}
-                        Email address
-                    {{/if}}
+                    {{#if errors.email}} {{errors.email.message}} {{else}} Email address {{/if}}
                 </label>
                 <p class="control has-icons-left has-icons-right">
                     <input class="input {{#if errors.email}}is-danger{{else}}{{#if
@@ -42,12 +40,10 @@
                     </span>
                     <span class="icon is-small is-right">
                         {{#if errors.email}}
-                            <i class="fa fa-warning"></i>
-                        {{else}}
-                            {{#if email}}
-                                <i class="fa fa-check"></i>
-                            {{/if}}
-                        {{/if}}
+                        <i class="fa fa-warning"></i>
+                        {{else}} {{#if email}}
+                        <i class="fa fa-check"></i>
+                        {{/if}} {{/if}}
                     </span>
                 </p>
             </div>
@@ -55,11 +51,7 @@
             <div class="field">
                 <div class="is-clearfix">
                     <label class="label is-pulled-left {{#if errors.password}}is-danger{{/if}}" for="password">
-                        {{#if errors.password}}
-                            {{errors.password.message}}
-                        {{else}}
-                            Password
-                        {{/if}}
+                        {{#if errors.password}} {{errors.password.message}} {{else}} Password {{/if}}
                     </label>
                 </div>
 
@@ -69,8 +61,8 @@
                         <i class="fa fa-lock"></i>
                     </span> {{#if errors.password}}
                     <span class="icon is-small is-right">
-                            <i class="fa fa-warning"></i>
-                        </span> {{/if}}
+                        <i class="fa fa-warning"></i>
+                    </span> {{/if}}
                 </p>
             </div>
 
