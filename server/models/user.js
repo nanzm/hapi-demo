@@ -22,9 +22,14 @@ const userSchema = new Schema({
       message: 'Invalid email address'
     }
   },
-  name: String,
   password: String,
-  url: String,
+  username: {
+    type: String,
+    unique: true,
+    trim: true
+  },
+  homepage: String,
+  name: String,
   passwordResetToken: {
     type: String,
     unique: true,
@@ -39,7 +44,7 @@ const userSchema = new Schema({
     type: Date,
     default: Date.now()
   },
-  scope: [ String ]
+  scope: [String]
   // hearts: [
   //   { type: Mongoose.Schema.ObjectId, ref: 'Store' }
   // ]
@@ -48,89 +53,99 @@ const userSchema = new Schema({
 /**
  * Statics
  */
-userSchema.statics.findByEmail = function (email) {
+userSchema.statics.findByEmail = function(email) {
   return this.findOne({ email })
 }
 
 /**
  * Instance Methods
  */
-userSchema.methods.comparePassword = function (candidatePassword) {
+userSchema.methods.comparePassword = function(candidatePassword) {
   const self = this
 
-  return Bcrypt.compare(candidatePassword, self.password).then(isMatch => {
-    if (isMatch) {
-      return Promise.resolve(self)
-    }
+  return Bcrypt.compare(candidatePassword, self.password)
+    .then(isMatch => {
+      if (isMatch) {
+        return Promise.resolve(self)
+      }
 
-    return Promise.reject(Boom.badRequest('The entered password is incorrect'))
-  }).catch(err => {
-    err = Boom.create(400, err.message, {
-      password: { message: err.message }
+      return Promise.reject(Boom.badRequest('The entered password is incorrect'))
     })
+    .catch(err => {
+      err = Boom.create(400, err.message, {
+        password: { message: err.message }
+      })
 
-    return Promise.reject(err)
-  })
+      return Promise.reject(err)
+    })
 }
 
-userSchema.methods.hashPassword = function () {
+userSchema.methods.hashPassword = function() {
   const self = this
 
-  return Bcrypt.genSalt(SALT_WORK_FACTOR).then(salt => {
-    return Bcrypt.hash(self.password, salt)
-  }).then(hash => {
-    self.password = hash
-    return Promise.resolve(self)
-  }).catch(() => {
-    return Promise.reject(Boom.badRequest('There was an error while hashing your password'))
-  })
+  return Bcrypt.genSalt(SALT_WORK_FACTOR)
+    .then(salt => {
+      return Bcrypt.hash(self.password, salt)
+    })
+    .then(hash => {
+      self.password = hash
+      return Promise.resolve(self)
+    })
+    .catch(() => {
+      return Promise.reject(Boom.badRequest('There was an error while hashing your password'))
+    })
 }
 
-userSchema.methods.generateAuthToken = function () {
+userSchema.methods.generateAuthToken = function() {
   this.authToken = Crypto.randomBytes(20).toString('hex')
   return Promise.resolve(this)
 }
 
-userSchema.methods.resetPassword = function () {
+userSchema.methods.resetPassword = function() {
   let self = this
   const passwordResetToken = Crypto.randomBytes(20).toString('hex')
 
-  return Bcrypt.genSalt(SALT_WORK_FACTOR).then(salt => {
-    return Bcrypt.hash(passwordResetToken, salt)
-  }).then(hash => {
-    self.passwordResetToken = hash
-    self.passwordResetDeadline = Date.now() + 1000 * 60 * 60 // 1 hour from now
-
-    return self.save().then(user => {
-      return Promise.resolve({ passwordResetToken, user })
+  return Bcrypt.genSalt(SALT_WORK_FACTOR)
+    .then(salt => {
+      return Bcrypt.hash(passwordResetToken, salt)
     })
-  }).catch(() => {
-    return Promise.reject(Boom.badRequest('An error occurred while hashing your password reset token'))
-  })
+    .then(hash => {
+      self.passwordResetToken = hash
+      self.passwordResetDeadline = Date.now() + 1000 * 60 * 60 // 1 hour from now
+
+      return self.save().then(user => {
+        return Promise.resolve({ passwordResetToken, user })
+      })
+    })
+    .catch(() => {
+      return Promise.reject(Boom.badRequest('An error occurred while hashing your password reset token'))
+    })
 }
 
-userSchema.methods.comparePasswordResetToken = function (resetToken) {
+userSchema.methods.comparePasswordResetToken = function(resetToken) {
   const self = this
 
-  return Bcrypt.compare(resetToken, self.passwordResetToken).then(isMatch => {
-    if (isMatch) {
-      return Promise.resolve(self)
-    }
+  return Bcrypt.compare(resetToken, self.passwordResetToken)
+    .then(isMatch => {
+      if (isMatch) {
+        return Promise.resolve(self)
+      }
 
-    return Promise.reject(Boom.badRequest('Your password reset token is invalid, please request a new one.'))
-  }).catch(err => {
-    err = Boom.create(400, err.message, {
-      password: { message: err.message }
+      return Promise.reject(Boom.badRequest('Your password reset token is invalid, please request a new one.'))
     })
+    .catch(err => {
+      err = Boom.create(400, err.message, {
+        password: { message: err.message }
+      })
 
-    return Promise.reject(err)
-  })
+      return Promise.reject(err)
+    })
 }
 
 /**
  * Virtuals
  */
-userSchema.virtual('gravatar').get(function () {
+userSchema.virtual('gravatar').get(function() {
   // create the MD5 hash from the user’s email address
   const hash = MD5(this.email)
   // return the ready-to-load avatar URL

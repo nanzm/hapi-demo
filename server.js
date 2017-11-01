@@ -21,77 +21,89 @@ server.connection({
 })
 
 // register plugins to server instance
-server.register([
-  {
-    register: require('inert')
-  },
-  {
-    register: require('vision')
-  },
-  {
-    register: require('hapi-dev-errors'),
-    options: {
-      showErrors: process.env.NODE_ENV !== 'production',
-      useYouch: true
-      //template: 'server-error'
-    }
-  },
-  {
-    register: Laabr.plugin,
-    options: {
-      colored: true,
-      hapiPino: {
-        logPayload: false
-      }
-    }
-  },
-  {
-    register: require('./server/authentication')
-  },
-  {
-    register: require('./server/base')
-  },
-  {
-    register: require('./server/add-user-to-request')
-  },
-  {
-    register: require('./server/add-user-to-views')
-  },
-  {
-    register: require('./server/user-signup-login')
-  },
-  {
-    register: require('./server/user-profile')
-  },
-  {
-    register: require('./server/movies')
-  },
-  {
-    register: require('./server/tv-shows')
-  }
-], err => {
-  if (err) {
-    throw err
-  }
-
-  const viewsPath = Path.resolve(__dirname, 'public', 'views')
-
-  server.views({
-    engines: {
-      hbs: require('handlebars')
+server.register(
+  [
+    {
+      register: require('inert')
     },
-    path: viewsPath,
-    layoutPath: Path.resolve(viewsPath, 'layouts'),
-    layout: 'layout',
-    partialsPath: Path.resolve(viewsPath, 'partials'),
-    isCached: process.env.NODE_ENV === 'production',
-    context: {
-      title: 'Futureflix'
+    {
+      register: require('vision')
+    },
+    {
+      register: require('crumb'),
+      options: {
+        cookieOptions: {
+          isSecure: process.env.NODE_ENV === 'production'
+        }
+      }
+    },
+    {
+      register: require('hapi-dev-errors'),
+      options: {
+        showErrors: process.env.NODE_ENV !== 'production',
+        useYouch: true
+        //template: 'server-error'
+      }
+    },
+    {
+      register: Laabr.plugin,
+      options: {
+        colored: true,
+        hapiPino: {
+          logPayload: false
+        }
+      }
+    },
+    {
+      register: require('./server/authentication')
+    },
+    {
+      register: require('./server/base')
+    },
+    {
+      register: require('./server/add-user-to-request')
+    },
+    {
+      register: require('./server/add-user-to-views')
+    },
+    {
+      register: require('./server/user-signup-login')
+    },
+    {
+      register: require('./server/user-profile')
+    },
+    {
+      register: require('./server/movies')
+    },
+    {
+      register: require('./server/tv-shows')
     }
-  })
+  ],
+  err => {
+    if (err) {
+      throw err
+    }
 
-  // start your server
-  server.start().catch(err => {
-    throw err
-  })
-})
+    const viewsPath = Path.resolve(__dirname, 'public', 'views')
+
+    server.views({
+      engines: {
+        hbs: require('handlebars')
+      },
+      path: viewsPath,
+      layoutPath: Path.resolve(viewsPath, 'layouts'),
+      layout: 'layout',
+      helpersPath: Path.resolve(viewsPath, 'helpers'),
+      partialsPath: Path.resolve(viewsPath, 'partials'),
+      isCached: process.env.NODE_ENV === 'production',
+      context: {
+        title: 'Futureflix'
+      }
+    })
+
+    // start your server
+    server.start().catch(err => {
+      throw err
+    })
+  }
+)
