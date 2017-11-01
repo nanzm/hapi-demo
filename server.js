@@ -83,6 +83,7 @@ server.register([
     path: viewsPath,
     layoutPath: Path.resolve(viewsPath, 'layouts'),
     layout: 'layout',
+    helpersPath: Path.resolve(viewsPath, 'helpers'),
     partialsPath: Path.resolve(viewsPath, 'partials'),
     isCached: process.env.NODE_ENV === 'production',
     context: {

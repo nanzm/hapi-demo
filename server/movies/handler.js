@@ -1,5 +1,9 @@
 'use strict'
 
+const Joi = require('joi')
+const Path = require('path')
+const Movie = require(Path.resolve(__dirname, '..', 'models')).Movie
+
 const Handler = {
   index: {
     plugins: {
@@ -8,7 +12,9 @@ const Handler = {
       }
     },
     handler: (request, reply) => {
-      reply.view('movies/index')
+      Movie.find().then(movies => {
+        reply.view('movies/index', { movies })
+      })
     }
   },
 
@@ -19,11 +25,20 @@ const Handler = {
       }
     },
     handler: (request, reply) => {
-      reply.view('movies/single', {
-        title: 'A Monster Calls',
-        year: 2016,
-        rating: 'PG13'
+      const slug = request.params.slug
+
+      Movie.findOne({ 'ids.slug': slug }).then(movie => {
+        if (!movie) {
+          return reply.view('404')
+        }
+
+        reply.view('movies/single', { movie }, { layout: 'movie-hero' })
       })
+    },
+    validate: {
+      params: {
+        slug: Joi.string().required()
+      }
     }
   }
 }
