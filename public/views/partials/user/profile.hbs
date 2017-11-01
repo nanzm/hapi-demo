@@ -25,14 +25,14 @@
                 <p class="control has-icons-left has-icons-right">
                     <input class="input {{#if errors.username}}is-danger{{else}}{{#if
                                  username}}is-success{{/if}}{{/if}}" type="text" placeholder="Your personal username" id="username"
-                        name="username" value="{{username}}">
+                        name="username" value="{{user.username}}">
                     <span class="icon is-small is-left">
                         <i class="fa fa-user"></i>
                     </span>
                     <span class="icon is-small is-right">
                         {{#if errors.username}}
                         <i class="fa fa-warning"></i>
-                        {{else}} {{#if username}}
+                        {{else}} {{#if user.username}}
                         <i class="fa fa-check"></i>
                         {{/if}} {{/if}}
                     </span>
@@ -46,14 +46,14 @@
                 <p class="control has-icons-left has-icons-right">
                     <input class="input {{#if errors.homepage}}is-danger{{else}}{{#if
                                  homepage}}is-success{{/if}}{{/if}}" type="text" placeholder="Your homepage" id="homepage"
-                        name="homepage" value="{{homepage}}">
+                        name="homepage" value="{{user.homepage}}">
                     <span class="icon is-small is-left">
                         <i class="fa fa-link"></i>
                     </span>
                     <span class="icon is-small is-right">
                         {{#if errors.homepage}}
                         <i class="fa fa-warning"></i>
-                        {{else}} {{#if homepage}}
+                        {{else}} {{#if user.homepage}}
                         <i class="fa fa-check"></i>
                         {{/if}} {{/if}}
                     </span>

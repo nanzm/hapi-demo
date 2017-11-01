@@ -2,17 +2,17 @@
 
 const _ = require('lodash')
 
-exports.register = function (server, options, next) {
-  server.ext('onPreResponse', function (request, reply) {
+exports.register = function(server, options, next) {
+  server.ext('onPreResponse', function(request, reply) {
     const response = request.response
 
     // rendering a view? then add the user object
     if (response.variety && _.isEqual(response.variety, 'view')) {
       response.source.context = response.source.context || {}
 
-      if (request.auth.isAuthenticated && request.user.id) {
-          response.source.context.user = request.user
-          return reply.continue()
+      if (request.auth.isAuthenticated && request.user._id) {
+        response.source.context.user = request.user
+        return reply.continue()
 
         // add user object to response data and make it available to views
         // return User.findById(request.user.id).then(function (user) {

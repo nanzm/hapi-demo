@@ -7,6 +7,11 @@ const Routes = [
     method: 'GET',
     path: '/profile',
     config: Handler.profile
+  },
+  {
+    method: 'POST',
+    path: '/profile',
+    config: Handler.update
   }
 ]
 
