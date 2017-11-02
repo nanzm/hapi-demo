@@ -1,6 +1,7 @@
 'use strict'
 
 const Joi = require('joi')
+const Boom = require('boom')
 const Path = require('path')
 const User = require(Path.resolve(__dirname, '..', 'models')).User
 const ErrorExtractor = require(Path.resolve(__dirname, '..', 'utils', 'error-extractor'))
@@ -16,6 +17,7 @@ const Handler = {
   update: {
     auth: 'session',
     handler: (request, reply) => {
+      // shortcut
       const payload = request.payload
 
       // check if the username is already chosen
@@ -23,7 +25,7 @@ const Handler = {
         if (user) {
           // create an error object that matches our error structure
           const error = Boom.create(409, 'Username is already taken', {
-            email: { message: 'Username is already taken' }
+            username: { message: 'Username is already taken' }
           })
 
           return Promise.reject(error)
