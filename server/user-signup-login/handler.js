@@ -37,43 +37,49 @@ const Handler = {
       const payload = request.payload
 
       // check whether the email address is already registered
-      User.findByEmail(payload.email).then(user => {
-        if (user) {
-          // create an error object that matches our error structure
-          const error = Boom.create(409, 'Email address is already registered', {
-            email: { message: 'Email address is already registered' }
+      User.findByEmail(payload.email)
+        .then(user => {
+          if (user) {
+            // create an error object that matches our error structure
+            const error = Boom.create(409, 'Email address is already registered', {
+              email: { message: 'Email address is already registered' }
+            })
+
+            return Promise.reject(error)
+          }
+
+          // create a new user
+          const newUser = new User({
+            email: payload.email,
+            password: payload.password,
+            scope: ['user']
           })
 
-          return Promise.reject(error)
-        }
-
-        // create a new user
-        const newUser = new User({
-          email: payload.email,
-          password: payload.password,
-          scope: [ 'user' ]
+          // don’t store the plain password in your DB, hash it!
+          return newUser.hashPassword()
         })
+        .then(user => {
+          return user.save()
+        })
+        .then(user => {
+          request.cookieAuth.set({ id: user.id })
 
-        // don’t store the plain password in your DB, hash it!
-        return newUser.hashPassword()
-      }).then(user => {
-        return user.save()
-      }).then(user => {
-        request.cookieAuth.set({ id: user.id })
+          const discoverURL = `http://${request.headers.host}/discover`
+          Mailer.send('welcome', user, '📺 Futureflix — Great to see you!', { discoverURL })
 
-        const discoverURL = `http://${request.headers.host}/discover`
-        Mailer.send('welcome', user, '📺 Futureflix — Great to see you!', { discoverURL })
+          // \o/ wohoo, sign up successful
+          return reply.view('signup-success')
+        })
+        .catch(err => {
+          const status = err.isBoom ? err.output.statusCode : 400
 
-        // \o/ wohoo, sign up successful
-        return reply.view('signup-success')
-      }).catch(err => {
-        const status = err.isBoom ? err.output.statusCode : 400
-
-        return reply.view('signup', {
-          email: payload.email,
-          errors: err.data
-        }).code(status)
-      })
+          return reply
+            .view('signup', {
+              email: payload.email,
+              errors: err.data
+            })
+            .code(status)
+        })
     },
     validate: {
       options: {
@@ -81,8 +87,14 @@ const Handler = {
         abortEarly: false
       },
       payload: {
-        email: Joi.string().email({ minDomainAtoms: 2 }).required().label('Email address'),
-        password: Joi.string().min(6).required().label('Password')
+        email: Joi.string()
+          .email({ minDomainAtoms: 2 })
+          .required()
+          .label('Email address'),
+        password: Joi.string()
+          .min(6)
+          .required()
+          .label('Password')
       },
       failAction: (request, reply, source, error) => {
         // prepare formatted error object
@@ -90,10 +102,12 @@ const Handler = {
         // remember the user’s email address and pre-fill for comfort reasons
         const email = request.payload.email
 
-        return reply.view('signup', {
-          email,
-          errors
-        }).code(400)
+        return reply
+          .view('signup', {
+            email,
+            errors
+          })
+          .code(400)
       }
     }
   },
@@ -127,28 +141,33 @@ const Handler = {
       // shortcut
       const payload = request.payload
 
-      User.findByEmail(payload.email).then(user => {
-        if (!user) {
-          const error = Boom.create(404, '', {
-            email: { message: 'Email address is not registered' }
-          })
+      User.findByEmail(payload.email)
+        .then(user => {
+          if (!user) {
+            const error = Boom.create(404, '', {
+              email: { message: 'Email address is not registered' }
+            })
 
-          return Promise.reject(error)
-        }
+            return Promise.reject(error)
+          }
 
-        return user.comparePassword(payload.password)
-      }).then(user => {
-        request.cookieAuth.set({ id: user.id })
+          return user.comparePassword(payload.password)
+        })
+        .then(user => {
+          request.cookieAuth.set({ id: user.id })
 
-        return reply.redirect('/profile')
-      }).catch(err => {
-        const status = err.isBoom ? err.output.statusCode : 400
+          return reply.redirect('/profile')
+        })
+        .catch(err => {
+          const status = err.isBoom ? err.output.statusCode : 400
 
-        return reply.view('login', {
-          email: payload.email,
-          errors: err.data
-        }).code(status)
-      })
+          return reply
+            .view('login', {
+              email: payload.email,
+              errors: err.data
+            })
+            .code(status)
+        })
     },
     validate: {
       options: {
@@ -156,8 +175,14 @@ const Handler = {
         abortEarly: false
       },
       payload: {
-        email: Joi.string().email({ minDomainAtoms: 2 }).required().label('Email address'),
-        password: Joi.string().min(6).required().label('Password')
+        email: Joi.string()
+          .email({ minDomainAtoms: 2 })
+          .required()
+          .label('Email address'),
+        password: Joi.string()
+          .min(6)
+          .required()
+          .label('Password')
       },
       failAction: (request, reply, source, error) => {
         // prepare formatted error object
@@ -165,10 +190,12 @@ const Handler = {
         // remember the user’s email address and pre-fill for comfort reasons
         const email = request.payload.email
 
-        return reply.view('login', {
-          email,
-          errors
-        }).code(400)
+        return reply
+          .view('login', {
+            email,
+            errors
+          })
+          .code(400)
       }
     }
   },
@@ -198,33 +225,39 @@ const Handler = {
       // shortcut
       const payload = request.payload
 
-      return User.findByEmail(payload.email).then(user => {
-        if (!user) {
-          const error = Boom.create(404, 'Email address is not registered', {
-            email: { message: 'Email address is not registered' }
-          })
+      return User.findByEmail(payload.email)
+        .then(user => {
+          if (!user) {
+            const error = Boom.create(404, 'Email address is not registered', {
+              email: { message: 'Email address is not registered' }
+            })
 
-          return Promise.reject(error)
-        }
+            return Promise.reject(error)
+          }
 
-        return user.resetPassword()
-      }).then(({ passwordResetToken, user }) => {
-        // encode email address to avoid issues with characters like "@"
-        const encodedEmail = encodeURIComponent(user.email)
-        // compose the user specific password reset URL
-        const resetURL = `http://${request.headers.host}/reset-password/${encodedEmail}/${passwordResetToken}`
+          return user.resetPassword()
+        })
+        .then(({ passwordResetToken, user }) => {
+          // encode email address to avoid issues with characters like "@"
+          const encodedEmail = encodeURIComponent(user.email)
+          // compose the user specific password reset URL
+          const resetURL = `http://${request.headers.host}/reset-password/${encodedEmail}/${passwordResetToken}`
 
-        return Mailer.send('password-reset', user, '📺 Futureflix - Password Reset', { resetURL })
-      }).then(() => {
-        return reply.view('forgot-password-email-sent')
-      }).catch(err => {
-        const status = err.isBoom ? err.output.statusCode : 400
+          return Mailer.send('password-reset', user, '📺 Futureflix - Password Reset', { resetURL })
+        })
+        .then(() => {
+          return reply.view('forgot-password-email-sent')
+        })
+        .catch(err => {
+          const status = err.isBoom ? err.output.statusCode : 400
 
-        return reply.view('forgot-password', {
-          email: payload.email,
-          errors: err.data
-        }).code(status)
-      })
+          return reply
+            .view('forgot-password', {
+              email: payload.email,
+              errors: err.data
+            })
+            .code(status)
+        })
     },
     validate: {
       options: {
@@ -232,16 +265,21 @@ const Handler = {
         abortEarly: false
       },
       payload: {
-        email: Joi.string().email({ minDomainAtoms: 2 }).required().label('Email address'),
+        email: Joi.string()
+          .email({ minDomainAtoms: 2 })
+          .required()
+          .label('Email address')
       },
       failAction: (request, reply, source, error) => {
         const errors = ErrorExtractor(error)
         const email = request.payload.email
 
-        return reply.view('forgot-password', {
-          email,
-          errors
-        }).code(400)
+        return reply
+          .view('forgot-password', {
+            email,
+            errors
+          })
+          .code(400)
       }
     }
   },
@@ -261,15 +299,24 @@ const Handler = {
     },
     validate: {
       params: {
-        email: Joi.string().email({ minDomainAtoms: 2 }).required().trim().label('Email address'),
-        resetToken: Joi.string().required().trim().label('Password reset token')
+        email: Joi.string()
+          .email({ minDomainAtoms: 2 })
+          .required()
+          .trim()
+          .label('Email address'),
+        resetToken: Joi.string()
+          .required()
+          .trim()
+          .label('Password reset token')
       },
       failAction: (request, reply, source, error) => {
         const errors = ErrorExtractor(error)
 
-        return reply.view('reset-password', {
-          errors
-        }).code(400)
+        return reply
+          .view('reset-password', {
+            errors
+          })
+          .code(400)
       }
     }
   },
@@ -289,36 +336,41 @@ const Handler = {
       const params = request.params
       const email = decodeURIComponent(params.email)
 
-      return User.findByEmail(email).then(user => {
-        if (!user) {
-          const error = Boom.create(400, '', {
-            resetToken: { message: 'Sorry, we can’t find a user with the credentials.' }
-          })
+      return User.findByEmail(email)
+        .then(user => {
+          if (!user) {
+            const error = Boom.create(400, '', {
+              resetToken: { message: 'Sorry, we can’t find a user with the credentials.' }
+            })
 
-          return Promise.reject(error)
-        }
+            return Promise.reject(error)
+          }
 
-        return user.comparePasswordResetToken(params.resetToken)
-      }).then(user => {
-        // remove password reset related data from user
-        user.passwordResetToken = undefined
-        user.passwordResetDeadline = undefined
+          return user.comparePasswordResetToken(params.resetToken)
+        })
+        .then(user => {
+          // remove password reset related data from user
+          user.passwordResetToken = undefined
+          user.passwordResetDeadline = undefined
 
-        // set new password
-        user.password = request.payload.password
+          // set new password
+          user.password = request.payload.password
 
-        return user.hashPassword()
-      }).then(user => {
-        return user.save()
-      }).then(user => {
-        request.cookieAuth.set({ id: user.id })
+          return user.hashPassword()
+        })
+        .then(user => {
+          return user.save()
+        })
+        .then(user => {
+          request.cookieAuth.set({ id: user.id })
 
-        return reply.view('reset-password-success')
-      }).catch(err => {
-        const status = err.isBoom ? err.output.statusCode : 400
+          return reply.view('reset-password-success')
+        })
+        .catch(err => {
+          const status = err.isBoom ? err.output.statusCode : 400
 
-        return reply.view('reset-password', { errors: err.data }).code(status)
-      })
+          return reply.view('reset-password', { errors: err.data }).code(status)
+        })
     },
     validate: {
       options: {
@@ -326,16 +378,31 @@ const Handler = {
         abortEarly: false
       },
       params: {
-        email: Joi.string().email({ minDomainAtoms: 2 }).required().trim().label('Email address'),
-        resetToken: Joi.string().required().trim().label('Password reset token')
+        email: Joi.string()
+          .email({ minDomainAtoms: 2 })
+          .required()
+          .trim()
+          .label('Email address'),
+        resetToken: Joi.string()
+          .required()
+          .trim()
+          .label('Password reset token')
       },
       payload: {
-        password: Joi.string().min(6).required().label('Password'),
-        passwordConfirm: Joi.string().min(6).valid(Joi.ref('password')).required().options({
-          language: {
-            any: { allowOnly: 'must match password' }
-          }
-        }).label('Confirm password')
+        password: Joi.string()
+          .min(6)
+          .required()
+          .label('Password'),
+        passwordConfirm: Joi.string()
+          .min(6)
+          .valid(Joi.ref('password'))
+          .required()
+          .options({
+            language: {
+              any: { allowOnly: 'must match password' }
+            }
+          })
+          .label('Confirm password')
       },
       failAction: (request, reply, source, error) => {
         const errors = ErrorExtractor(error)

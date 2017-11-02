@@ -39,7 +39,13 @@ const Handler = {
           }
         },
         {
-          new: true // tells Mongoose to return the post-update document
+          // returns the post-update document
+          new: true
+
+          // applies validators defined in the User model.
+          // -> this option is off by default due to several caveats
+          // -> check this section for more information: http://mongoosejs.com/docs/validation.html#update-validators
+          // runValidators: true
         }
       ).then(user => {
         request.user = user
