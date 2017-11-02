@@ -71,6 +71,7 @@ const Handler = {
           return reply.view('signup-success')
         })
         .catch(err => {
+          console.log(err)
           const status = err.isBoom ? err.output.statusCode : 400
 
           return reply
@@ -97,6 +98,7 @@ const Handler = {
           .label('Password')
       },
       failAction: (request, reply, source, error) => {
+        console.log(error)
         // prepare formatted error object
         const errors = ErrorExtractor(error)
         // remember the user’s email address and pre-fill for comfort reasons

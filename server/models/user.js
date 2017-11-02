@@ -32,8 +32,9 @@ const userSchema = new Schema({
   name: String,
   passwordResetToken: {
     type: String,
-    unique: true,
-    trim: true
+    trim: true,
+    unique: true, // creates an index in MongoDB, making sure for unique values
+    sparse: true // this makes sure the unique index applies to not null values only (= unique if not null)
   },
   passwordResetDeadline: Date,
   authToken: {
@@ -53,14 +54,14 @@ const userSchema = new Schema({
 /**
  * Statics
  */
-userSchema.statics.findByEmail = function(email) {
+userSchema.statics.findByEmail = function (email) {
   return this.findOne({ email })
 }
 
 /**
  * Instance Methods
  */
-userSchema.methods.comparePassword = function(candidatePassword) {
+userSchema.methods.comparePassword = function (candidatePassword) {
   const self = this
 
   return Bcrypt.compare(candidatePassword, self.password)
@@ -80,7 +81,7 @@ userSchema.methods.comparePassword = function(candidatePassword) {
     })
 }
 
-userSchema.methods.hashPassword = function() {
+userSchema.methods.hashPassword = function () {
   const self = this
 
   return Bcrypt.genSalt(SALT_WORK_FACTOR)
@@ -96,12 +97,12 @@ userSchema.methods.hashPassword = function() {
     })
 }
 
-userSchema.methods.generateAuthToken = function() {
+userSchema.methods.generateAuthToken = function () {
   this.authToken = Crypto.randomBytes(20).toString('hex')
   return Promise.resolve(this)
 }
 
-userSchema.methods.resetPassword = function() {
+userSchema.methods.resetPassword = function () {
   let self = this
   const passwordResetToken = Crypto.randomBytes(20).toString('hex')
 
@@ -122,7 +123,7 @@ userSchema.methods.resetPassword = function() {
     })
 }
 
-userSchema.methods.comparePasswordResetToken = function(resetToken) {
+userSchema.methods.comparePasswordResetToken = function (resetToken) {
   const self = this
 
   return Bcrypt.compare(resetToken, self.passwordResetToken)
@@ -145,7 +146,7 @@ userSchema.methods.comparePasswordResetToken = function(resetToken) {
 /**
  * Virtuals
  */
-userSchema.virtual('gravatar').get(function() {
+userSchema.virtual('gravatar').get(function () {
   // create the MD5 hash from the user’s email address
   const hash = MD5(this.email)
   // return the ready-to-load avatar URL

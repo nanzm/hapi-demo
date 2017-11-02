@@ -21,16 +21,28 @@ const Handler = {
       const payload = request.payload
 
       // check if the username is already chosen
-      User.findOne({ username: payload.username, email: { $ne: request.user.email } }).then(user => {
-        if (user) {
-          // create an error object that matches our error structure
-          const error = Boom.create(409, 'Username is already taken', {
-            username: { message: 'Username is already taken' }
-          })
+      User.findOne({ username: payload.username, email: { $ne: request.user.email } })
+        .then(user => {
+          if (user) {
+            // create an error object that matches our error structure
+            const error = Boom.create(409, 'Username is already taken', {
+              username: { message: 'Username is already taken' }
+            })
 
-          return Promise.reject(error)
-        }
-      })
+            return Promise.reject(error)
+          }
+        })
+        .catch(err => {
+          const status = err.isBoom ? err.output.statusCode : 400
+          const user = Object.assign(request.user, { username: payload.username })
+
+          return reply
+            .view('user/profile', {
+              user,
+              errors: err.data
+            })
+            .code(status)
+        })
 
       // process the actual user update
       User.findOneAndUpdate(
@@ -50,10 +62,21 @@ const Handler = {
           // -> check this section for more information: http://mongoosejs.com/docs/validation.html#update-validators
           // runValidators: true
         }
-      ).then(user => {
-        request.user = user
-        reply.view('user/profile')
-      })
+      )
+        .then(user => {
+          request.user = user
+          reply.view('user/profile')
+        })
+        .catch(err => {
+          const status = err.isBoom ? err.output.statusCode : 400
+
+          return reply
+            .view('user/profile', {
+              user: request.user,
+              errors: err.data
+            })
+            .code(status)
+        })
     },
     validate: {
       payload: {
