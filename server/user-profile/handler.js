@@ -3,6 +3,7 @@
 const Joi = require('joi')
 const Path = require('path')
 const User = require(Path.resolve(__dirname, '..', 'models')).User
+const ErrorExtractor = require(Path.resolve(__dirname, '..', 'utils', 'error-extractor'))
 
 const Handler = {
   profile: {
@@ -55,14 +56,32 @@ const Handler = {
     validate: {
       payload: {
         username: Joi.string()
+          .label('Username')
           .optional()
           .allow('')
           .allow(null),
         homepage: Joi.string()
+          .label('Homepage')
           .optional()
           .allow('')
           .allow(null)
           .uri()
+      },
+      failAction: (request, reply, source, error) => {
+        // prepare formatted error object
+        const errors = ErrorExtractor(error)
+
+        const username = request.payload.username
+        const homepage = request.payload.homepage
+
+        const user = Object.assign(request.user, { username, homepage })
+
+        return reply
+          .view('user/profile', {
+            user,
+            errors
+          })
+          .code(400)
       }
     }
   }
