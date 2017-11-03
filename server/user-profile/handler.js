@@ -21,7 +21,7 @@ const Handler = {
       const payload = request.payload
 
       // check if the username is already chosen
-      User.findOne({ username: payload.username, email: { $ne: request.user.email } })
+      return User.findOne({ username: payload.username, email: { $ne: request.user.email } })
         .then(user => {
           if (user) {
             // create an error object that matches our error structure
@@ -31,6 +31,33 @@ const Handler = {
 
             return Promise.reject(error)
           }
+
+          return Promise.resolve()
+        })
+        .then(() => {
+          // process the actual user update
+          return User.findOneAndUpdate(
+            { _id: request.user._id }, // filters the document
+            {
+              $set: {
+                username: payload.username,
+                homepage: payload.homepage
+              }
+            },
+            {
+              // returns the post-update document
+              new: true
+
+              // applies validators defined in the User model.
+              // -> this option is off by default due to several caveats
+              // -> check this section for more information: http://mongoosejs.com/docs/validation.html#update-validators
+              // runValidators: true
+            }
+          )
+        })
+        .then(user => {
+          request.user = user
+          reply.view('user/profile')
         })
         .catch(err => {
           const status = err.isBoom ? err.output.statusCode : 400
@@ -39,40 +66,6 @@ const Handler = {
           return reply
             .view('user/profile', {
               user,
-              errors: err.data
-            })
-            .code(status)
-        })
-
-      // process the actual user update
-      User.findOneAndUpdate(
-        { _id: request.user._id }, // filters the document
-        {
-          $set: {
-            username: payload.username,
-            homepage: payload.homepage
-          }
-        },
-        {
-          // returns the post-update document
-          new: true
-
-          // applies validators defined in the User model.
-          // -> this option is off by default due to several caveats
-          // -> check this section for more information: http://mongoosejs.com/docs/validation.html#update-validators
-          // runValidators: true
-        }
-      )
-        .then(user => {
-          request.user = user
-          reply.view('user/profile')
-        })
-        .catch(err => {
-          const status = err.isBoom ? err.output.statusCode : 400
-
-          return reply
-            .view('user/profile', {
-              user: request.user,
               errors: err.data
             })
             .code(status)
@@ -96,9 +89,10 @@ const Handler = {
         // prepare formatted error object
         const errors = ErrorExtractor(error)
 
-        const username = request.payload.username
-        const homepage = request.payload.homepage
+        // grab incoming payload values
+        const { username, homepage } = request.payload
 
+        // merge existing user data with incoming values
         const user = Object.assign(request.user, { username, homepage })
 
         return reply
