@@ -32,9 +32,6 @@ const Handler = {
             return Promise.reject(error)
           }
 
-          return Promise.resolve()
-        })
-        .then(() => {
           // process the actual user update
           return User.findOneAndUpdate(
             { _id: request.user._id }, // filters the document
