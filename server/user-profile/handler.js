@@ -21,7 +21,7 @@ const Handler = {
       const payload = request.payload
 
       // check if the username is already chosen
-      return User.findOne({ username: payload.username, email: { $ne: request.user.email } })
+      return User.findOne({ username: payload.username, _id: { $ne: request.user._id } })
         .then(user => {
           if (user) {
             // create an error object that matches our error structure
@@ -33,6 +33,8 @@ const Handler = {
           }
 
           // process the actual user update
+          // you can also use "findByIdAndUpdate"
+          // "findOneAndUpdate" just gives you more filter options
           return User.findOneAndUpdate(
             { _id: request.user._id }, // filters the document
             {
