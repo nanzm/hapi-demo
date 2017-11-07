@@ -28,7 +28,11 @@ const userSchema = new Schema({
     unique: true,
     trim: true
   },
-  homepage: String,
+  homepage: {
+    type: String,
+    unique: true,
+    trim: true
+  },
   name: String,
   passwordResetToken: {
     type: String,

@@ -74,11 +74,13 @@ const Handler = {
       payload: {
         username: Joi.string()
           .label('Username')
+          .trim()
           .optional()
           .allow('')
           .allow(null),
         homepage: Joi.string()
           .label('Homepage')
+          .trim()
           .optional()
           .allow('')
           .allow(null)
