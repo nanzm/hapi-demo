@@ -10,7 +10,7 @@ body {
 
 button.button,
 input[type='submit'].button {
-  font-family: Rubik, sans-serif;
+  font-family: 'Inter UI', sans-serif;
   font-weight: 500;
 }
 
