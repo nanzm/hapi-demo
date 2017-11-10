@@ -42,7 +42,6 @@ server.register(
       options: {
         showErrors: process.env.NODE_ENV !== 'production',
         useYouch: true
-        //template: 'server-error'
       }
     },
     {
