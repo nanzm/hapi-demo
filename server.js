@@ -32,6 +32,7 @@ server.register(
     {
       register: require('crumb'),
       options: {
+        key: 'keepMeSafeFromCsrf',
         cookieOptions: {
           isSecure: process.env.NODE_ENV === 'production'
         }
