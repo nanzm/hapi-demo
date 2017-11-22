@@ -27,7 +27,7 @@ const Handler = {
     handler: (request, reply) => {
       const slug = request.params.slug
 
-      Movie.findOne({ 'ids.slug': slug }).then(movie => {
+      return Movie.findOne({ 'ids.slug': slug }).then(movie => {
         if (!movie) {
           return reply.view('404')
         }

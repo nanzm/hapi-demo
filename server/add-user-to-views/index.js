@@ -2,8 +2,8 @@
 
 const _ = require('lodash')
 
-exports.register = function(server, options, next) {
-  server.ext('onPreResponse', function(request, reply) {
+exports.register = (server, options, next) => {
+  server.ext('onPreResponse', (request, reply) => {
     const response = request.response
 
     // rendering a view? then add the user object
