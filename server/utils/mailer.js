@@ -7,11 +7,13 @@ const Nodemailer = require('nodemailer')
 const Handlebars = require('handlebars')
 const htmlToText = require('html-to-text')
 const PostmarkTransport = require('nodemailer-postmark-transport')
-const Transporter = Nodemailer.createTransport(PostmarkTransport({
-  auth: {
-    apiKey: process.env.POSTMARK_API_KEY
-  }
-}))
+const Transporter = Nodemailer.createTransport(
+  PostmarkTransport({
+    auth: {
+      apiKey: process.env.POSTMARK_API_KEY
+    }
+  })
+)
 const Templates = Path.resolve(__dirname, '..', 'email-templates')
 
 /**
