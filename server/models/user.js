@@ -9,6 +9,12 @@ const Crypto = require('crypto')
 const Validator = require('validator')
 const Slug = require('slugify')
 const _ = require('lodash')
+const Haikunator = require('haikunator')
+
+// initialize haikunator to generate funky usernames
+// initialize to not append numbers to generated names
+// e.g. "patient-king" instead of "patient-king-4711"
+const haikunator = new Haikunator({ defaults: { tokenLength: 0 } })
 
 const SALT_WORK_FACTOR = 12
 
@@ -29,7 +35,8 @@ const userSchema = new Schema(
     username: {
       type: String,
       unique: true,
-      trim: true
+      trim: true,
+      sparse: true // this makes sure the unique index applies to not null values only (= unique if not null)
     },
     homepage: {
       type: String,
@@ -63,40 +70,36 @@ const userSchema = new Schema(
 )
 
 /**
-* pre-save Model hook to generate a unique username
-*/
+ * Mongoose Middlewares
+ */
+
+/**
+ * pre-save hook to generate a unique username
+ */
 userSchema.pre('save', function (next) {
-  if (this.isModified('username')) {
-    // stop here, because username wasn’t modified
+  if (this.isNew) {
+    // split email address at @ symbol and only return the first part
+    const email = _.first(_.split(this.email, '@', 1))
+
+    // slugify the first part of the email address to generate the username
+    this.username = Slug(email)
+
+    // find existing user with the same username
+    this.constructor.find({ username: this.username }).then(existingUser => {
+      // TODO this can lead to duplicated keys if haikunate generates the same slugs
+      if (existingUser) {
+        this.username = `${this.username}-${haikunator.haikunate()}`
+      }
+
+      // tell mongoose to proceed
+      next()
+    })
+  } else {
+    // save on an existing document, don't change the username
+    // skip middelware by calling next()
+    // stop here by returning
     return next()
   }
-
-  // split email address at @ symbol and only return the first part
-  const email = _.first(_.split(this.email, '@', 1))
-
-  // generate slug from username
-  this.username = Slug(email)
-
-  console.log(this.username)
-  console.log(email)
-
-  // find other stores that have a slug of wes, wes-1, wes-2
-  const usernameRegEx = new RegExp(`^(${this.username})((-[0-9]*$)?)$`, 'i')
-
-  this.constructor.find({ username: usernameRegEx }).then(existingUsers => {
-    // TODO this can lead to duplicated keys
-    // say there are usernames for 'marcus', 'marcus-1' and 'marcus-2'
-    // if 'marcus-1' deletes the account, the search for existing users results in length of 2
-    // trying to set the username to 'marcus-2' will cause a duplicate
-    if (existingUsers.length) {
-      console.log('puh, username exists')
-      this.username = `${this.username}-${existingUsers.length + 1}`
-      console.log('new one:')
-      console.log(this.username)
-    }
-
-    next()
-  })
 })
 
 /**
@@ -170,7 +173,9 @@ userSchema.methods.resetPassword = function () {
       })
     })
     .catch(() => {
-      return Promise.reject(Boom.badRequest('An error occurred while hashing your password reset token'))
+      return Promise.reject(
+        Boom.badRequest('An error occurred while hashing your password reset token')
+      )
     })
 }
 
@@ -183,7 +188,9 @@ userSchema.methods.comparePasswordResetToken = function (resetToken) {
         return Promise.resolve(self)
       }
 
-      return Promise.reject(Boom.badRequest('Your password reset token is invalid, please request a new one.'))
+      return Promise.reject(
+        Boom.badRequest('Your password reset token is invalid, please request a new one.')
+      )
     })
     .catch(err => {
       err = Boom.create(400, err.message, {
