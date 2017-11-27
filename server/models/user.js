@@ -82,7 +82,7 @@ userSchema.pre('save', function(next) {
 
     // find existing user with the same username
     this.constructor.findOne({ username: this.username }).then(existingUser => {
-      // TODO this can lead to duplicated keys if haikunate generates the same slugs
+      // TODO this can lead to duplicated keys if haikunate generates the same slug twice
       if (existingUser) {
         this.username = `${this.username}-${haikunator.haikunate()}`
       }
