@@ -7,7 +7,6 @@ const Boom = require('boom')
 const MD5 = require('md5')
 const Crypto = require('crypto')
 const Validator = require('validator')
-const Slug = require('slugify')
 const _ = require('lodash')
 const Haikunator = require('haikunator')
 
@@ -82,7 +81,7 @@ userSchema.pre('save', function (next) {
     const email = _.first(_.split(this.email, '@', 1))
 
     // slugify the first part of the email address to generate the username
-    this.username = Slug(email)
+    this.username = email
 
     // find existing user with the same username
     this.constructor.findOne({ username: this.username }).then(existingUser => {
