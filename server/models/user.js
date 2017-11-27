@@ -60,7 +60,7 @@ const userSchema = new Schema(
     },
     scope: [String]
     // hearts: [
-    //   { type: Mongoose.Schema.ObjectId, ref: 'Store' }
+    //   { type: Mongoose.Schema.ObjectId, ref: 'Movie' }
     // ]
   },
   {
@@ -173,9 +173,7 @@ userSchema.methods.resetPassword = function () {
       })
     })
     .catch(() => {
-      return Promise.reject(
-        Boom.badRequest('An error occurred while hashing your password reset token')
-      )
+      return Promise.reject(Boom.badRequest('An error occurred while hashing your password reset token'))
     })
 }
 
@@ -188,9 +186,7 @@ userSchema.methods.comparePasswordResetToken = function (resetToken) {
         return Promise.resolve(self)
       }
 
-      return Promise.reject(
-        Boom.badRequest('Your password reset token is invalid, please request a new one.')
-      )
+      return Promise.reject(Boom.badRequest('Your password reset token is invalid, please request a new one.'))
     })
     .catch(err => {
       err = Boom.create(400, err.message, {
