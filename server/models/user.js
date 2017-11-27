@@ -75,13 +75,10 @@ const userSchema = new Schema(
 /**
  * pre-save hook to generate a unique username
  */
-userSchema.pre('save', function (next) {
+userSchema.pre('save', function(next) {
   if (this.isNew) {
     // split email address at @ symbol and only return the first part
-    const email = _.first(_.split(this.email, '@', 1))
-
-    // slugify the first part of the email address to generate the username
-    this.username = email
+    this.username = _.first(_.split(this.email, '@', 1))
 
     // find existing user with the same username
     this.constructor.findOne({ username: this.username }).then(existingUser => {
@@ -107,14 +104,14 @@ userSchema.pre('save', function (next) {
  * use the “User” model in your app and static methods to find documents
  * like: User.findByEmail('marcus@futurestud.io').then(user => {})
  */
-userSchema.statics.findByEmail = function (email) {
+userSchema.statics.findByEmail = function(email) {
   return this.findOne({ email })
 }
 
 /**
  * Instance Methods
  */
-userSchema.methods.comparePassword = function (candidatePassword) {
+userSchema.methods.comparePassword = function(candidatePassword) {
   const self = this
 
   return Bcrypt.compare(candidatePassword, self.password)
@@ -134,7 +131,7 @@ userSchema.methods.comparePassword = function (candidatePassword) {
     })
 }
 
-userSchema.methods.hashPassword = function () {
+userSchema.methods.hashPassword = function() {
   const self = this
 
   return Bcrypt.genSalt(SALT_WORK_FACTOR)
@@ -150,12 +147,12 @@ userSchema.methods.hashPassword = function () {
     })
 }
 
-userSchema.methods.generateAuthToken = function () {
+userSchema.methods.generateAuthToken = function() {
   this.authToken = Crypto.randomBytes(20).toString('hex')
   return Promise.resolve(this)
 }
 
-userSchema.methods.resetPassword = function () {
+userSchema.methods.resetPassword = function() {
   let self = this
   const passwordResetToken = Crypto.randomBytes(20).toString('hex')
 
@@ -176,7 +173,7 @@ userSchema.methods.resetPassword = function () {
     })
 }
 
-userSchema.methods.comparePasswordResetToken = function (resetToken) {
+userSchema.methods.comparePasswordResetToken = function(resetToken) {
   const self = this
 
   return Bcrypt.compare(resetToken, self.passwordResetToken)
@@ -199,7 +196,7 @@ userSchema.methods.comparePasswordResetToken = function (resetToken) {
 /**
  * Virtuals
  */
-userSchema.virtual('gravatar').get(function () {
+userSchema.virtual('gravatar').get(function() {
   // create the MD5 hash from the user’s email address
   const hash = MD5(this.email)
   // return the ready-to-load avatar URL
