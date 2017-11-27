@@ -12,7 +12,7 @@ const Haikunator = require('haikunator')
 
 // initialize haikunator to generate funky usernames
 // initialize to not append numbers to generated names
-// e.g. "patient-king" instead of "patient-king-4711"
+// e.g. "proud-mode" instead of "proud-mode-4711"
 const haikunator = new Haikunator({
   defaults: { tokenLength: 0 }
 })
