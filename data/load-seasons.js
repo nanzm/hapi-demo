@@ -51,6 +51,13 @@ if (process.argv) {
 
           return seasons.map(season => {
             season.ids.show = show.ids.trakt
+
+            const episodes = season.episodes.map(episode => {
+              episode.ids.season = season.ids.trakt
+              return episode
+            })
+
+            season.episodes = episodes
             return season
           })
         })

@@ -56,7 +56,11 @@ const showSchema = new Schema(
 showSchema.virtual('seasons', {
   ref: 'Season',
   localField: 'ids.trakt',
-  foreignField: 'ids.show'
+  foreignField: 'ids.show',
+
+  populate: {
+    path: 'episodes'
+  }
 })
 
 function autopopulate(next) {
