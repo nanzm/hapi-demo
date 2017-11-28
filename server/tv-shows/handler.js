@@ -1,5 +1,8 @@
 'use strict'
 
+const Path = require('path')
+const Show = require(Path.resolve(__dirname, '..', 'models')).Show
+
 const Handler = {
   index: {
     plugins: {
@@ -7,8 +10,10 @@ const Handler = {
         redirectTo: false
       }
     },
-    handler: function (request, reply) {
-      reply.view('tv-shows/index')
+    handler: function(request, reply) {
+      Show.find().then(shows => {
+        reply.view('tv-shows/index', { shows })
+      })
     }
   },
 
@@ -18,7 +23,7 @@ const Handler = {
         redirectTo: false
       }
     },
-    handler: function (request, reply) {
+    handler: function(request, reply) {
       reply.view('tv-shows/single', {
         title: 'A Monster Calls',
         year: 2016,
@@ -33,7 +38,7 @@ const Handler = {
         redirectTo: false
       }
     },
-    handler: function (request, reply) {
+    handler: function(request, reply) {
       reply.view('tv-shows/index')
     }
   },
@@ -44,7 +49,7 @@ const Handler = {
         redirectTo: false
       }
     },
-    handler: function (request, reply) {
+    handler: function(request, reply) {
       reply.view('tv-shows/popular', {
         title: 'A Monster Calls',
         year: 2016,
