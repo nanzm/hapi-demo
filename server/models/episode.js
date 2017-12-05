@@ -33,4 +33,10 @@ const episodeSchema = new Schema(
   }
 )
 
+episodeSchema.methods.toJSON = function() {
+  let obj = this.toObject()
+  delete obj.__v
+  return obj
+}
+
 module.exports = Mongoose.model('Episode', episodeSchema)

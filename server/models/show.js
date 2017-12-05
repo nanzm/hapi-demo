@@ -71,6 +71,12 @@ function autopopulate(next) {
 showSchema.pre('find', autopopulate)
 showSchema.pre('findOne', autopopulate)
 
+showSchema.methods.toJSON = function() {
+  let obj = this.toObject()
+  delete obj.__v
+  return obj
+}
+
 // add plugin to find random movies
 showSchema.plugin(MongooseRandom)
 

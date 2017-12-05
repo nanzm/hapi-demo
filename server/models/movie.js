@@ -37,6 +37,12 @@ const movieSchema = new Schema({
   certification: String
 })
 
+movieSchema.methods.toJSON = function() {
+  let obj = this.toObject()
+  delete obj.__v
+  return obj
+}
+
 // add plugin to find random movies
 movieSchema.plugin(MongooseRandom)
 

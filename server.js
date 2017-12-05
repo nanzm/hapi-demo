@@ -67,6 +67,9 @@ server.register(
       register: require('./server/add-user-to-views')
     },
     {
+      register: require('./server/api')
+    },
+    {
       register: require('./server/user-signup-login')
     },
     {

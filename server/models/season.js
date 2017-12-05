@@ -49,4 +49,10 @@ function autopopulate(next) {
 seasonSchema.pre('find', autopopulate)
 seasonSchema.pre('findOne', autopopulate)
 
+seasonSchema.methods.toJSON = function() {
+  let obj = this.toObject()
+  delete obj.__v
+  return obj
+}
+
 module.exports = Mongoose.model('Season', seasonSchema)
