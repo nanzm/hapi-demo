@@ -60,8 +60,12 @@ const showSchema = new Schema(
 // the related episodes as well (defined in the ”season” model)
 showSchema.virtual('seasons', {
   ref: 'Season',
-  localField: 'ids.trakt',
-  foreignField: 'ids.show'
+  localField: '_id',
+  foreignField: 'ids.show',
+
+  populate: {
+    path: 'episodes'
+  }
 })
 
 // this is a helper function to populate “seasons” on queries

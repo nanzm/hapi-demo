@@ -16,7 +16,7 @@ const seasonSchema = new Schema(
       imdb: String,
       tmdb: Number,
       tvrage: Number,
-      show: { type: Number, ref: 'Show' }
+      show: { type: Schema.Types.ObjectId, ref: 'Show' }
     },
     number: Number,
     overview: String,
@@ -40,7 +40,7 @@ const seasonSchema = new Schema(
 // to remove virtuals when sending to the client
 seasonSchema.virtual('episodes', {
   ref: 'Episode',
-  localField: 'ids.trakt',
+  localField: '_id',
   foreignField: 'ids.season'
 })
 
