@@ -27,11 +27,11 @@ const Handler = {
 
         if (user) {
           // create an error object that matches our error structure
-          const error = Boom.create(409, 'Username is already taken', {
-            username: { message: 'Username is already taken' }
+          const message = 'Username is already taken'
+          throw new Boom(message, {
+            statusCode: 409,
+            data: { username: { message } }
           })
-
-          return Promise.reject(error)
         }
 
         // process the actual user update
