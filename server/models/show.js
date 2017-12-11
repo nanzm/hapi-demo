@@ -53,7 +53,7 @@ const showSchema = new Schema(
 )
 
 // use a virtual property for the “seasons” relation
-// benefit from Mongoose’s “toJSON” configuration
+// allows you to benefit from Mongoose’s “toJSON” configuration
 // to remove seasons before sending them to the client
 // this won’t bloat the JSON with ALL the data
 // because this “seasons” population fetches
@@ -61,11 +61,7 @@ const showSchema = new Schema(
 showSchema.virtual('seasons', {
   ref: 'Season',
   localField: '_id',
-  foreignField: 'ids.show',
-
-  populate: {
-    path: 'episodes'
-  }
+  foreignField: 'ids.show'
 })
 
 // this is a helper function to populate “seasons” on queries
