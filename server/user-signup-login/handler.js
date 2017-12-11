@@ -13,12 +13,12 @@ const Handler = {
         redirectTo: false
       }
     },
-    handler: (request, reply) => {
+    handler: (request, h) => {
       if (request.auth.isAuthenticated) {
-        return reply.redirect('/profile')
+        return h.redirect('/profile')
       }
 
-      reply.view('signup')
+      return h.view('signup')
     }
   },
 
@@ -28,59 +28,55 @@ const Handler = {
         redirectTo: false
       }
     },
-    handler: (request, reply) => {
+    handler: async (request, h) => {
       if (request.auth.isAuthenticated) {
-        return reply.redirect('/profile')
+        return h.redirect('/profile')
       }
 
       // shortcut
       const payload = request.payload
 
-      // check whether the email address is already registered
-      User.findByEmail(payload.email)
-        .then(user => {
-          if (user) {
-            // create an error object that matches our error structure
-            const error = Boom.create(409, 'Email address is already registered', {
-              email: { message: 'Email address is already registered' }
-            })
+      try {
+        // check whether the email address is already registered
+        let user = await User.findByEmail(payload.email)
 
-            return Promise.reject(error)
-          }
-
-          // create a new user
-          const newUser = new User({
-            email: payload.email,
-            password: payload.password,
-            scope: ['user']
+        if (user) {
+          // create an error object that matches our error structure
+          const message = 'Email address is already registered'
+          throw new Boom(message, {
+            statusCode: 409,
+            data: { email: { message } }
           })
+        }
 
-          // don’t store the plain password in your DB, hash it!
-          return newUser.hashPassword()
+        // create a new user
+        const newUser = new User({
+          email: payload.email,
+          password: payload.password,
+          scope: ['user']
         })
-        .then(user => {
-          return user.save()
-        })
-        .then(user => {
-          request.cookieAuth.set({ id: user.id })
 
-          const discoverURL = `http://${request.headers.host}/discover`
-          Mailer.send('welcome', user, '📺 Futureflix — Great to see you!', { discoverURL })
+        // don’t store the plain password in your DB, hash it!
+        user = await newUser.hashPassword()
+        user = await user.save()
 
-          // \o/ wohoo, sign up successful
-          return reply.view('signup-success')
-        })
-        .catch(err => {
-          console.log(err)
-          const status = err.isBoom ? err.output.statusCode : 400
+        request.cookieAuth.set({ id: user.id })
 
-          return reply
-            .view('signup', {
-              email: payload.email,
-              errors: err.data
-            })
-            .code(status)
-        })
+        const discoverURL = `http://${request.headers.host}/discover`
+        Mailer.send('welcome', user, '📺 Futureflix — Great to see you!', { discoverURL })
+
+        // \o/ wohoo, sign up successful
+        return h.view('signup-success')
+      } catch (err) {
+        const status = err.isBoom ? err.output.statusCode : 400
+
+        return h
+          .view('signup', {
+            email: payload.email,
+            errors: err.data
+          })
+          .code(status)
+      }
     },
     validate: {
       options: {
@@ -97,19 +93,19 @@ const Handler = {
           .required()
           .label('Password')
       },
-      failAction: (request, reply, source, error) => {
-        console.log(error)
+      failAction: (request, h, error) => {
         // prepare formatted error object
         const errors = ErrorExtractor(error)
         // remember the user’s email address and pre-fill for comfort reasons
         const email = request.payload.email
 
-        return reply
+        return h
           .view('signup', {
             email,
             errors
           })
           .code(400)
+          .takeover()
       }
     }
   },
@@ -120,12 +116,12 @@ const Handler = {
         redirectTo: false
       }
     },
-    handler: (request, reply) => {
+    handler: (request, h) => {
       if (request.auth.isAuthenticated) {
-        return reply.redirect('/profile')
+        return h.redirect('/profile')
       }
 
-      return reply.view('login')
+      return h.view('login')
     }
   },
 
@@ -135,41 +131,39 @@ const Handler = {
         redirectTo: false
       }
     },
-    handler: (request, reply) => {
+    handler: async (request, h) => {
       if (request.auth.isAuthenticated) {
-        return reply.redirect('/profile')
+        return h.redirect('/profile')
       }
 
       // shortcut
       const payload = request.payload
 
-      User.findByEmail(payload.email)
-        .then(user => {
-          if (!user) {
-            const error = Boom.create(404, '', {
-              email: { message: 'Email address is not registered' }
-            })
+      try {
+        let user = await User.findByEmail(payload.email)
 
-            return Promise.reject(error)
-          }
+        if (!user) {
+          const message = 'Email address is not registered'
+          throw new Boom(message, {
+            statusCode: 404,
+            data: { email: { message } }
+          })
+        }
 
-          return user.comparePassword(payload.password)
-        })
-        .then(user => {
-          request.cookieAuth.set({ id: user.id })
+        await user.comparePassword(payload.password)
+        request.cookieAuth.set({ id: user.id })
 
-          return reply.redirect('/profile')
-        })
-        .catch(err => {
-          const status = err.isBoom ? err.output.statusCode : 400
+        return h.redirect('/profile')
+      } catch (err) {
+        const status = err.isBoom ? err.output.statusCode : 400
 
-          return reply
-            .view('login', {
-              email: payload.email,
-              errors: err.data
-            })
-            .code(status)
-        })
+        return h
+          .view('login', {
+            email: payload.email,
+            errors: err.data
+          })
+          .code(status)
+      }
     },
     validate: {
       options: {
@@ -186,18 +180,19 @@ const Handler = {
           .required()
           .label('Password')
       },
-      failAction: (request, reply, source, error) => {
+      failAction: async (request, h, error) => {
         // prepare formatted error object
         const errors = ErrorExtractor(error)
         // remember the user’s email address and pre-fill for comfort reasons
         const email = request.payload.email
 
-        return reply
+        return h
           .view('login', {
             email,
             errors
           })
           .code(400)
+          .takeover()
       }
     }
   },
@@ -208,8 +203,8 @@ const Handler = {
         redirectTo: false
       }
     },
-    handler: (request, reply) => {
-      return reply.view('forgot-password')
+    handler: (request, h) => {
+      return h.view('forgot-password')
     }
   },
 
@@ -219,47 +214,45 @@ const Handler = {
         redirectTo: false
       }
     },
-    handler: (request, reply) => {
+    handler: async (request, h) => {
       if (request.auth.isAuthenticated) {
-        return reply.redirect('/profile')
+        return h.redirect('/profile')
       }
 
       // shortcut
       const payload = request.payload
 
-      return User.findByEmail(payload.email)
-        .then(user => {
-          if (!user) {
-            const error = Boom.create(404, 'Email address is not registered', {
-              email: { message: 'Email address is not registered' }
-            })
+      try {
+        let user = await User.findByEmail(payload.email)
 
-            return Promise.reject(error)
-          }
+        if (!user) {
+          const message = 'Email address is not registered'
+          throw new Boom(message, {
+            statusCode: 404,
+            data: { email: { message } }
+          })
+        }
 
-          return user.resetPassword()
-        })
-        .then(({ passwordResetToken, user }) => {
-          // encode email address to avoid issues with characters like "@"
-          const encodedEmail = encodeURIComponent(user.email)
-          // compose the user specific password reset URL
-          const resetURL = `http://${request.headers.host}/reset-password/${encodedEmail}/${passwordResetToken}`
+        const passwordResetToken = await user.resetPassword()
 
-          return Mailer.send('password-reset', user, '📺 Futureflix - Password Reset', { resetURL })
-        })
-        .then(() => {
-          return reply.view('forgot-password-email-sent')
-        })
-        .catch(err => {
-          const status = err.isBoom ? err.output.statusCode : 400
+        // encode email address to avoid issues with characters like "@"
+        const encodedEmail = encodeURIComponent(user.email)
 
-          return reply
-            .view('forgot-password', {
-              email: payload.email,
-              errors: err.data
-            })
-            .code(status)
-        })
+        // compose the user specific password reset URL
+        const resetURL = `http://${request.headers.host}/reset-password/${encodedEmail}/${passwordResetToken}`
+        await Mailer.send('password-reset', user, '📺 Futureflix - Password Reset', { resetURL })
+
+        return h.view('forgot-password-email-sent')
+      } catch (err) {
+        const status = err.isBoom ? err.output.statusCode : 400
+
+        return h
+          .view('forgot-password', {
+            email: payload.email,
+            errors: err.data
+          })
+          .code(status)
+      }
     },
     validate: {
       options: {
@@ -272,16 +265,17 @@ const Handler = {
           .required()
           .label('Email address')
       },
-      failAction: (request, reply, source, error) => {
+      failAction: (request, h, error) => {
         const errors = ErrorExtractor(error)
         const email = request.payload.email
 
-        return reply
+        return h
           .view('forgot-password', {
             email,
             errors
           })
           .code(400)
+          .takeover()
       }
     }
   },
@@ -292,12 +286,12 @@ const Handler = {
         redirectTo: false
       }
     },
-    handler: (request, reply) => {
+    handler: (request, h) => {
       if (request.auth.isAuthenticated) {
-        return reply.redirect('/profile')
+        return h.redirect('/profile')
       }
 
-      return reply.view('reset-password')
+      return h.view('reset-password')
     },
     validate: {
       params: {
@@ -311,14 +305,15 @@ const Handler = {
           .trim()
           .label('Password reset token')
       },
-      failAction: (request, reply, source, error) => {
+      failAction: (request, h, error) => {
         const errors = ErrorExtractor(error)
 
-        return reply
+        return h
           .view('reset-password', {
             errors
           })
           .code(400)
+          .takeover()
       }
     }
   },
@@ -329,50 +324,45 @@ const Handler = {
         redirectTo: false
       }
     },
-    handler: (request, reply) => {
+    handler: async (request, h) => {
       if (request.auth.isAuthenticated) {
-        return reply.redirect('/profile')
+        return h.redirect('/profile')
       }
 
       // shortcut
       const params = request.params
       const email = decodeURIComponent(params.email)
 
-      return User.findByEmail(email)
-        .then(user => {
-          if (!user) {
-            const error = Boom.create(400, '', {
-              resetToken: { message: 'Sorry, we can’t find a user with the credentials.' }
-            })
+      try {
+        let user = await User.findByEmail(email)
 
-            return Promise.reject(error)
-          }
+        if (!user) {
+          const message = 'Sorry, we can’t find a user with the credentials.'
+          throw new Boom(message, {
+            statusCode: 404,
+            data: { email: { message } }
+          })
+        }
 
-          return user.comparePasswordResetToken(params.resetToken)
-        })
-        .then(user => {
-          // remove password reset related data from user
-          user.passwordResetToken = undefined
-          user.passwordResetDeadline = undefined
+        user = user.comparePasswordResetToken(params.resetToken)
 
-          // set new password
-          user.password = request.payload.password
+        // remove password reset related data from user
+        user.passwordResetToken = undefined
+        user.passwordResetDeadline = undefined
+        // set new password
+        user.password = request.payload.password
 
-          return user.hashPassword()
-        })
-        .then(user => {
-          return user.save()
-        })
-        .then(user => {
-          request.cookieAuth.set({ id: user.id })
+        await user.hashPassword()
+        await user.save()
 
-          return reply.view('reset-password-success')
-        })
-        .catch(err => {
-          const status = err.isBoom ? err.output.statusCode : 400
+        request.cookieAuth.set({ id: user.id })
 
-          return reply.view('reset-password', { errors: err.data }).code(status)
-        })
+        return h.view('reset-password-success')
+      } catch (err) {
+        const status = err.isBoom ? err.output.statusCode : 400
+
+        return h.view('reset-password', { errors: err.data }).code(status)
+      }
     },
     validate: {
       options: {
@@ -406,19 +396,22 @@ const Handler = {
           })
           .label('Confirm password')
       },
-      failAction: (request, reply, source, error) => {
+      failAction: (request, h, error) => {
         const errors = ErrorExtractor(error)
 
-        return reply.view('reset-password', { errors }).code(400)
+        return h
+          .view('reset-password', { errors })
+          .code(400)
+          .takeover()
       }
     }
   },
 
   logout: {
     auth: 'session',
-    handler: (request, reply) => {
+    handler: (request, h) => {
       request.cookieAuth.clear()
-      reply.redirect('/')
+      return h.redirect('/')
     }
   }
 }

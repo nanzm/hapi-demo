@@ -13,8 +13,8 @@ const showSchema = new Schema(
       required: true
     },
     ids: {
-      trakt: Number,
-      slug: String,
+      trakt: { type: Number, unique: true },
+      slug: { type: String, unique: true },
       imdb: String,
       tvdb: Number,
       tmdb: Number,
@@ -69,7 +69,7 @@ showSchema.virtual('seasons', {
 })
 
 // this is a helper function to populate “seasons” on queries
-function autopopulate(next) {
+function autopopulate (next) {
   this.populate('seasons')
   next()
 }
@@ -80,7 +80,7 @@ showSchema.pre('findOne', autopopulate)
 // add plugin to find random movies
 showSchema.plugin(MongooseRandom)
 
-showSchema.statics.random = function(limit) {
+showSchema.statics.random = function (limit) {
   const self = this
 
   return new Promise((resolve, reject) => {

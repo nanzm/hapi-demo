@@ -4,6 +4,11 @@ const Hapi = require('hapi')
 const Path = require('path')
 const Laabr = require('laabr')
 const Dotenv = require('dotenv')
+const Handlebars = require('handlebars')
+const HandlebarsRepeatHelper = require('handlebars-helper-repeat')
+
+// extend handlebars instance
+Handlebars.registerHelper('repeat', HandlebarsRepeatHelper)
 
 // import environment variables from local secrets.env file
 Dotenv.config({ path: Path.resolve(__dirname, 'secrets.env') })
@@ -12,25 +17,24 @@ Dotenv.config({ path: Path.resolve(__dirname, 'secrets.env') })
 Laabr.format('log', ':time :level :message')
 
 // create new server instance
-const server = new Hapi.Server()
-
 // add server’s connection information
-server.connection({
+const server = new Hapi.Server({
   host: 'localhost',
   port: process.env.PORT || 3000
 })
 
-// register plugins to server instance
-server.register(
-  [
+// register plugins, configure views and start the server instance
+async function start () {
+  // register plugins to server instance
+  await server.register([
     {
-      register: require('inert')
+      plugin: require('inert')
     },
     {
-      register: require('vision')
+      plugin: require('vision')
     },
     {
-      register: require('crumb'),
+      plugin: require('crumb'),
       options: {
         key: 'keepMeSafeFromCsrf',
         cookieOptions: {
@@ -39,14 +43,14 @@ server.register(
       }
     },
     {
-      register: require('hapi-dev-errors'),
+      plugin: require('hapi-dev-errors'),
       options: {
         showErrors: process.env.NODE_ENV !== 'production',
         useYouch: true
       }
     },
     {
-      register: Laabr.plugin,
+      plugin: Laabr.plugin,
       options: {
         colored: true,
         hapiPino: {
@@ -55,55 +59,63 @@ server.register(
       }
     },
     {
-      register: require('./server/authentication')
+      plugin: require('./server/authentication')
     },
     {
-      register: require('./server/base')
+      plugin: require('./server/base')
     },
     {
-      register: require('./server/add-user-to-request')
+      plugin: require('./server/add-user-to-request')
     },
     {
-      register: require('./server/add-user-to-views')
+      plugin: require('./server/add-user-to-views')
     },
     {
-      register: require('./server/user-signup-login')
+      plugin: require('./server/user-signup-login')
     },
     {
-      register: require('./server/user-profile')
+      plugin: require('./server/user-profile')
     },
     {
-      register: require('./server/movies')
+      plugin: require('./server/movies')
     },
     {
-      register: require('./server/tv-shows')
+      plugin: require('./server/tv-shows')
     }
-  ],
-  err => {
-    if (err) {
-      throw err
+  ])
+
+  // view configuration
+  const viewsPath = Path.resolve(__dirname, 'public', 'views')
+
+  server.views({
+    engines: {
+      hbs: Handlebars
+    },
+    path: viewsPath,
+    layoutPath: Path.resolve(viewsPath, 'layouts'),
+    layout: 'layout',
+    helpersPath: Path.resolve(viewsPath, 'helpers'),
+    partialsPath: Path.resolve(viewsPath, 'partials'),
+    isCached: process.env.NODE_ENV === 'production',
+    context: {
+      title: 'Futureflix'
     }
+  })
 
-    const viewsPath = Path.resolve(__dirname, 'public', 'views')
-
-    server.views({
-      engines: {
-        hbs: require('handlebars')
-      },
-      path: viewsPath,
-      layoutPath: Path.resolve(viewsPath, 'layouts'),
-      layout: 'layout',
-      helpersPath: Path.resolve(viewsPath, 'helpers'),
-      partialsPath: Path.resolve(viewsPath, 'partials'),
-      isCached: process.env.NODE_ENV === 'production',
-      context: {
-        title: 'Futureflix'
-      }
-    })
-
-    // start your server
-    server.start().catch(err => {
-      throw err
-    })
+  // start your server
+  try {
+    await server.start()
+    console.log(`Server started → ${server.info.uri}`)
+  } catch (err) {
+    console.log(err)
+    console.error(err)
+    process.exit(1)
   }
-)
+}
+
+start()
+
+process.on('unhandledRejection', error => {
+  console.log(error)
+  process.exit(1)
+})

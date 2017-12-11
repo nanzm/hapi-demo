@@ -77,26 +77,25 @@ const userSchema = new Schema(
 /**
  * pre-save hook to generate a unique username
  */
-userSchema.pre('save', function(next) {
+userSchema.pre('save', async function (next) {
   if (this.isNew) {
     // split email address at @ symbol and only return the first part
     this.username = _.first(_.split(this.email, '@', 1))
 
     // find existing user with the same username
-    this.constructor.findOne({ username: this.username }).then(existingUser => {
-      // TODO this can lead to duplicated keys if haikunate generates the same slug twice
-      if (existingUser) {
-        this.username = `${this.username}-${haikunator.haikunate()}`
-      }
+    const existingUser = await this.constructor.findOne({ username: this.username })
+    // TODO this can lead to duplicated keys if haikunate generates the same slug twice
+    if (existingUser) {
+      this.username = `${this.username}-${haikunator.haikunate()}`
+    }
 
-      // tell mongoose to proceed
-      next()
-    })
+    // tell mongoose to proceed
+    next()
   } else {
     // save on an existing document, don't change the username
     // skip middelware by calling next()
     // stop here by returning
-    return next()
+    next()
   }
 })
 
@@ -104,101 +103,84 @@ userSchema.pre('save', function(next) {
  * Statics
  *
  * use the “User” model in your app and static methods to find documents
- * like: User.findByEmail('marcus@futurestud.io').then(user => {})
+ * like: const user = await User.findByEmail('marcus@futurestud.io')
  */
-userSchema.statics.findByEmail = function(email) {
+userSchema.statics.findByEmail = function (email) {
   return this.findOne({ email })
 }
 
 /**
  * Instance Methods
  */
-userSchema.methods.comparePassword = function(candidatePassword) {
-  const self = this
+userSchema.methods.comparePassword = async function (candidatePassword) {
+  const isMatch = await Bcrypt.compare(candidatePassword, this.password)
 
-  return Bcrypt.compare(candidatePassword, self.password)
-    .then(isMatch => {
-      if (isMatch) {
-        return Promise.resolve(self)
-      }
+  if (isMatch) {
+    return this
+  }
 
-      return Promise.reject(Boom.badRequest('The entered password is incorrect'))
-    })
-    .catch(err => {
-      err = Boom.create(400, err.message, {
-        password: { message: err.message }
-      })
-
-      return Promise.reject(err)
-    })
+  const message = 'The entered password is incorrect'
+  throw new Boom(message, {
+    statusCode: 400,
+    data: { password: { message } }
+  })
 }
 
-userSchema.methods.hashPassword = function() {
-  const self = this
+userSchema.methods.hashPassword = async function () {
+  const salt = await Bcrypt.genSalt(SALT_WORK_FACTOR)
+  const hash = await Bcrypt.hash(this.password, salt)
 
-  return Bcrypt.genSalt(SALT_WORK_FACTOR)
-    .then(salt => {
-      return Bcrypt.hash(self.password, salt)
-    })
-    .then(hash => {
-      self.password = hash
-      return Promise.resolve(self)
-    })
-    .catch(() => {
-      return Promise.reject(Boom.badRequest('There was an error while hashing your password'))
-    })
+  this.password = hash
+  return this
 }
 
-userSchema.methods.generateAuthToken = function() {
+userSchema.methods.generateAuthToken = async function () {
   this.authToken = Crypto.randomBytes(20).toString('hex')
-  return Promise.resolve(this)
+  return this
 }
 
-userSchema.methods.resetPassword = function() {
-  let self = this
-  const passwordResetToken = Crypto.randomBytes(20).toString('hex')
+userSchema.methods.resetPassword = async function () {
+  try {
+    const passwordResetToken = Crypto.randomBytes(20).toString('hex')
 
-  return Bcrypt.genSalt(SALT_WORK_FACTOR)
-    .then(salt => {
-      return Bcrypt.hash(passwordResetToken, salt)
-    })
-    .then(hash => {
-      self.passwordResetToken = hash
-      self.passwordResetDeadline = Date.now() + 1000 * 60 * 60 // 1 hour from now
+    const salt = await Bcrypt.genSalt(SALT_WORK_FACTOR)
+    const hash = await Bcrypt.hash(passwordResetToken, salt)
 
-      return self.save().then(user => {
-        return Promise.resolve({ passwordResetToken, user })
-      })
+    this.passwordResetToken = hash
+    this.passwordResetDeadline = Date.now() + 1000 * 60 * 60 // 1 hour from now
+
+    await this.save()
+
+    return passwordResetToken
+  } catch (ignored) {
+    const message = 'An error occurred while hashing your password reset token.'
+
+    throw new Boom(message, {
+      statusCode: 400,
+      data: { password: { message } }
     })
-    .catch(() => {
-      return Promise.reject(Boom.badRequest('An error occurred while hashing your password reset token'))
-    })
+  }
 }
 
-userSchema.methods.comparePasswordResetToken = function(resetToken) {
-  const self = this
+userSchema.methods.comparePasswordResetToken = async function (resetToken) {
+  const isMatch = await Bcrypt.compare(resetToken, this.passwordResetToken)
 
-  return Bcrypt.compare(resetToken, self.passwordResetToken)
-    .then(isMatch => {
-      if (isMatch) {
-        return Promise.resolve(self)
-      }
+  if (isMatch) {
+    return this
+  }
 
-      return Promise.reject(Boom.badRequest('Your password reset token is invalid, please request a new one.'))
-    })
-    .catch(err => {
-      err = Boom.create(400, err.message, {
-        password: { message: err.message }
-      })
+  const message = 'Your password reset token is invalid, please request a new one.'
 
-      return Promise.reject(err)
-    })
+  throw new Boom(message, {
+    statusCode: 400,
+    data: { password: { message } }
+  })
 }
 
 /**
  * Virtuals
  */
-userSchema.virtual('gravatar').get(function() {
+userSchema.virtual('gravatar').get(function () {
   // create the MD5 hash from the user’s email address
   const hash = MD5(this.email)
   // return the ready-to-load avatar URL

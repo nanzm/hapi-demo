@@ -45,7 +45,7 @@ seasonSchema.virtual('episodes', {
 })
 
 // this is a helper function to populate “episodes” on queries
-function autopopulate(next) {
+function autopopulate (next) {
   this.populate('episodes')
   next()
 }

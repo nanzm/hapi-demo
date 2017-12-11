@@ -1,14 +1,14 @@
 'use strict'
 
-exports.register = (server, options, next) => {
+function register (server, options) {
   // declare dependencies
-  server.dependency([ 'authentication' ])
+  server.dependency(['authentication'])
 
   // decorate the request and pass responsibility to hapi
   // that no other plugin uses request.user
   server.decorate('request', 'user', {})
 
-  server.ext('onPostAuth', (request, reply) => {
+  server.ext('onPostAuth', (request, h) => {
     // user successfully authenticated?
     if (request.auth.isAuthenticated) {
       // add user object to request by using its credentials
@@ -16,14 +16,14 @@ exports.register = (server, options, next) => {
     }
 
     // continue request lifecycle
-    return reply.continue()
+    return h.continue
   })
 
   server.log('info', 'Plugin registered: add user to request')
-  next()
 }
 
-exports.register.attributes = {
+exports.plugin = {
   name: 'add-user-to-request',
-  version: '1.0.0'
+  version: '1.0.0',
+  register
 }

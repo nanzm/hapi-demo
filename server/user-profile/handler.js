@@ -9,66 +9,66 @@ const ErrorExtractor = require(Path.resolve(__dirname, '..', 'utils', 'error-ext
 const Handler = {
   profile: {
     auth: 'session',
-    handler: (request, reply) => {
-      reply.view('user/profile')
+    handler: (request, h) => {
+      return h.view('user/profile')
     }
   },
 
   update: {
     auth: 'session',
-    handler: (request, reply) => {
+    handler: async (request, h) => {
       // shortcut
       const payload = request.payload
+      let user
 
-      // check if the username is already chosen
-      return User.findOne({ username: payload.username, _id: { $ne: request.user._id } })
-        .then(user => {
-          if (user) {
-            // create an error object that matches our error structure
-            const error = Boom.create(409, 'Username is already taken', {
-              username: { message: 'Username is already taken' }
-            })
+      try {
+        // check if the username is already chosen
+        user = await User.findOne({ username: payload.username, _id: { $ne: request.user._id } })
 
-            return Promise.reject(error)
-          }
+        if (user) {
+          // create an error object that matches our error structure
+          const error = Boom.create(409, 'Username is already taken', {
+            username: { message: 'Username is already taken' }
+          })
 
-          // process the actual user update
-          // you can also use "findByIdAndUpdate"
-          // "findOneAndUpdate" just gives you more filter options
-          return User.findOneAndUpdate(
-            { _id: request.user._id }, // filters the document
-            {
-              $set: {
-                username: payload.username,
-                homepage: payload.homepage
-              }
-            },
-            {
-              // returns the post-update document
-              new: true
+          return Promise.reject(error)
+        }
 
-              // applies validators defined in the User model.
-              // -> this option is off by default due to several caveats
-              // -> check this section for more information: http://mongoosejs.com/docs/validation.html#update-validators
-              // runValidators: true
+        // process the actual user update
+        // you can also use "findByIdAndUpdate"
+        // "findOneAndUpdate" just gives you more filter options
+        user = await User.findOneAndUpdate(
+          { _id: request.user._id }, // filters the document
+          {
+            $set: {
+              username: payload.username,
+              homepage: payload.homepage
             }
-          )
-        })
-        .then(user => {
-          request.user = user
-          reply.view('user/profile')
-        })
-        .catch(err => {
-          const status = err.isBoom ? err.output.statusCode : 400
-          const user = Object.assign(request.user, { username: payload.username })
+          },
+          {
+            // returns the post-update document
+            new: true
 
-          return reply
-            .view('user/profile', {
-              user,
-              errors: err.data
-            })
-            .code(status)
-        })
+            // applies validators defined in the User model.
+            // -> this option is off by default due to several caveats
+            // -> check this section for more information: http://mongoosejs.com/docs/validation.html#update-validators
+            // runValidators: true
+          }
+        )
+
+        request.user = user
+        return h.view('user/profile')
+      } catch (err) {
+        const status = err.isBoom ? err.output.statusCode : 400
+        const user = Object.assign(request.user, { username: payload.username })
+
+        return h
+          .view('user/profile', {
+            user,
+            errors: err.data
+          })
+          .code(status)
+      }
     },
     validate: {
       payload: {
@@ -86,7 +86,7 @@ const Handler = {
           .allow(null)
           .uri()
       },
-      failAction: (request, reply, source, error) => {
+      failAction: (request, h, error) => {
         // prepare formatted error object
         const errors = ErrorExtractor(error)
 
@@ -96,12 +96,13 @@ const Handler = {
         // merge existing user data with incoming values
         const user = Object.assign(request.user, { username, homepage })
 
-        return reply
+        return h
           .view('user/profile', {
             user,
             errors
           })
           .code(400)
+          .takeover()
       }
     }
   }

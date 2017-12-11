@@ -1,11 +1,11 @@
 'use strict'
 
-const errorExtractor = (error) => {
+const errorExtractor = error => {
   let errors = {}
 
-  error.data.details.forEach((err) => {
-    const errorKey = err.path
-    errors[ errorKey ] = {
+  error.details.forEach(err => {
+    const errorKey = err.context.key
+    errors[errorKey] = {
       message: err.message.replace(/"/g, '')
     }
   })
