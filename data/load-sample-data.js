@@ -67,25 +67,6 @@ function pumpItUp () {
           task.output = 'Importing episodes'
           return Promise.all(promises)
         }
-      },
-      {
-        title: 'Importing seasons and episodes for TV shows',
-        task: (ctx, task) => {
-          // show explicit output for the two step process:
-          // first movies, second TV shows
-          task.output = 'Importing seasons'
-
-          const promises = Shows.map(async show => {
-            await Season.insertMany(show.seasons)
-
-            return show.seasons.map(season => {
-              return Episode.insertMany(season.episodes)
-            })
-          })
-
-          task.output = 'Importing episodes'
-          return Promise.all(promises)
-        }
       }
     ]
   )
