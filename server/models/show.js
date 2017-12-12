@@ -61,7 +61,7 @@ const showSchema = new Schema(
 showSchema.virtual('seasons', {
   ref: 'Season',
   localField: '_id',
-  foreignField: 'ids.show'
+  foreignField: 'show'
 })
 
 // this is a helper function to populate “seasons” on queries

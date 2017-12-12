@@ -41,7 +41,7 @@ const seasonSchema = new Schema(
 seasonSchema.virtual('episodes', {
   ref: 'Episode',
   localField: '_id',
-  foreignField: 'ids.season'
+  foreignField: 'season'
 })
 
 // this is a helper function to populate “episodes” on queries
