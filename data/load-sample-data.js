@@ -75,11 +75,11 @@ function pumpItUp () {
           // first movies, second TV shows
           task.output = 'Importing seasons'
 
-          const promises = Shows.map(show => {
-            return Season.insertMany(show.seasons).then(() => {
-              return show.seasons.map(season => {
-                return Episode.insertMany(season.episodes)
-              })
+          const promises = Shows.map(async show => {
+            await Season.insertMany(show.seasons)
+
+            return show.seasons.map(season => {
+              return Episode.insertMany(season.episodes)
             })
           })
 
