@@ -9,11 +9,13 @@ At this point, the current project’s implementation is only available for enro
 
 
 ## Requirements
-To run the **Futureflix Starter Kit**, please install the following dependencies:
+The **Futureflix Starter Kit** has full support for `async/await` and therefore requires Node.js v8.x.
 
-- Node.js v6.x or later
+- Node.js **v8.x** or later
 - NPM or Yarn to install the project’s dependencies
 - [Vagrant](https://www.vagrantup.com/) or a [MongoDB](https://docs.mongodb.com/manual/installation/) instance on your machine
+
+Download the Futureflix Starter Kit in version `1.x` from GitHub’s release page if you want to run it with Node.js v6.x.
 
 Seems doable, huh? 😃
 
@@ -49,16 +51,19 @@ The starter kit doesn’t contain any logging. If you don’t see any errors whi
 
 
 ## Getting Help
-At this point, there’s no Slack channel or support group. If you need help with your implementation, please use email. We’re active on emails and reply as soon as possible.
-
-This repository accompanies you with the **Futureflix Starter Kit** and is not meant to be a support channel.
+At this point, there’s no Slack channel or support group. If you need help with your implementation, please email us. We’re active on emails and reply as soon as possible.
 
 
 ## Sending Pull Requests
 In case you found a different way to implement a feature, we’re happy to hear about it! Within the videos we’re using the code of this repository and want to keep it as close as possible.
 
-It’s unlikely that we accept a pull request with functionality changes.
-
 Error fixes and additional explanations are always welcome. If you find something, we absolutely appreciate your pull request.
 
 Make it rock!
+
+## Thank You with a Hug!
+It’s great to see you exploring this repository. Really! Dig through the code and hopefully you’ll take wins away ❤️
+
+### Sample data from trakt.tv
+Movie and TV show sample data for Futureflix comes from [trakt.tv](https://trakt.tv/). Track your progress on watched movies and shows, never forget where you left off a week ago! Trakt is a nice platform with dozens of apps for any client. 
+We’re not payed to say that 😅
