@@ -15,9 +15,9 @@ const seasonSchema = new Schema(
       slug: String,
       imdb: String,
       tmdb: Number,
-      tvrage: Number,
-      show: { type: Number, ref: 'Show' }
+      tvrage: Number
     },
+    show: { type: Schema.Types.ObjectId, ref: 'Show' },
     number: Number,
     overview: String,
     first_aired: String,
@@ -34,14 +34,18 @@ const seasonSchema = new Schema(
   }
 )
 
-//
+// virtual property for “episodes” instead of a
+// dedicated “episodes” array within the schema
+// this let’s you use Mongoose’s “toJSON” configuration
+// to remove virtuals when sending to the client
 seasonSchema.virtual('episodes', {
   ref: 'Episode',
-  localField: 'ids.trakt',
-  foreignField: 'ids.season'
+  localField: '_id',
+  foreignField: 'season'
 })
 
-function autopopulate(next) {
+// this is a helper function to populate “episodes” on queries
+function autopopulate (next) {
   this.populate('episodes')
   next()
 }

@@ -55,21 +55,18 @@ const prepareTemplate = (filename, options = {}) => {
  * @param  {object} data     view specific data that will be rendered into the view
  * @return {Promise}
  */
-exports.send = (template, user, subject, data) => {
-  return prepareTemplate(template, data).then(({ html, text }) => {
-    const mailOptions = {
-      from: `Marcus Poehls <marcus@futurestud.io>`,
-      to: user.email,
-      subject: subject,
-      html,
-      text
-    }
+exports.send = async (template, user, subject, data) => {
+  const { html, text } = await prepareTemplate(template, data)
+  const mailOptions = {
+    from: `Marcus Poehls <marcus@futurestud.io>`,
+    to: user.email,
+    subject: subject,
+    html,
+    text
+  }
 
-    // fire and forget
-    // will be changed later to use a queue with retries
-    // to handle the case of downtimes on the email delivery service
-    return Transporter.sendMail(mailOptions).catch(err => {
-      console.log(err)
-    })
-  })
+  // fire and forget
+  // will be changed later to use a queue with retries
+  // to handle the case of downtimes on the email delivery service
+  return Transporter.sendMail(mailOptions)
 }

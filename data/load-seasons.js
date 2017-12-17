@@ -18,11 +18,9 @@ const Shows = JSON.parse(Fs.readFileSync(Path.resolve(__dirname, 'shows.json'), 
  * @param  {Listr} tasks  Listr instance with tasks
  * @return {void}
  */
-function kickoff(tasks) {
-  tasks
-    .run()
-    .then(process.exit)
-    .catch(process.exit)
+async function kickoff (tasks) {
+  await tasks.run()
+  process.exit()
 }
 
 /**
