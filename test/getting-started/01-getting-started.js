@@ -10,7 +10,7 @@ const experiment = lab.experiment
 const test = lab.test
 
 experiment('getting started with hapi testing using lab,', { parallel: true }, () => {
-  test.skip('lab considers this test as TOOD and skips it')
+  test.skip('lab considers this test as TODO and skips it')
 
   test('always succeeding :)', done => {
     done()
