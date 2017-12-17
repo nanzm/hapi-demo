@@ -139,7 +139,10 @@ async function startApi () {
       }
     },
     {
-      plugin: require('./server/api')
+      plugin: require('./server/api-movies')
+    },
+    {
+      plugin: require('./server/api-tv-shows')
     }
   ])
 

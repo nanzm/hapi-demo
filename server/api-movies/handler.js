@@ -7,36 +7,7 @@ const Show = require(Path.resolve(__dirname, '..', 'models')).Show
 const Movie = require(Path.resolve(__dirname, '..', 'models')).Movie
 
 const Handler = {
-  showsIndex: {
-    plugins: {
-      'hapi-auth-cookie': {
-        redirectTo: false
-      }
-    },
-    handler: async (request, h) => {
-      const shows = await Show.find()
-
-      return shows
-    }
-  },
-  showsSingle: {
-    plugins: {
-      'hapi-auth-cookie': {
-        redirectTo: false
-      }
-    },
-    handler: async (request, h) => {
-      const slug = request.params.slug
-      const show = await Show.findOne({ 'ids.slug': slug })
-
-      if (!show) {
-        return Boom.notFound('Cannot find a show with that slug')
-      }
-
-      return show
-    }
-  },
-  moviesIndex: {
+  index: {
     plugins: {
       'hapi-auth-cookie': {
         redirectTo: false
@@ -48,7 +19,7 @@ const Handler = {
       return movies
     }
   },
-  moviesSingle: {
+  show: {
     plugins: {
       'hapi-auth-cookie': {
         redirectTo: false
