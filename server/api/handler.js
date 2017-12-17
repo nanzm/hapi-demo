@@ -13,11 +13,11 @@ const Handler = {
         redirectTo: false
       }
     },
-    handler: function(request, reply) {
+    handler: async (request, h) => {
       // todo remove seasons property from request, otherwise the returning JSON is huge
-      Show.find().then(shows => {
-        return reply(shows)
-      })
+      const shows = await Show.find()
+
+      return shows
     }
   },
   showsSingle: {
@@ -26,16 +26,15 @@ const Handler = {
         redirectTo: false
       }
     },
-    handler: function(request, reply) {
+    handler: async (request, h) => {
       const slug = request.params.slug
+      const show = await Show.findOne({ 'ids.slug': slug })
 
-      return Movie.findOne({ 'ids.slug': slug }).then(movie => {
-        if (!movie) {
-          return reply(Boom.notFound('Cannot find a show with that slug'))
-        }
+      if (!show) {
+        return Boom.notFound('Cannot find a show with that slug')
+      }
 
-        return reply(movie)
-      })
+      return show
     }
   },
   moviesIndex: {
@@ -44,10 +43,10 @@ const Handler = {
         redirectTo: false
       }
     },
-    handler: function(request, reply) {
-      Movie.find().then(movies => {
-        return reply(movies)
-      })
+    handler: async (request, h) => {
+      const movies = await Movie.find()
+
+      return movies
     }
   },
   moviesSingle: {
@@ -56,19 +55,17 @@ const Handler = {
         redirectTo: false
       }
     },
-    handler: function(request, reply) {
+    handler: async (request, h) => {
       const slug = request.params.slug
+      const movie = await Movie.findOne({ 'ids.slug': slug })
 
-      return Movie.findOne({ 'ids.slug': slug }).then(movie => {
-        if (!movie) {
-          return reply(Boom.notFound('Cannot find a movie with that slug'))
-        }
+      if (!movie) {
+        return Boom.notFound('Cannot find a movie with that slug')
+      }
 
-        return reply(movie)
-      })
+      return movie
     }
   }
-
 }
 
 module.exports = Handler

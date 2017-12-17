@@ -5,22 +5,22 @@ const Handler = require('./handler')
 const Routes = [
   {
     method: 'GET',
-    path: '/api/shows',
+    path: '/shows',
     config: Handler.showsIndex
   },
   {
     method: 'GET',
-    path: '/api/shows/{slug}',
+    path: '/shows/{slug}',
     config: Handler.showsSingle
   },
   {
     method: 'GET',
-    path: '/api/movies',
+    path: '/movies',
     config: Handler.moviesIndex
   },
   {
     method: 'GET',
-    path: '/api/movies/{slug}',
+    path: '/movies/{slug}',
     config: Handler.moviesSingle
   }
 ]

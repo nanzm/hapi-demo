@@ -16,15 +16,15 @@ Dotenv.config({ path: Path.resolve(__dirname, 'secrets.env') })
 // configure logger
 Laabr.format('log', ':time :level :message')
 
-// create new server instance
+// create new server instance for the frontend
 // add server’s connection information
 const server = new Hapi.Server({
   host: 'localhost',
   port: process.env.PORT || 3000
 })
 
-// register plugins, configure views and start the server instance
-async function start () {
+// register plugins, configure views and start the server frontend instance
+async function startFrontend() {
   // register plugins to server instance
   await server.register([
     {
@@ -71,9 +71,6 @@ async function start () {
       plugin: require('./server/add-user-to-views')
     },
     {
-      plugin: require('./server/api')
-    },
-    {
       plugin: require('./server/user-signup-login')
     },
     {
@@ -116,7 +113,49 @@ async function start () {
   }
 }
 
-start()
+const api = new Hapi.Server({
+  host: 'localhost',
+  port: process.env.PORT_API || 3001
+})
+
+// register plugins and start the API server instance
+async function startApi () {
+  // register plugins to server instance
+  await api.register([
+    {
+      plugin: require('hapi-dev-errors'),
+      options: {
+        showErrors: process.env.NODE_ENV !== 'production',
+        useYouch: true
+      }
+    },
+    {
+      plugin: Laabr.plugin,
+      options: {
+        colored: true,
+        hapiPino: {
+          logPayload: false
+        }
+      }
+    },
+    {
+      plugin: require('./server/api')
+    }
+  ])
+
+  // start your server
+  try {
+    await api.start()
+    console.log(`API started → ${api.info.uri}`)
+  } catch (err) {
+    console.log(err)
+    console.error(err)
+    process.exit(1)
+  }
+}
+
+startFrontend()
+startApi()
 
 process.on('unhandledRejection', error => {
   console.log(error)

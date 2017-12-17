@@ -2,14 +2,13 @@
 
 const Routes = require('./routes')
 
-exports.register = (server, options, next) => {
+function register (server, options) {
   server.route(Routes)
   server.log('info', 'Plugin registered: API')
-
-  next()
 }
 
-exports.register.attributes = {
+exports.plugin = {
   name: 'api',
-  version: '1.0.0'
+  version: '1.0.0',
+  register
 }
