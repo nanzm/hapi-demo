@@ -14,7 +14,6 @@ const Handler = {
       }
     },
     handler: async (request, h) => {
-      // todo remove seasons property from request, otherwise the returning JSON is huge
       const shows = await Show.find()
 
       return shows

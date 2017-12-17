@@ -73,10 +73,11 @@ function autopopulate (next) {
 showSchema.pre('find', autopopulate)
 showSchema.pre('findOne', autopopulate)
 
-showSchema.methods.toJSON = function() {
-  let obj = this.toObject()
-  delete obj.__v
-  return obj
+// minimize JSON: don't include all season/episode info and remove __v property
+showSchema.set('toJSON', { virtuals: false })
+showSchema.options.toJSON.transform = function (doc, ret, options) {
+  delete ret.__v
+  return ret
 }
 
 // add plugin to find random movies

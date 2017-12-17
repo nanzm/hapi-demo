@@ -35,12 +35,16 @@ const movieSchema = new Schema({
   genres: [String],
   language: String,
   certification: String
-})
+  },
+  {
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true }
+  }
+)
 
-movieSchema.methods.toJSON = function() {
-  let obj = this.toObject()
-  delete obj.__v
-  return obj
+movieSchema.options.toJSON.transform = function (doc, ret, options) {
+  delete ret.__v
+  return ret
 }
 
 // add plugin to find random movies
