@@ -100,6 +100,24 @@ userSchema.pre('save', async function (next) {
 })
 
 /**
+ * Relations
+ */
+userSchema.virtual('watchlist', {
+  ref: 'Watchlist',
+  localField: '_id',
+  foreignField: 'user',
+  justOne: true
+})
+
+// this is a helper function to populate “seasons” on queries
+function autopopulate (next) {
+  this.populate('watchlist')
+  next()
+}
+
+userSchema.pre('findOne', autopopulate)
+
+/**
  * Statics
  *
  * use the “User” model in your app and static methods to find documents

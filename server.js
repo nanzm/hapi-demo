@@ -77,6 +77,9 @@ async function start () {
       plugin: require('./server/user-profile')
     },
     {
+      plugin: require('./server/user-watchlist')
+    },
+    {
       plugin: require('./server/movies')
     },
     {
