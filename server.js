@@ -16,17 +16,17 @@ Dotenv.config({ path: Path.resolve(__dirname, 'secrets.env') })
 // configure logger
 Laabr.format('log', ':time :level :message')
 
-// create new server instance for the frontend
-// add server’s connection information
-const server = new Hapi.Server({
+// create new web instance
+// add web’s connection information
+const web = new Hapi.Server({
   host: 'localhost',
-  port: process.env.PORT || 3000
+  port: process.env.PORT_WEB || 3000
 })
 
-// register plugins, configure views and start the server frontend instance
-async function startFrontend() {
-  // register plugins to server instance
-  await server.register([
+// register plugins, configure views and start the web instance
+async function startWeb() {
+  // register plugins to web instance
+  await web.register([
     {
       plugin: require('inert')
     },
@@ -87,7 +87,7 @@ async function startFrontend() {
   // view configuration
   const viewsPath = Path.resolve(__dirname, 'public', 'views')
 
-  server.views({
+  web.views({
     engines: {
       hbs: Handlebars
     },
@@ -102,10 +102,10 @@ async function startFrontend() {
     }
   })
 
-  // start your server
+  // start your web
   try {
-    await server.start()
-    console.log(`Server started → ${server.info.uri}`)
+    await web.start()
+    console.log(`Web started → ${web.info.uri}`)
   } catch (err) {
     console.log(err)
     console.error(err)
@@ -118,9 +118,9 @@ const api = new Hapi.Server({
   port: process.env.PORT_API || 3001
 })
 
-// register plugins and start the API server instance
+// register plugins and start the API web instance
 async function startApi () {
-  // register plugins to server instance
+  // register plugins to web instance
   await api.register([
     {
       plugin: require('hapi-dev-errors'),
@@ -146,7 +146,7 @@ async function startApi () {
     }
   ])
 
-  // start your server
+  // start your web
   try {
     await api.start()
     console.log(`API started → ${api.info.uri}`)
@@ -157,7 +157,7 @@ async function startApi () {
   }
 }
 
-startFrontend()
+startWeb()
 startApi()
 
 process.on('unhandledRejection', error => {
