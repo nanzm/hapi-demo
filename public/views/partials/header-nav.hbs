@@ -1,18 +1,18 @@
-<div class="navbar-start">
-    <a class="navbar-item" href="/movies">
-        Movies
-    </a>
-    <a class="navbar-item" href="/shows">
-        TV Shows
-    </a>
-    <a class="navbar-item" href="/discover">
-        Discover
-    </a>
-</div>
+<div class="navbar-menu">
 
-<div class="navbar-end">
-    <div class="navbar-menu">
+    <div class="navbar-start">
+        <a class="navbar-item" href="/movies">
+            Movies
+        </a>
+        <a class="navbar-item" href="/shows">
+            TV Shows
+        </a>
+        <a class="navbar-item" href="/discover">
+            Discover
+        </a>
+    </div>
 
+    <div class="navbar-end">
         {{#if user}}
             <div class="navbar-item has-dropdown is-hoverable">
 
@@ -22,7 +22,7 @@
                     </figure>
                     Profile
                 </a>
-                <div class="navbar-dropdown">
+                <div class="navbar-dropdown is-transparent">
                     <a href="/profile" class="navbar-item">
                         <p>
                             <figure class="image is-16x16" style="margin-right: 14px;">
@@ -33,7 +33,8 @@
                             <strong>Profile</strong>
                             <br>
                             <small>
-                                Update your profile settings
+                                Check and update your profile
+                                <br> settings
                             </small>
                         </p>
                     </a>
@@ -50,7 +51,8 @@
                             </strong>
                             <br>
                             <small>
-                                Save movies and TV shows for the weekends.
+                                Movies and TV shows saved for
+                                <br> weekends on the couch
                             </small>
                         </p>
                     </a>
