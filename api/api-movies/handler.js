@@ -3,7 +3,7 @@
 const Boom = require('boom')
 const Joi = require('joi')
 const Path = require('path')
-const Show = require(Path.resolve(__dirname, '..', 'models')).Show
+const Movie = require(Path.resolve(__dirname, '..', '..', 'models')).Movie
 
 const Handler = {
   index: {
@@ -13,9 +13,9 @@ const Handler = {
       }
     },
     handler: async (request, h) => {
-      const shows = await Show.find()
+      const movies = await Movie.find()
 
-      return shows
+      return movies
     }
   },
   show: {
@@ -26,13 +26,13 @@ const Handler = {
     },
     handler: async (request, h) => {
       const slug = request.params.slug
-      const show = await Show.findOne({ 'ids.slug': slug })
+      const movie = await Movie.findOne({ 'ids.slug': slug })
 
-      if (!show) {
-        return Boom.notFound('Cannot find a show with that slug')
+      if (!movie) {
+        return Boom.notFound('Cannot find a movie with that slug')
       }
 
-      return show
+      return movie
     },
     validate: {
       params: {

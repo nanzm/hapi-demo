@@ -1,7 +1,7 @@
 'use strict'
 
 const Boom = require('boom')
-const User = require('./../models').User
+const User = require('../../models').User
 
 async function register (server, options) {
   // declare dependencies to hapi auth plugins

@@ -59,28 +59,28 @@ async function startWeb() {
       }
     },
     {
-      plugin: require('./server/authentication')
+      plugin: require('./web/authentication')
     },
     {
-      plugin: require('./server/base')
+      plugin: require('./web/base')
     },
     {
-      plugin: require('./server/add-user-to-request')
+      plugin: require('./web/add-user-to-request')
     },
     {
-      plugin: require('./server/add-user-to-views')
+      plugin: require('./web/add-user-to-views')
     },
     {
-      plugin: require('./server/user-signup-login')
+      plugin: require('./web/user-signup-login')
     },
     {
-      plugin: require('./server/user-profile')
+      plugin: require('./web/user-profile')
     },
     {
-      plugin: require('./server/movies')
+      plugin: require('./web/movies')
     },
     {
-      plugin: require('./server/tv-shows')
+      plugin: require('./web/tv-shows')
     }
   ])
 
@@ -139,10 +139,10 @@ async function startApi () {
       }
     },
     {
-      plugin: require('./server/api-movies')
+      plugin: require('./api/api-movies')
     },
     {
-      plugin: require('./server/api-tv-shows')
+      plugin: require('./api/api-tv-shows')
     }
   ])
 

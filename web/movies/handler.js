@@ -1,9 +1,8 @@
 'use strict'
 
-const Boom = require('boom')
 const Joi = require('joi')
 const Path = require('path')
-const Movie = require(Path.resolve(__dirname, '..', 'models')).Movie
+const Movie = require(Path.resolve(__dirname, '..', '..', 'models')).Movie
 
 const Handler = {
   index: {
@@ -15,10 +14,11 @@ const Handler = {
     handler: async (request, h) => {
       const movies = await Movie.find()
 
-      return movies
+      return h.view('movies/index', { movies })
     }
   },
-  show: {
+
+  single: {
     plugins: {
       'hapi-auth-cookie': {
         redirectTo: false
@@ -29,10 +29,10 @@ const Handler = {
       const movie = await Movie.findOne({ 'ids.slug': slug })
 
       if (!movie) {
-        return Boom.notFound('Cannot find a movie with that slug')
+        return h.view('404')
       }
 
-      return movie
+      return h.view('movies/single', { movie }, { layout: 'hero' })
     },
     validate: {
       params: {
