@@ -13,8 +13,8 @@ const showSchema = new Schema(
       required: true
     },
     ids: {
-      trakt: Number,
-      slug: String,
+      trakt: { type: Number, unique: true },
+      slug: { type: String, unique: true },
       imdb: String,
       tvdb: Number,
       tmdb: Number,
@@ -52,18 +52,20 @@ const showSchema = new Schema(
   }
 )
 
-//
+// use a virtual property for the “seasons” relation
+// allows you to benefit from Mongoose’s “toJSON” configuration
+// to remove seasons before sending them to the client
+// this won’t bloat the JSON with ALL the data
+// because this “seasons” population fetches
+// the related episodes as well (defined in the ”season” model)
 showSchema.virtual('seasons', {
   ref: 'Season',
-  localField: 'ids.trakt',
-  foreignField: 'ids.show',
-
-  populate: {
-    path: 'episodes'
-  }
+  localField: '_id',
+  foreignField: 'show'
 })
 
-function autopopulate(next) {
+// this is a helper function to populate “seasons” on queries
+function autopopulate (next) {
   this.populate('seasons')
   next()
 }
@@ -74,7 +76,7 @@ showSchema.pre('findOne', autopopulate)
 // add plugin to find random movies
 showSchema.plugin(MongooseRandom)
 
-showSchema.statics.random = function(limit) {
+showSchema.statics.random = function (limit) {
   const self = this
 
   return new Promise((resolve, reject) => {
