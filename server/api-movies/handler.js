@@ -1,9 +1,8 @@
 'use strict'
 
-const _ = require('lodash')
 const Boom = require('boom')
+const Joi = require('joi')
 const Path = require('path')
-const Show = require(Path.resolve(__dirname, '..', 'models')).Show
 const Movie = require(Path.resolve(__dirname, '..', 'models')).Movie
 
 const Handler = {
@@ -34,6 +33,11 @@ const Handler = {
       }
 
       return movie
+    },
+    validate: {
+      params: {
+        slug: Joi.string().required()
+      }
     }
   }
 }

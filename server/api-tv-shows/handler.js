@@ -1,6 +1,7 @@
 'use strict'
 
 const Boom = require('boom')
+const Joi = require('joi')
 const Path = require('path')
 const Show = require(Path.resolve(__dirname, '..', 'models')).Show
 
@@ -32,6 +33,11 @@ const Handler = {
       }
 
       return show
+    },
+    validate: {
+      params: {
+        slug: Joi.string().required()
+      }
     }
   }
 }
