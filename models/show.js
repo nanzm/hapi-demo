@@ -47,10 +47,11 @@ const showSchema = new Schema(
     country: String
   },
   {
-    // minimize JSON for API: don't include all season/episode info and remove __v property
+    // minimize JSON for API: don't include all season/episode info and remove _id, __v properties
     toJSON: {
       virtuals: false,
       transform: function (doc, ret, options) {
+        delete ret._id
         delete ret.__v
         return ret
       }
