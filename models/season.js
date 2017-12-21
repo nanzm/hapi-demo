@@ -29,7 +29,14 @@ const seasonSchema = new Schema(
     aired_episodes: Number
   },
   {
-    toJSON: { virtuals: true },
+    // minimize JSON for API: remove __v property
+    toJSON: {
+      virtuals: true,
+      transform: function (doc, ret, options) {
+        delete ret.__v
+        return ret
+      }
+    },
     toObject: { virtuals: true }
   }
 )

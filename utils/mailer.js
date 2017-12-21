@@ -14,10 +14,10 @@ const Transporter = Nodemailer.createTransport(
     }
   })
 )
-const Templates = Path.resolve(__dirname, '..', 'email-templates')
+const Templates = Path.resolve(__dirname, '..', 'public', 'email-templates')
 
 /**
- * filename: email template name, without ".html" file ending. Email templates are located within "server/email-templates"
+ * filename: email template name, without ".html" file ending. Email templates are located within "web/email-templates"
  * options: data which will be used to replace the placeholders within the template
  **/
 const prepareTemplate = (filename, options = {}) => {
