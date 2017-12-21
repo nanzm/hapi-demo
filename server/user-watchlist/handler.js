@@ -1,7 +1,6 @@
 'use strict'
 
 const Joi = require('joi')
-const Boom = require('boom')
 const Path = require('path')
 const Models = require(Path.resolve(__dirname, '..', 'models'))
 const Show = Models.Show
@@ -25,9 +24,16 @@ const Handler = {
       const slug = request.params.slug
       const movie = await Movie.findOne({ 'ids.slug': slug })
       const show = !movie ? await Show.findOne({ 'ids.slug': slug }) : null
+      let watchlist = request.user.watchlist
 
-      let watchlist = await Watchlist.findOne({ user: request.user._id })
+      if (!movie && !show) {
+        return h.view('user/watchlist', {
+          error: `We can’t find a movie or show for the given slug »${slug}«. Nothing added to your watchlist.`,
+          watchlist
+        })
+      }
 
+      // create new watchlist if user didn't have one yet
       if (!watchlist) {
         watchlist = new Watchlist({
           user: request.user._id,
@@ -36,18 +42,17 @@ const Handler = {
         })
       }
 
-      if (movie && !watchlist.includesMovie(movie)) {
-        watchlist.movies.push(movie)
-      }
-
-      if (show && !watchlist.includesShow(show)) {
-        watchlist.shows.push(show)
-      }
-
+      // add movie and show to watchlist
+      // document methods handle empty value properly (undefined, null)
+      watchlist.addMovie(movie)
+      watchlist.addShow(show)
       await watchlist.save()
 
+      // Mongoose's "post save" hook doesn't support population yet
+      // that means you need to query the data again to populate relations
+      watchlist = await Watchlist.findById(watchlist._id)
+
       return h.view('user/watchlist', {
-        message: 'Perfect!',
         watchlist
       })
     },
