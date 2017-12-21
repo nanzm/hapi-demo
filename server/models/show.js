@@ -47,7 +47,14 @@ const showSchema = new Schema(
     country: String
   },
   {
-    toJSON: { virtuals: true },
+    // minimize JSON for API: don't include all season/episode info and remove __v property
+    toJSON: {
+      virtuals: false,
+      transform: function (doc, ret, options) {
+        delete ret.__v
+        return ret
+      }
+    },
     toObject: { virtuals: true }
   }
 )
@@ -72,13 +79,6 @@ function autopopulate (next) {
 
 showSchema.pre('find', autopopulate)
 showSchema.pre('findOne', autopopulate)
-
-// minimize JSON: don't include all season/episode info and remove __v property
-showSchema.set('toJSON', { virtuals: false })
-showSchema.options.toJSON.transform = function (doc, ret, options) {
-  delete ret.__v
-  return ret
-}
 
 // add plugin to find random movies
 showSchema.plugin(MongooseRandom)

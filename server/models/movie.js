@@ -37,15 +37,17 @@ const movieSchema = new Schema({
   certification: String
   },
   {
-    toJSON: { virtuals: true },
+    // minimize JSON for API: remove __v property
+    toJSON: {
+      virtuals: true,
+      transform: function (doc, ret, options) {
+        delete ret.__v
+        return ret
+      }
+    },
     toObject: { virtuals: true }
   }
 )
-
-movieSchema.options.toJSON.transform = function (doc, ret, options) {
-  delete ret.__v
-  return ret
-}
 
 // add plugin to find random movies
 movieSchema.plugin(MongooseRandom)
