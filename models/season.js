@@ -29,7 +29,14 @@ const seasonSchema = new Schema(
     aired_episodes: Number
   },
   {
-    toJSON: { virtuals: true },
+    // minimize JSON for API: remove __v property
+    toJSON: {
+      virtuals: true,
+      transform: function (doc, ret, options) {
+        delete ret.__v
+        return ret
+      }
+    },
     toObject: { virtuals: true }
   }
 )
@@ -52,11 +59,5 @@ function autopopulate (next) {
 
 seasonSchema.pre('find', autopopulate)
 seasonSchema.pre('findOne', autopopulate)
-
-seasonSchema.methods.toJSON = function() {
-  let obj = this.toObject()
-  delete obj.__v
-  return obj
-}
 
 module.exports = Mongoose.model('Season', seasonSchema)

@@ -27,15 +27,16 @@ const episodeSchema = new Schema(
     available_translations: [String]
   },
   {
-    toJSON: { virtuals: true },
+    // minimize JSON for API: remove __v property
+    toJSON: {
+      virtuals: true,
+      transform: function (doc, ret, options) {
+        delete ret.__v
+        return ret
+      }
+    },
     toObject: { virtuals: true }
   }
 )
-
-episodeSchema.methods.toJSON = function() {
-  let obj = this.toObject()
-  delete obj.__v
-  return obj
-}
 
 module.exports = Mongoose.model('Episode', episodeSchema)
