@@ -7,11 +7,6 @@ const Show = require(Path.resolve(__dirname, '..', '..', 'models')).Show
 
 const Handler = {
   index: {
-    plugins: {
-      'hapi-auth-cookie': {
-        redirectTo: false
-      }
-    },
     handler: async (request, h) => {
       const shows = await Show.find()
 
@@ -19,11 +14,6 @@ const Handler = {
     }
   },
   show: {
-    plugins: {
-      'hapi-auth-cookie': {
-        redirectTo: false
-      }
-    },
     handler: async (request, h) => {
       const slug = request.params.slug
       const show = await Show.findOne({ 'ids.slug': slug })
