@@ -2,11 +2,11 @@
 
 const Joi = require('joi')
 const Path = require('path')
-const Models = require(Path.resolve(__dirname, '..', 'models'))
+const Models = require(Path.resolve(__dirname, '..', '..', 'models'))
 const Show = Models.Show
 const Movie = Models.Movie
-const Watchlist = require(Path.resolve(__dirname, '..', 'models')).Watchlist
-const ErrorExtractor = require(Path.resolve(__dirname, '..', 'utils', 'error-extractor'))
+const Watchlist = Models.Watchlist
+const ErrorExtractor = require(Path.resolve(__dirname, '..', '..', 'utils', 'error-extractor'))
 
 const Handler = {
   watchlist: {

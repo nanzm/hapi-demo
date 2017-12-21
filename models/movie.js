@@ -35,7 +35,19 @@ const movieSchema = new Schema({
   genres: [String],
   language: String,
   certification: String
-})
+  },
+  {
+    // minimize JSON for API: remove __v property
+    toJSON: {
+      virtuals: true,
+      transform: function (doc, ret, options) {
+        delete ret.__v
+        return ret
+      }
+    },
+    toObject: { virtuals: true }
+  }
+)
 
 // add plugin to find random movies
 movieSchema.plugin(MongooseRandom)

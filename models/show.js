@@ -47,7 +47,14 @@ const showSchema = new Schema(
     country: String
   },
   {
-    toJSON: { virtuals: true },
+    // minimize JSON for API: don't include all season/episode info and remove __v property
+    toJSON: {
+      virtuals: false,
+      transform: function (doc, ret, options) {
+        delete ret.__v
+        return ret
+      }
+    },
     toObject: { virtuals: true }
   }
 )

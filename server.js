@@ -16,17 +16,17 @@ Dotenv.config({ path: Path.resolve(__dirname, 'secrets.env') })
 // configure logger
 Laabr.format('log', ':time :level :message')
 
-// create new server instance
-// add server’s connection information
-const server = new Hapi.Server({
+// create new web instance
+// add web’s connection information
+const web = new Hapi.Server({
   host: 'localhost',
-  port: process.env.PORT || 3000
+  port: process.env.PORT_WEB || 3000
 })
 
-// register plugins, configure views and start the server instance
-async function start () {
-  // register plugins to server instance
-  await server.register([
+// register plugins, configure views and start the web instance
+async function startWeb() {
+  // register plugins to web instance
+  await web.register([
     {
       plugin: require('inert')
     },
@@ -59,38 +59,38 @@ async function start () {
       }
     },
     {
-      plugin: require('./server/authentication')
+      plugin: require('./web/authentication')
     },
     {
-      plugin: require('./server/base')
+      plugin: require('./web/base')
     },
     {
-      plugin: require('./server/add-user-to-request')
+      plugin: require('./web/add-user-to-request')
     },
     {
-      plugin: require('./server/add-user-to-views')
+      plugin: require('./web/add-user-to-views')
     },
     {
-      plugin: require('./server/user-signup-login')
+      plugin: require('./web/user-signup-login')
     },
     {
-      plugin: require('./server/user-profile')
+      plugin: require('./web/user-profile')
     },
     {
-      plugin: require('./server/user-watchlist')
+      plugin: require('./web/user-watchlist')
     },
     {
-      plugin: require('./server/movies')
+      plugin: require('./web/movies')
     },
     {
-      plugin: require('./server/tv-shows')
+      plugin: require('./web/tv-shows')
     }
   ])
 
   // view configuration
   const viewsPath = Path.resolve(__dirname, 'public', 'views')
 
-  server.views({
+  web.views({
     engines: {
       hbs: Handlebars
     },
@@ -105,10 +105,10 @@ async function start () {
     }
   })
 
-  // start your server
+  // start your web
   try {
-    await server.start()
-    console.log(`Server started → ${server.info.uri}`)
+    await web.start()
+    console.log(`Web started → ${web.info.uri}`)
   } catch (err) {
     console.log(err)
     console.error(err)
@@ -116,7 +116,52 @@ async function start () {
   }
 }
 
-start()
+const api = new Hapi.Server({
+  host: 'localhost',
+  port: process.env.PORT_API || 3001
+})
+
+// register plugins and start the API web instance
+async function startApi () {
+  // register plugins to web instance
+  await api.register([
+    {
+      plugin: require('hapi-dev-errors'),
+      options: {
+        showErrors: process.env.NODE_ENV !== 'production',
+        useYouch: true
+      }
+    },
+    {
+      plugin: Laabr.plugin,
+      options: {
+        colored: true,
+        hapiPino: {
+          logPayload: false
+        }
+      }
+    },
+    {
+      plugin: require('./api/movies')
+    },
+    {
+      plugin: require('./api/tv-shows')
+    }
+  ])
+
+  // start your web
+  try {
+    await api.start()
+    console.log(`API started → ${api.info.uri}`)
+  } catch (err) {
+    console.log(err)
+    console.error(err)
+    process.exit(1)
+  }
+}
+
+startWeb()
+startApi()
 
 process.on('unhandledRejection', error => {
   console.log(error)
