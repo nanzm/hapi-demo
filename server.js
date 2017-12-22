@@ -24,7 +24,7 @@ const web = new Hapi.Server({
 })
 
 // register plugins, configure views and start the web instance
-async function startWeb() {
+async function startWeb () {
   // register plugins to web instance
   await web.register([
     {
@@ -108,7 +108,6 @@ async function startWeb() {
   // start your web
   try {
     await web.start()
-    console.log(`Web started → ${web.info.uri}`)
   } catch (err) {
     console.log(err)
     console.error(err)
@@ -152,7 +151,6 @@ async function startApi () {
   // start your web
   try {
     await api.start()
-    console.log(`API started → ${api.info.uri}`)
   } catch (err) {
     console.log(err)
     console.error(err)
