@@ -37,8 +37,7 @@
         position: relative;
     }
 
-    .hero.is-dark .navbar-item a:not(.button),
-    .hero.is-dark a.navbar-item {}
+    .hero.is-dark h2 {}
 </style>
 
 {{> hero-movies-shows movieOrShow=movie user=user isHeight='is-fullheight'}}
@@ -54,11 +53,11 @@
     <div class="container">
         <div class="columns content">
             {{#each movies}}
-                <div class="column">
-                    <a href="/movies/{{ids.slug}}">
-                        <img src="{{images.poster}}" width="">
-                    </a>
-                </div>
+            <div class="column">
+                <a href="/movies/{{ids.slug}}">
+                    <img src="{{images.poster}}" width="">
+                </a>
+            </div>
             {{/each}}
         </div>
     </div>
@@ -75,11 +74,11 @@
     <div class="container">
         <div class="columns content">
             {{#each shows}}
-                <div class="column">
-                    <a href="/shows/{{ids.slug}}">
-                        <img src="{{images.poster}}" width="">
-                    </a>
-                </div>
+            <div class="column">
+                <a href="/shows/{{ids.slug}}">
+                    <img src="{{images.poster}}" width="">
+                </a>
+            </div>
             {{/each}}
         </div>
     </div>
