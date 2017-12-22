@@ -27,10 +27,11 @@ const episodeSchema = new Schema(
     available_translations: [String]
   },
   {
-    // minimize JSON for API: remove __v property
+    // minimize JSON for API: remove _id, __v properties
     toJSON: {
       virtuals: true,
       transform: function (doc, ret, options) {
+        delete ret._id
         delete ret.__v
         return ret
       }

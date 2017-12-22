@@ -26,68 +26,64 @@
     }
 </style>
 
-{{> hero-movies-shows movieOrShow=show user=user isHeight='is-medium'}}
+{{> hero-movies-shows movieOrShow=show user=user isHeight='is-medium'}} {{#show}}
+<div class="content container">
+    <div class="columns is-one-quarter">
+        <div class="column">
+            <img src="{{images.poster}}">
 
-{{#show}}
-    <div class="content container">
-        <div class="columns is-one-quarter">
-            <div class="column">
-                <img src="{{images.poster}}">
-
-                <h2>Genres</h2>
-                <div class="tags">
-                    {{#each genres}}
-                        <span class="tag is-warning">{{this}}</span>
-                    {{/each}}
-                </div>
-
-                {{#if seasons}}
-                    <h2>Seasons</h2>
-                    <div class="">
-                        {{#each seasons}}
-                            <p>{{this.title}} ({{this.episodes.length}})</p>
-                        {{/each}}
-                    </div>
-                {{/if}}
+            <h2>Genres</h2>
+            <div class="tags">
+                {{#each genres}}
+                <span class="tag is-warning">{{this}}</span>
+                {{/each}}
             </div>
 
-            <div class="column is-three-quarters content has-white-background">
-                <div class="container is-fluid">
-                    <h1>
-                        {{title}}
-                    </h1>
+            {{#if seasons}}
+            <h2>Seasons</h2>
+            <div class="">
+                {{#each seasons}}
+                <p>{{this.title}} ({{this.episodes.length}})</p>
+                {{/each}}
+            </div>
+            {{/if}}
+        </div>
 
-                    <p class="subtitle has-text-grey">
-                        <img src="/images/star-yellow.svg" alt=""> {{formatRating rating}} out of {{votes}} Votes
-                    </p>
-                    <p>
-                        <a href="{{homepage}}" class="button is-secondary is-small">
-                            Visit Homepage
-                        </a>
-                    </p>
-                    <p>
-                        {{overview}}
-                    </p>
+        <div class="column is-three-quarters content has-white-background">
+            <div class="container is-fluid">
+                <h1>
+                    {{title}}
+                </h1>
 
-                    {{#if trailer}}
-                        <h2>Trailer</h2>
-                        <div class="video-container">
-                            <iframe src="{{video trailer}}" frameborder="0" allowfullscreen></iframe>
-                        </div>
-                    {{/if}}
+                <p class="subtitle has-text-grey">
+                    <img src="/images/star-yellow.svg" alt=""> {{formatRating rating}} out of {{votes}} Votes
+                </p>
+                <p>
+                    <a href="{{homepage}}" class="button is-secondary is-small">
+                        Visit Homepage
+                    </a>
+                </p>
+                <p>
+                    {{overview}}
+                </p>
 
-                    <h2>Comments</h2>
-                    {{#if comments}}
-                        <div>
-                            {{! implement this as part of learnhapi.com :) }}
-                        </div>
-                    {{else}}
-                        <div class="notification">
-                            Be the first who comments on {{title}}!
-                        </div>
-                    {{/if}}
+                {{#if trailer}}
+                <h2>Trailer</h2>
+                <div class="video-container">
+                    <iframe src="{{video trailer}}" frameborder="0" allowfullscreen></iframe>
+                </div>
+                {{/if}}
+
+                <h2>Comments</h2>
+                {{#if comments}}
+                <div>
+                    {{! implement this as part of learnhapi.com :) }}
+                </div>
+                {{else}}
+                <div class="notification">
+                    Be the first who comments on {{title}}! {{! implement the actual commenting system as part of learnhapi.com :) }}
                 </div>
             </div>
         </div>
     </div>
-{{/show}}
+    {{/show}}

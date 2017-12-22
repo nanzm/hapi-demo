@@ -7,11 +7,6 @@ const Movie = require(Path.resolve(__dirname, '..', '..', 'models')).Movie
 
 const Handler = {
   index: {
-    plugins: {
-      'hapi-auth-cookie': {
-        redirectTo: false
-      }
-    },
     handler: async (request, h) => {
       const movies = await Movie.find()
 
@@ -19,11 +14,6 @@ const Handler = {
     }
   },
   show: {
-    plugins: {
-      'hapi-auth-cookie': {
-        redirectTo: false
-      }
-    },
     handler: async (request, h) => {
       const slug = request.params.slug
       const movie = await Movie.findOne({ 'ids.slug': slug })
