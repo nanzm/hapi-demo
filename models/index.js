@@ -6,6 +6,7 @@ const Movie = require('./movie')
 const Show = require('./show')
 const Season = require('./season')
 const Episode = require('./episode')
+const Watchlist = require('./watchlist')
 
 // tell Mongoose to use ES6 promises
 Mongoose.Promise = global.Promise
@@ -24,5 +25,6 @@ module.exports = {
   Movie,
   Show,
   Season,
-  Episode
+  Episode,
+  Watchlist
 }

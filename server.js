@@ -77,6 +77,9 @@ async function startWeb () {
       plugin: require('./web/user-profile')
     },
     {
+      plugin: require('./web/user-watchlist')
+    },
+    {
       plugin: require('./web/movies')
     },
     {

@@ -26,19 +26,9 @@
     }
 </style>
 
-{{#show}}
-<section class="hero is-dark is-bold is-medium">
-
-    <div class="hero-head">
-        {{> hero-header user=../user}}
-    </div>
-
-    {{> hero-movies-shows }}
-
-</section>
-
+{{> hero-movies-shows movieOrShow=show user=user isHeight='is-medium'}} {{#show}}
 <div class="content container">
-    <div class="columns is-one-quarter">
+    <div class="columns">
         <div class="column">
             <img src="{{images.poster}}">
 
@@ -91,12 +81,12 @@
                 </div>
                 {{else}}
                 <div class="notification">
-                    Be the first who comments on {{title}}!
-                    {{! implement the actual commenting system as part of learnhapi.com :) }}
+                    Be the first who comments on {{title}}! {{! implement the actual commenting system as part of learnhapi.com :) }}
                 </div>
                 {{/if}}
             </div>
         </div>
     </div>
 </div>
+
 {{/show}}
