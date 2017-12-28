@@ -1,0 +1,15 @@
+image: node:8
+
+services:
+  - mongodb:3.0
+  - mongodb:3.2
+  - mongodb:3.4
+  - mongodb:3.6
+  - mongodb:latest
+
+before_script:
+  - npm install
+
+test:
+  script:
+    - npm test
