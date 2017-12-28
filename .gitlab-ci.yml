@@ -4,7 +4,7 @@ services:
   - mongo:3.4
 
 variables:
-  - DATABASE: "mongodb://mongo/futureflix"
+  DATABASE: "mongodb://mongo/futureflix"
 
 # This folder is cached between builds
 # http://docs.gitlab.com/ce/ci/yaml/README.html#cache
