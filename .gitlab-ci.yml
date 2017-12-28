@@ -1,5 +1,3 @@
-image: node:8
-
 services:
   - mongo:3.4
 
@@ -15,6 +13,13 @@ cache:
 before_script:
   - npm install
 
-test:
+# test against Node.js v8 and latest stable release
+test:node-8:
+  image: node:8
+  script:
+    - npm test
+
+test:node-latest:
+  image: node:latest
   script:
     - npm test
