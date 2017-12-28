@@ -8,11 +8,11 @@ const Season = require('./season')
 const Episode = require('./episode')
 const Watchlist = require('./watchlist')
 
-// tell Mongoose to use ES6 promises
+// tell Mongoose to use Node.js promises
 Mongoose.Promise = global.Promise
 
 // Connect to your database
-Mongoose.connect(process.env.DATABASE)
+Mongoose.connect(process.env.DATABASE || 'mongodb://localhost/futureflix')
 
 // listen for connection errors and print the message
 Mongoose.connection.on('error', err => {
