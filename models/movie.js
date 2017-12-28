@@ -4,37 +4,38 @@ const Mongoose = require('mongoose')
 const MongooseRandom = require('mongoose-simple-random')
 const Schema = Mongoose.Schema
 
-const movieSchema = new Schema({
-  title: {
-    type: String,
-    unique: true,
-    trim: true,
-    required: true
-  },
-  ids: {
-    trakt: Number,
-    slug: String,
-    imdb: String,
-    tmdb: Number,
-    fanart: Number,
-    omdb: Number
-  },
-  images: {
-    poster: String,
-    background: String
-  },
-  year: Number,
-  tagline: String,
-  overview: String,
-  released: String,
-  runtime: Number, // in minutes
-  trailer: String,
-  homepage: String,
-  rating: Number,
-  votes: Number,
-  genres: [String],
-  language: String,
-  certification: String
+const movieSchema = new Schema(
+  {
+    title: {
+      type: String,
+      unique: true,
+      trim: true,
+      required: true
+    },
+    ids: {
+      trakt: Number,
+      slug: String,
+      imdb: String,
+      tmdb: Number,
+      fanart: Number,
+      omdb: Number
+    },
+    images: {
+      poster: String,
+      background: String
+    },
+    year: Number,
+    tagline: String,
+    overview: String,
+    released: String,
+    runtime: Number, // in minutes
+    trailer: String,
+    homepage: String,
+    rating: Number,
+    votes: Number,
+    genres: [String],
+    language: String,
+    certification: String
   },
   {
     // minimize JSON for API: remove _id, __v properties
