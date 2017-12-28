@@ -13,8 +13,8 @@ const Handler = {
       }
     },
     handler: async (request, h) => {
-      const showCount = await Movie.count()
-      const pagination = new Paginator(request, showCount)
+      const totalCount = await Movie.count()
+      const pagination = new Paginator(request, totalCount)
 
       if (pagination.currentPage > pagination.lastPage) {
         return h.view('404').code(404)
