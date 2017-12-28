@@ -1,7 +1,7 @@
 image: node:8
 
 services:
-  - mongodb:3.4
+  - mongo:3.4
 
 # This folder is cached between builds
 # http://docs.gitlab.com/ce/ci/yaml/README.html#cache
