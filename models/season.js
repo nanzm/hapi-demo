@@ -52,13 +52,4 @@ seasonSchema.virtual('episodes', {
   foreignField: 'season'
 })
 
-// this is a helper function to populate “episodes” on queries
-function autopopulate (next) {
-  this.populate('episodes')
-  next()
-}
-
-seasonSchema.pre('find', autopopulate)
-seasonSchema.pre('findOne', autopopulate)
-
 module.exports = Mongoose.model('Season', seasonSchema)
