@@ -8,9 +8,6 @@ const Show = require(Path.resolve(__dirname, '..', '..', 'models')).Show
 const queryParamEpisodes = 'episodes'
 const queryParamSeasons = 'seasons'
 
-const modelPopulateEpisodes = 'episodes'
-const modelPopulateSeasons = 'seasons'
-
 function queryParamsIncludeOnlyEpisodes (extendParams) {
   return extendParams.includes(queryParamEpisodes) && !extendParams.includes(queryParamSeasons)
 }
@@ -31,11 +28,11 @@ function extendQueryWithSeasonEpisodeData (baseQuery, queryParams) {
   }
 
   if (queryParamsIncludeOnlySeasons(extendParams)) {
-    return baseQuery.populate(modelPopulateSeasons)
+    return baseQuery.populate('seasons')
   }
 
   if (queryParamsIncludeSeasonsAndEpisodes(extendParams)) {
-    return baseQuery.populate({path: modelPopulateSeasons, populate: {path: modelPopulateEpisodes}})
+    return baseQuery.populate({path: 'seasons', populate: {path: 'episodes'}})
   }
 
   return baseQuery
