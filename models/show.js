@@ -49,7 +49,7 @@ const showSchema = new Schema(
   {
     // minimize JSON for API: don't include all season/episode info and remove _id, __v properties
     toJSON: {
-      virtuals: false,
+      virtuals: true,
       transform: function (doc, ret, options) {
         delete ret._id
         delete ret.__v
@@ -71,15 +71,6 @@ showSchema.virtual('seasons', {
   localField: '_id',
   foreignField: 'show'
 })
-
-// this is a helper function to populate “seasons” on queries
-function autopopulate (next) {
-  this.populate('seasons')
-  next()
-}
-
-showSchema.pre('find', autopopulate)
-showSchema.pre('findOne', autopopulate)
 
 // add plugin to find random movies
 showSchema.plugin(MongooseRandom)
