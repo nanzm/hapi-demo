@@ -3,6 +3,7 @@
 const Boom = require('boom')
 const Joi = require('joi')
 const Path = require('path')
+const Paginator = require(Path.resolve(__dirname, '..', '..', 'utils', 'paginator'))
 const Show = require(Path.resolve(__dirname, '..', '..', 'models')).Show
 
 const queryParamEpisodes = 'episodes'
@@ -42,11 +43,25 @@ const Handler = {
   index: {
     handler: async (request, h) => {
       const baseQuery = Show.find()
+      const totalCount = await Show.count()
+      const pagination = new Paginator(request, totalCount)
+
+      if (pagination.currentPage > pagination.lastPage) {
+        return Boom.notFound('The requested page does not exist. The last available page is: ' + pagination.lastPage)
+      }
 
       let extendedQuery = extendQueryWithSeasonEpisodeData(baseQuery, request.query)
-      let shows = await extendedQuery
 
-      return shows
+      const shows = await extendedQuery
+        .skip(pagination.from)
+        .limit(pagination.perPage)
+
+      return h.response(shows).header('Link', pagination.link)
+    },
+    validate: {
+      query: {
+        page: Joi.number().min(1)
+      }
     }
   },
   show: {
