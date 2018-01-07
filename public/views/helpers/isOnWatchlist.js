@@ -1,12 +1,19 @@
 'use strict'
 
-module.exports = options => {
+module.exports = function (options) {
   const user = options.data.root.user
-  const movieOrShow = options.data.root.movie || options.data.root.show
 
-  if (user.watchlist.isOnWatchlist(movieOrShow)) {
-    return options.fn(this)
+  // “this” is the context data from Handlebars
+  // either a movie or a show
+  const movieOrShow = this
+
+  if (!user) {
+    return options.inverse(movieOrShow)
   }
 
-  return options.inverse(movieOrShow)
+  if (!user.watchlist.isOnWatchlist(movieOrShow)) {
+    return options.inverse(movieOrShow)
+  }
+
+  return options.fn()
 }
