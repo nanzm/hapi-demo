@@ -29,12 +29,21 @@
                             {{overview}}
                         </p>
                         <p class="field">
-                            <a href="/watchlist/add/{{ids.slug}}" class="button add-to-watchlist has-margin-top-1">
-                                <span class="icon is-small has-text-primary">
-                                    <i class="fa fa-plus"></i>
-                                </span>
-                                <span class="has-text-white-ter">Add to Watchlist</span>
-                            </a>
+                            {{#isOnWatchlist}}
+                                <div class="button add-to-watchlist">
+                                    <span class="icon is-small has-text-primary">
+                                        <i class="fa fa-check"></i>
+                                    </span>
+                                    <span class="has-text-white-ter">On Wour Watchlist</span>
+                                </div>
+                                {{else}}
+                                    <a href="/watchlist/add/{{ids.slug}}" class="button add-to-watchlist has-margin-top-1">
+                                        <span class="icon is-small has-text-primary">
+                                            <i class="fa fa-plus"></i>
+                                        </span>
+                                        <span class="has-text-white-ter">Add to Watchlist</span>
+                                    </a>
+                            {{/isOnWatchlist}}
                         </p>
                     </div>
                 </div>

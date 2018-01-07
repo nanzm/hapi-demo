@@ -62,4 +62,10 @@ watchlistSchema.methods.includesShow = function (candidateShow) {
   return shows.length > 0
 }
 
+watchlistSchema.methods.isOnWatchlist = function (movieOrShow) {
+  const isMovie = movieOrShow.constructor.modelName === 'Movie'
+
+  return isMovie ? this.includesMovie(movieOrShow) : this.includesShow(movieOrShow)
+}
+
 module.exports = Mongoose.model('Watchlist', watchlistSchema)
