@@ -1,6 +1,7 @@
 'use strict'
 
 module.exports = function (options) {
+  // grab user from Handlebars context
   const user = options.data.root.user
 
   // “this” is the context data from Handlebars
