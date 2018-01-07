@@ -8,5 +8,5 @@ module.exports = options => {
     return options.fn(this)
   }
 
-  return options.inverse(this)
+  return options.inverse(movieOrShow)
 }
