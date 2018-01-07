@@ -9,7 +9,10 @@ const watchlistSchema = new Schema({
   shows: [{ type: Schema.Types.ObjectId, ref: 'Show' }]
 })
 
-// this is a helper function to populate “seasons” on queries
+/**
+ * Middleware
+ */
+// helper function to populate movies and shows on queries
 function autopopulate (next) {
   this.populate('movies').populate('shows')
   next()
@@ -18,11 +21,10 @@ function autopopulate (next) {
 watchlistSchema.pre('find', autopopulate)
 watchlistSchema.pre('findOne', autopopulate)
 
+/**
+ * Model Instance Methods
+ */
 watchlistSchema.methods.addMovie = function (movie) {
-  if (!movie) {
-    return
-  }
-
   if (!this.includesMovie(movie)) {
     this.movies.push(movie)
   }
@@ -41,10 +43,6 @@ watchlistSchema.methods.includesMovie = function (candidateMovie) {
 }
 
 watchlistSchema.methods.addShow = function (show) {
-  if (!show) {
-    return
-  }
-
   if (!this.includesShow(show)) {
     this.shows.push(show)
   }
