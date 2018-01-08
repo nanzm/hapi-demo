@@ -1,12 +1,8 @@
 'use strict'
 
-module.exports = function (options) {
+module.exports = function (movieOrShow, options) {
   // grab user from Handlebars context
   const user = options.data.root.user
-
-  // “this” is the context data from Handlebars
-  // either a movie or a show
-  const movieOrShow = this
 
   if (!user) {
     return options.inverse(movieOrShow)
@@ -16,5 +12,7 @@ module.exports = function (options) {
     return options.inverse(movieOrShow)
   }
 
+  // at this point: no need to pass any data back to the view
+  // we only show static HTML, no data needed
   return options.fn()
 }

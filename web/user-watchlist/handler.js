@@ -9,7 +9,7 @@ const Watchlist = Models.Watchlist
 const ErrorExtractor = require(Path.resolve(__dirname, '..', '..', 'utils', 'error-extractor'))
 
 const Handler = {
-  watchlist: {
+  index: {
     auth: 'session',
     handler: (request, h) => {
       return h.view('user/watchlist', { watchlist: request.user.watchlist })
@@ -27,10 +27,12 @@ const Handler = {
       let watchlist = request.user.watchlist
 
       if (noMovieNorShow) {
-        return h.view('user/watchlist', {
-          error: `We can’t find a movie or show for the given slug »${slug}«. Nothing added to your watchlist.`,
-          watchlist
-        })
+        return h
+          .view('user/watchlist', {
+            error: `We can’t find a movie or show for the given slug »${slug}«. Nothing added to your watchlist.`,
+            watchlist
+          })
+          .code(404)
       }
 
       // create new watchlist if user didn't have one yet

@@ -6,7 +6,7 @@ const Routes = [
   {
     method: 'GET',
     path: '/watchlist',
-    config: Handler.watchlist
+    config: Handler.index
   },
   {
     method: 'GET',
