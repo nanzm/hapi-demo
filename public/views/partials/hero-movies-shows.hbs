@@ -37,7 +37,7 @@
                                     <span class="has-text-white-ter">On Wour Watchlist</span>
                                 </div>
                                 {{else}}
-                                    <a href="/watchlist/add/{{ids.slug}}" class="button add-to-watchlist has-margin-top-1">
+                                    <a href="/watchlist/add/{{#if this.seasons}}show{{else}}movie{{/if}}/{{ids.slug}}" class="button add-to-watchlist has-margin-top-1">
                                         <span class="icon is-small has-text-primary">
                                             <i class="fa fa-plus"></i>
                                         </span>

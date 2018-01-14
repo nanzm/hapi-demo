@@ -10,13 +10,13 @@ const Routes = [
   },
   {
     method: 'GET',
-    path: '/watchlist/add/{slug}',
-    config: Handler.add
+    path: '/watchlist/add/movie/{slug}',
+    config: Handler.addMovie
   },
   {
-    method: 'POST',
-    path: '/watchlist/{slug}',
-    config: Handler.add
+    method: 'GET',
+    path: '/watchlist/add/show/{slug}',
+    config: Handler.addShow
   }
 ]
 
