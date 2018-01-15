@@ -3,9 +3,11 @@
     {{#movieOrShow}}
         <div class="hero-bg" style="background-image: url({{images.background}});"></div>
         <div class="shadow"></div>
+    {{/movieOrShow}}
 
-        {{> hero-header user=../user}}
+    {{> hero-header}}
 
+    {{#movieOrShow}}
         <div class="hero-body">
             <div class="container">
                 <div class="columns">
@@ -37,7 +39,7 @@
                                     <span class="has-text-white-ter">On Wour Watchlist</span>
                                 </div>
                                 {{else}}
-                                    <a href="/watchlist/add/{{#if this.seasons}}show{{else}}movie{{/if}}/{{ids.slug}}" class="button add-to-watchlist has-margin-top-1">
+                                    <a href="/watchlist/add/{{#if isMovie}}movie{{else}}show{{/if}}/{{ids.slug}}" class="button add-to-watchlist has-margin-top-1">
                                         <span class="icon is-small has-text-primary">
                                             <i class="fa fa-plus"></i>
                                         </span>

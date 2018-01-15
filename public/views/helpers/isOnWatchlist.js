@@ -8,6 +8,10 @@ module.exports = function (movieOrShow, options) {
     return options.inverse(movieOrShow)
   }
 
+  if (!user.watchlist) {
+    return options.inverse(movieOrShow)
+  }
+
   if (!user.watchlist.isOnWatchlist(movieOrShow)) {
     return options.inverse(movieOrShow)
   }

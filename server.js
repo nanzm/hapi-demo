@@ -84,6 +84,9 @@ async function startWeb () {
     },
     {
       plugin: require('./web/tv-shows')
+    },
+    {
+      plugin: require('./web/search')
     }
   ])
 

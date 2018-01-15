@@ -35,7 +35,11 @@ const movieSchema = new Schema(
     votes: Number,
     genres: [String],
     language: String,
-    certification: String
+    certification: String,
+    isMovie: {
+      type: Boolean,
+      default: true
+    }
   },
   {
     // minimize JSON for API: remove _id, __v properties
@@ -51,9 +55,24 @@ const movieSchema = new Schema(
   }
 )
 
-// add plugin to find random movies
+/**
+ * Create Indexes
+ */
+movieSchema.index(
+  { title: 'text', overview: 'text', genres: 'text' },
+  {
+    weights: { title: 5, overview: 2, genres: 1 }
+  }
+)
+
+/**
+ * add plugin to find random movies
+ */
 movieSchema.plugin(MongooseRandom)
 
+/**
+ * Add static Model methods
+ */
 movieSchema.statics.random = function (limit) {
   const self = this
 
