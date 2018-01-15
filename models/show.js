@@ -72,6 +72,16 @@ showSchema.virtual('seasons', {
   foreignField: 'show'
 })
 
+/**
+ * Create Indexes
+ */
+showSchema.index(
+  { title: 'text', overview: 'text', genres: 'text' },
+  {
+    weights: { title: 5, overview: 2, genres: 1 }
+  }
+)
+
 // add plugin to find random movies
 showSchema.plugin(MongooseRandom)
 
