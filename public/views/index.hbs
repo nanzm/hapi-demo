@@ -40,7 +40,7 @@
     .hero.is-dark h2 {}
 </style>
 
-{{> hero-movies-shows movieOrShow=movie user=user isHeight='is-fullheight'}}
+{{> hero-movies-shows movieOrShow=movie user=user isHeight='is-fullheight' keepMeSafeFromCsrf=keepMeSafeFromCsrf}}
 
 <section class="section">
     <div class="container">
@@ -53,11 +53,11 @@
     <div class="container">
         <div class="columns content">
             {{#each movies}}
-            <div class="column">
-                <a href="/movies/{{ids.slug}}">
-                    <img src="{{images.poster}}" width="">
-                </a>
-            </div>
+                <div class="column">
+                    <a href="/movies/{{ids.slug}}">
+                        <img src="{{images.poster}}" width="">
+                    </a>
+                </div>
             {{/each}}
         </div>
     </div>
@@ -74,11 +74,11 @@
     <div class="container">
         <div class="columns content">
             {{#each shows}}
-            <div class="column">
-                <a href="/shows/{{ids.slug}}">
-                    <img src="{{images.poster}}" width="">
-                </a>
-            </div>
+                <div class="column">
+                    <a href="/shows/{{ids.slug}}">
+                        <img src="{{images.poster}}" width="">
+                    </a>
+                </div>
             {{/each}}
         </div>
     </div>

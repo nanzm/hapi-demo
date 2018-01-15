@@ -14,22 +14,26 @@
 
     <div class="navbar-end">
         <div class="navbar-item">
-            <div class="field has-addons">
-                <p class="control">
-                    <input class="input search-input" type="text" placeholder="Search Futureflix">
-                </p>
-                <p class="control">
-                    <button class="button search-button">
-                        <figure class="image is-16x16">
-                            {{#if isHero}}
-                                <img src="/images/search-white.svg" alt="">
-                            {{else}}
-                                <img src="/images/search.svg" alt="">
-                            {{/if}}
-                        </figure>
-                    </button>
-                </p>
-            </div>
+            <form action="/search" method="POST">
+                <input type="hidden" name="keepMeSafeFromCsrf" value="{{keepMeSafeFromCsrf}}">
+
+                <div class="field has-addons">
+                    <p class="control">
+                        <input class="input search-input" type="text" name="keyword" placeholder="Search Futureflix" value="{{keyword}}">
+                    </p>
+                    <p class="control">
+                        <button class="button search-button">
+                            <figure class="image is-16x16">
+                                {{#if isHero}}
+                                    <img src="/images/search-white.svg" alt="">
+                                {{else}}
+                                    <img src="/images/search.svg" alt="">
+                                {{/if}}
+                            </figure>
+                        </button>
+                    </p>
+                </div>
+            </form>
         </div>
 
         {{#if user}}
