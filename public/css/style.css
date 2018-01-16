@@ -143,6 +143,14 @@ label.is-danger {
   margin-top: 1rem;
 }
 
+.has-margin-top-2 {
+  margin-top: 2rem;
+}
+
+.has-margin-top-3 {
+  margin-top: 3rem;
+}
+
 .has-margin-bottom-1 {
   margin-bottom: 1rem;
 }
