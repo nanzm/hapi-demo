@@ -57,3 +57,4 @@ deploy:
     - ssh -p22 launch@futureflix.space "cd futureflix && npm install --production"
   only:
   - master
+  - develop
