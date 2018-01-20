@@ -56,8 +56,9 @@ deploy:
   - chmod 644 ~/.ssh/known_hosts
   script:
     - echo "Starting Futureflix production deployment"
-    - ssh -p22 launch@futureflix.space "cd ~/futureflix && git pull origin master"
+    - ssh launch@futureflix.space "cd ~/futureflix && git pull origin master"
     - ssh launch@futureflix.space "cd ~/futureflix && npm install --production"
+    - ssh launch@futureflix.space "pm2 gracefulReload futureflix"
   only:
-  - master
+#  - master
   - develop
