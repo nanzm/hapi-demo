@@ -44,7 +44,6 @@ const Handler = {
           .allow('')
       },
       failAction: (request, h, error) => {
-        console.log(error)
         // prepare formatted error object
         const errors = ErrorExtractor(error)
 
