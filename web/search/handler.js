@@ -19,15 +19,26 @@ const Handler = {
 
       // find movies and shows based on the user input
       const [movies, shows] = await Promise.all([
-        Movie.find({ $text: { $search: keyword } }, { score: { $meta: 'textScore' } }).sort({
+        Movie.find(
+          {
+            $text: { $search: keyword }
+          },
+          { score: { $meta: 'textScore' } }
+        ).sort({
           score: { $meta: 'textScore' }
         }),
-        Show.find({ $text: { $search: keyword } }, { score: { $meta: 'textScore' } }).sort({
+        Show.find(
+          {
+            $text: { $search: keyword }
+          },
+          { score: { $meta: 'textScore' } }
+        ).sort({
           score: { $meta: 'textScore' }
         })
       ])
 
-      // combine results for movies and shows
+      // merge result arrays for movies and shows
+      // and sort by search score
       const results = movies.concat(shows).sort((a, b) => {
         // sort by score DESC
         // score is only available on the _doc attribute,
