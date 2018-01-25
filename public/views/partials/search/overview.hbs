@@ -7,6 +7,12 @@
             </div>
         {{/if}}
 
+        {{#unless results}}
+            <div class="notification is-info">
+                Can’t find anything for »{{keyword}}«
+            </div>
+        {{/unless}}
+
         {{#each results}}
             <div class="card">
                 <div class="card-content">
