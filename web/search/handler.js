@@ -24,17 +24,19 @@ const Handler = {
             $text: { $search: keyword }
           },
           { score: { $meta: 'textScore' } }
-        ).sort({
-          score: { $meta: 'textScore' }
-        }),
+        ).limit(5),
+        // .sort({
+        //   score: { $meta: 'textScore' }
+        // }),
         Show.find(
           {
             $text: { $search: keyword }
           },
           { score: { $meta: 'textScore' } }
-        ).sort({
-          score: { $meta: 'textScore' }
-        })
+        ).limit(5)
+        // .sort({
+        //   score: { $meta: 'textScore' }
+        // }),
       ])
 
       // merge result arrays for movies and shows
