@@ -112,7 +112,6 @@ async function startWeb () {
   try {
     await web.start()
   } catch (err) {
-    console.log(err)
     console.error(err)
     process.exit(1)
   }
@@ -155,7 +154,6 @@ async function startApi () {
   try {
     await api.start()
   } catch (err) {
-    console.log(err)
     console.error(err)
     process.exit(1)
   }
