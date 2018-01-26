@@ -108,7 +108,7 @@ async function startWeb () {
     }
   })
 
-  // start your web
+  // start the web
   try {
     await web.start()
   } catch (err) {
@@ -151,7 +151,7 @@ async function startApi () {
     }
   ])
 
-  // start your web
+  // start the API
   try {
     await api.start()
   } catch (err) {
