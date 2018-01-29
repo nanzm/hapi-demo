@@ -29,7 +29,7 @@ const Handler = {
     tags: ['api', 'Movies'],
     validate: {
       query: {
-        page: Joi.number().integer().min(1).default('1'),
+        page: Joi.number().integer().min(1).default('1')
       }
     }
   },

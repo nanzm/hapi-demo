@@ -1,13 +1,13 @@
 'use strict'
 
 const Hapi = require('hapi')
-const HapiSwagger = require('hapi-swagger');
-const Pack = require('./package');
+const HapiSwagger = require('hapi-swagger')
+const Pack = require('./package')
 const Path = require('path')
 const Laabr = require('laabr')
 const Dotenv = require('dotenv')
-const Inert = require('inert');
-const Vision = require('vision');
+const Inert = require('inert')
+const Vision = require('vision')
 const Handlebars = require('handlebars')
 const HandlebarsRepeatHelper = require('handlebars-helper-repeat')
 
