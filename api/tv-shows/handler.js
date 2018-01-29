@@ -94,33 +94,33 @@ const Handler = {
           '200': {
             'description': 'Success',
             'schema': Joi.object({
-              "title": "Game of Thrones",
-              "year": 2011,
-              "overview": "Seven noble families fight for control of the mythical land of Westeros. Friction between the houses leads to full-scale war. All while a very ancient evil awakens in the farthest north. Amidst the war, a neglected military order of misfits, the Night's Watch, is all that stands between the realms of men and the icy horrors beyond.",
-              "first_aired": "2011-04-18T01:00:00.000Z",
-              "runtime": 60,
-              "certification": "TV-MA",
-              "network": "HBO",
-              "country": "us",
-              "trailer": "http://youtube.com/watch?v=giYeaKsXnsI",
-              "homepage": "http://www.hbo.com/game-of-thrones",
-              "status": "returning series",
-              "rating": 9.36794,
-              "votes": 64187,
-              "language": "en",
-              "aired_episodes": 67
+              title: 'Game of Thrones',
+              year: 2011,
+              overview: 'Seven noble families fight for control of the mythical land of Westeros. Friction between the houses leads to full-scale war. All while a very ancient evil awakens in the farthest north. Amidst the war, a neglected military order of misfits, the Night\'s Watch, is all that stands between the realms of men and the icy horrors beyond.',
+              first_aired: '2011-04-18T01:00:00.000Z',
+              runtime: 60,
+              certification: 'TV-MA',
+              network: 'HBO',
+              country: 'us',
+              trailer: 'http://youtube.com/watch?v=giYeaKsXnsI',
+              homepage: 'http://www.hbo.com/game-of-thrones',
+              status: 'returning series',
+              rating: 9.36794,
+              votes: 64187,
+              language: 'en',
+              aired_episodes: 67
             }).label('Result')
           },
           '404': {
             'description': 'Bad Request',
             'schema': Joi.object({
-              "statusCode": 404,
-              "error": "Not Found",
-              "message": "Cannot find a show with that slug"
+              statusCode: 404,
+              error: 'Not Found',
+              message: 'Cannot find a show with that slug'
             }).label('Error for unknown slug')
           }
         }
-      },
+      }
     },
     validate: {
       params: {
