@@ -131,12 +131,13 @@ async function startApi () {
       description: 'Futureflix comes with a full-fledged API. You can find the documentation on all provided endpoints here.'
     },
     documentationPath: '/docs',
+    grouping: 'tags',
     tags: [{
-      'name': 'movie',
-      'description': 'Movie data'
+      'name': 'Movies',
+      'description': 'Access movie data'
     }, {
-      'name': 'tv-show',
-      'description': 'TV show data'
+      'name': 'TV shows',
+      'description': 'Access TV show data'
     }]
   }
 

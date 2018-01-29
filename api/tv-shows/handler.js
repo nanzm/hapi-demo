@@ -61,11 +61,11 @@ const Handler = {
       return h.response(shows).header('Link', pagination.link)
     },
     description: 'Get List of TV Shows',
-    notes: 'Returns a list of TV shows. You can paginate through the list with the page parameter.',
-    tags: ['api', 'tv-show'],
+    notes: 'Returns a list of TV shows. You can paginate through the list with the page parameter. You can request to enhance the returned model with more information by passing the extend query parameter.',
+    tags: ['api', 'TV shows'],
     validate: {
       query: {
-        page: Joi.number().min(1).integer().default('1'),
+        page: Joi.number().integer().min(1).default('1'),
         extend: Joi.string().default('seasons,episodes').description('Extend the return model by seasons or seasons and episodes.')
       }
     }
@@ -87,7 +87,7 @@ const Handler = {
     },
     description: 'Get TV Show by Slug',
     notes: 'Returns a TV show based on a passed slug.',
-    tags: ['api', 'tv-show'],
+    tags: ['api', 'TV shows'],
     validate: {
       params: {
         slug: Joi.string().required().default('game-of-thrones')
