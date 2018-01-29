@@ -128,8 +128,17 @@ async function startApi () {
     info: {
       title: 'Futureflix API Documentation',
       version: Pack.version,
+      description: 'Futureflix comes with a full-fledged API. You can find the documentation on all provided endpoints here.'
     },
-  };
+    documentationPath: '/docs',
+    tags: [{
+      'name': 'movie',
+      'description': 'Movie data'
+    }, {
+      'name': 'tv-show',
+      'description': 'TV show data'
+    }]
+  }
 
   // register plugins to web instance
   await api.register([
