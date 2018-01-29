@@ -60,6 +60,7 @@ const Handler = {
 
       return h.response(shows).header('Link', pagination.link)
     },
+    tags: ['api'],
     validate: {
       query: {
         page: Joi.number().min(1)
@@ -81,6 +82,7 @@ const Handler = {
 
       return show
     },
+    tags: ['api'],
     validate: {
       params: {
         slug: Joi.string().required()

@@ -24,6 +24,7 @@ const Handler = {
 
       return h.response(movies).header('Link', pagination.link)
     },
+    tags: ['api'],
     validate: {
       query: {
         page: Joi.number().min(1)
@@ -42,6 +43,7 @@ const Handler = {
 
       return movie
     },
+    tags: ['api'],
     validate: {
       params: {
         slug: Joi.string().required()

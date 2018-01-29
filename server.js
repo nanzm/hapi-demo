@@ -1,9 +1,13 @@
 'use strict'
 
 const Hapi = require('hapi')
+const HapiSwagger = require('hapi-swagger');
+const Pack = require('./package');
 const Path = require('path')
 const Laabr = require('laabr')
 const Dotenv = require('dotenv')
+const Inert = require('inert');
+const Vision = require('vision');
 const Handlebars = require('handlebars')
 const HandlebarsRepeatHelper = require('handlebars-helper-repeat')
 
@@ -27,12 +31,8 @@ const web = new Hapi.Server({
 async function startWeb () {
   // register plugins to web instance
   await web.register([
-    {
-      plugin: require('inert')
-    },
-    {
-      plugin: require('vision')
-    },
+    Inert,
+    Vision,
     {
       plugin: require('crumb'),
       options: {
@@ -124,6 +124,13 @@ const api = new Hapi.Server({
 
 // register plugins and start the API web instance
 async function startApi () {
+  const swaggerOptions = {
+    info: {
+      title: 'Futureflix API Documentation',
+      version: Pack.version,
+    },
+  };
+
   // register plugins to web instance
   await api.register([
     {
@@ -141,6 +148,12 @@ async function startApi () {
           logPayload: false
         }
       }
+    },
+    Inert,
+    Vision,
+    {
+      plugin: HapiSwagger,
+      options: swaggerOptions
     },
     {
       plugin: require('./api/movies')
