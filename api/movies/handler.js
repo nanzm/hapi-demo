@@ -24,10 +24,10 @@ const Handler = {
 
       return h.response(movies).header('Link', pagination.link)
     },
-    tags: ['api'],
+    tags: ['api', 'movie'],
     validate: {
       query: {
-        page: Joi.number().min(1)
+        page: Joi.number().min(1).default('1')
       }
     }
   },
@@ -43,10 +43,10 @@ const Handler = {
 
       return movie
     },
-    tags: ['api'],
+    tags: ['api', 'movie'],
     validate: {
       params: {
-        slug: Joi.string().required()
+        slug: Joi.string().required().default('a-monster-calls-2016')
       }
     }
   }

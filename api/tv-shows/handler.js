@@ -60,10 +60,13 @@ const Handler = {
 
       return h.response(shows).header('Link', pagination.link)
     },
-    tags: ['api'],
+    description: 'Get List of TV Shows',
+    notes: 'Returns a list of TV shows. You can paginate through the list with the page parameter.',
+    tags: ['api', 'tv-show'],
     validate: {
       query: {
-        page: Joi.number().min(1)
+        page: Joi.number().min(1).integer().default('1'),
+        extend: Joi.string().default('seasons,episodes').description('Extend the return model by seasons or seasons and episodes.')
       }
     }
   },
@@ -82,10 +85,15 @@ const Handler = {
 
       return show
     },
-    tags: ['api'],
+    description: 'Get TV Show by Slug',
+    notes: 'Returns a TV show based on a passed slug.',
+    tags: ['api', 'tv-show'],
     validate: {
       params: {
-        slug: Joi.string().required()
+        slug: Joi.string().required().default('game-of-thrones')
+      },
+      query: {
+        extend: Joi.string().default('seasons,episodes').description('Extend the return model by seasons or seasons and episodes.')
       }
     }
   }
