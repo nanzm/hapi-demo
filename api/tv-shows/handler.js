@@ -25,7 +25,9 @@ function extendQueryWithSeasonEpisodeData (baseQuery, queryParams) {
   const extendParams = queryParams && queryParams.extend ? queryParams.extend : ''
 
   if (queryParamsIncludeOnlyEpisodes(extendParams)) {
-    throw Boom.badRequest('You cannot request episode data without seasons. Please add extend=seasons to your request.')
+    throw Boom.badRequest(
+      'You cannot request episode data without seasons. Please add extend=seasons to your request.'
+    )
   }
 
   if (queryParamsIncludeOnlySeasons(extendParams)) {
@@ -33,7 +35,7 @@ function extendQueryWithSeasonEpisodeData (baseQuery, queryParams) {
   }
 
   if (queryParamsIncludeSeasonsAndEpisodes(extendParams)) {
-    return baseQuery.populate({path: 'seasons', populate: {path: 'episodes'}})
+    return baseQuery.populate({ path: 'seasons', populate: { path: 'episodes' } })
   }
 
   return baseQuery
@@ -42,19 +44,19 @@ function extendQueryWithSeasonEpisodeData (baseQuery, queryParams) {
 const Handler = {
   index: {
     handler: async (request, h) => {
-      const baseQuery = Show.find()
       const totalCount = await Show.count()
       const pagination = new Paginator(request, totalCount)
 
       if (pagination.currentPage > pagination.lastPage) {
-        return Boom.notFound('The requested page does not exist. The last available page is: ' + pagination.lastPage)
+        return Boom.notFound(
+          `The requested page does not exist. The last available page is: ${pagination.lastPage}`
+        )
       }
 
-      let extendedQuery = extendQueryWithSeasonEpisodeData(baseQuery, request.query)
+      const baseQuery = Show.find()
+      const extendedQuery = extendQueryWithSeasonEpisodeData(baseQuery, request.query)
 
-      const shows = await extendedQuery
-        .skip(pagination.from)
-        .limit(pagination.perPage)
+      const shows = await extendedQuery.skip(pagination.from).limit(pagination.perPage)
 
       return h.response(shows).header('Link', pagination.link)
     },
@@ -64,13 +66,14 @@ const Handler = {
       }
     }
   },
+
   show: {
     handler: async (request, h) => {
       const slug = request.params.slug
-      const baseQuery = Show.findOne({'ids.slug': slug})
+      const baseQuery = Show.findOne({ 'ids.slug': slug })
 
-      let extendedQuery = extendQueryWithSeasonEpisodeData(baseQuery, request.query)
-      let show = await extendedQuery
+      const extendedQuery = extendQueryWithSeasonEpisodeData(baseQuery, request.query)
+      const show = await extendedQuery
 
       if (!show) {
         return Boom.notFound('Cannot find a show with that slug')
