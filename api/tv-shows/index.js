@@ -4,7 +4,7 @@ const Routes = require('./routes')
 
 function register (server, options) {
   server.route(Routes)
-  server.log('info', 'Plugin registered: api-tv-shows')
+  server.log('info', 'Plugin registered: API TV shows')
 }
 
 exports.plugin = {
