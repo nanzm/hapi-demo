@@ -33,6 +33,7 @@
     "hapi-auth-basic": "~5.0.0",
     "hapi-auth-cookie": "~8.0.0",
     "hapi-dev-errors": "~2.0.1",
+    "hapi-swagger": "~9.0.2",
     "hoek": "~5.0.2",
     "html-to-text": "~3.3.0",
     "inert": "~5.0.1",

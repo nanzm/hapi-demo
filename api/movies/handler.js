@@ -24,9 +24,12 @@ const Handler = {
 
       return h.response(movies).header('Link', pagination.link)
     },
+    description: 'Get List of Movies',
+    notes: 'Returns a list of movies. You can paginate through the list with the page parameter.',
+    tags: ['api', 'Movies'],
     validate: {
       query: {
-        page: Joi.number().min(1)
+        page: Joi.number().integer().min(1).default('1')
       }
     }
   },
@@ -42,9 +45,12 @@ const Handler = {
 
       return movie
     },
+    description: 'Get Movie by Slug',
+    notes: 'Returns a movie based on a passed slug.',
+    tags: ['api', 'Movies'],
     validate: {
       params: {
-        slug: Joi.string().required()
+        slug: Joi.string().required().default('a-monster-calls-2016')
       }
     }
   }
