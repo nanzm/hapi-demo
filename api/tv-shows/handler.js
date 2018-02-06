@@ -66,7 +66,7 @@ const Handler = {
     validate: {
       query: {
         page: Joi.number().integer().min(1).default('1'),
-        extend: Joi.string().default('seasons,episodes').description('Extend the return model by seasons or seasons and episodes.')
+        extend: Joi.string().allow(['seasons', 'seasons,episodes']).description('Extend the return model by seasons or seasons and episodes.')
       }
     }
   },
@@ -127,7 +127,7 @@ const Handler = {
         slug: Joi.string().required().default('game-of-thrones')
       },
       query: {
-        extend: Joi.string().default('seasons,episodes').description('Extend the return model by seasons or seasons and episodes.')
+        extend: Joi.string().allow(['seasons', 'seasons,episodes']).description('Extend the return model by seasons or seasons and episodes.')
       }
     }
   }
