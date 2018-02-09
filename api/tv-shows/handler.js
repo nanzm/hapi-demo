@@ -5,6 +5,7 @@ const Joi = require('joi')
 const Path = require('path')
 const Paginator = require(Path.resolve(__dirname, '..', '..', 'utils', 'paginator'))
 const Show = require(Path.resolve(__dirname, '..', '..', 'models')).Show
+const ValidationError = require(Path.resolve(__dirname, '..', 'errors')).ValidationError
 
 const queryParamEpisodes = 'episodes'
 const queryParamSeasons = 'seasons'
@@ -63,6 +64,12 @@ const Handler = {
         extend: Joi.string()
           .valid(['seasons', 'seasons,episodes'])
           .description('Extend the return models by seasons or seasons and episodes.')
+          .error(
+            new ValidationError(
+              'The extend query parameter value must be one of ["seasons", "seasons,episodes"]',
+              '/docs#!/TV_shows/getShowsSlug'
+            )
+          )
       }
     }
   },

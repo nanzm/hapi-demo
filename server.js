@@ -166,6 +166,9 @@ async function startApi () {
       options: swaggerOptions
     },
     {
+      plugin: require('./api/error-interceptor')
+    },
+    {
       plugin: require('./api/movies')
     },
     {
