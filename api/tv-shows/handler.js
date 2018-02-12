@@ -63,7 +63,7 @@ const Handler = {
           .default('1'),
         extend: Joi.string()
           .valid(['seasons', 'seasons,episodes'])
-          .description('Extend the return models by seasons or seasons and episodes.')
+          .description('Extend the result by seasons or seasons and episodes.')
           .error(
             new ValidationError(
               'The extend query parameter value must be one of ["seasons", "seasons,episodes"]',
@@ -133,7 +133,13 @@ const Handler = {
       query: {
         extend: Joi.string()
           .valid(['seasons', 'seasons,episodes'])
-          .description('Extend the return model by seasons or seasons and episodes.')
+          .description('Extend the result by seasons or seasons and episodes.')
+          .error(
+            new ValidationError(
+              'The extend query parameter value must be one of ["seasons", "seasons,episodes"]',
+              '/docs#!/TV_shows/getShowsSlug'
+            )
+          )
       }
     }
   }
