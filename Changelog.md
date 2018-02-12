@@ -1,5 +1,17 @@
 # Changelog
 
+## 2.2.1 — 2017-02-12
+
+* `update` API TV show handler: use hapi's validation to restrict allowed path parameters
+
+## 2.2.0 — 2017-02-xx
+
+* `tbd.`
+
+## 2.1.0 — 2017-xx-xx
+
+* `tbd.`
+
 ## 2.0.0 — 2017-12-15
 
 * `add` thank you section in readme
