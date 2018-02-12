@@ -119,7 +119,14 @@ async function startWeb () {
 
 const api = new Hapi.Server({
   host: 'localhost',
-  port: process.env.PORT_API || 3001
+  port: process.env.PORT_API || 3001,
+  routes: {
+    validate: {
+      failAction (request, h, error) {
+        throw error
+      }
+    }
+  }
 })
 
 // register plugins and start the API web instance
