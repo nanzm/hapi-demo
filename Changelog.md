@@ -4,13 +4,15 @@
 
 * `update` API TV show handler: use hapi's validation to restrict allowed path parameters
 
-## 2.2.0 — 2017-02-xx
+## 2.2.0 — 2017-02-07
 
-* `tbd.`
+* `add` API docs
+* `add` API endpoint validation
+* `add` API endpoint descriptions and tags to group API related endpoints
 
-## 2.1.0 — 2017-xx-xx
+## 2.1.0 — 2017-01-16
 
-* `tbd.`
+* `add` API endpoints for movies and TV shows
 
 ## 2.0.0 — 2017-12-15
 
