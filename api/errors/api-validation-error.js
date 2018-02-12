@@ -2,7 +2,7 @@
 
 const APIError = require('./api-error')
 
-class ValidationError extends APIError {
+class APIValidationError extends APIError {
   /**
    * Create a validation error as bad request with HTTP status 400
    *
@@ -17,4 +17,4 @@ class ValidationError extends APIError {
   }
 }
 
-module.exports = ValidationError
+module.exports = APIValidationError

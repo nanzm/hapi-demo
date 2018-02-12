@@ -5,5 +5,5 @@
  */
 module.exports = {
   APIError: require('./api-error'),
-  ValidationError: require('./validation-error')
+  APIValidationError: require('./api-validation-error')
 }

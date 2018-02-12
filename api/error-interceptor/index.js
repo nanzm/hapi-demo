@@ -2,10 +2,34 @@
 
 const Hoek = require('hoek')
 
+/**
+ * Check whether the response is an
+ * instance of `APIError`.
+ *
+ * The `APIError` is a custom error class
+ * located within the `api` directory.
+ *
+ * @param {Object} error instance
+ *
+ * @returns {boolean}
+ */
 function isApiError (error) {
   return error.isBoom && error.name === 'APIError'
 }
 
+/**
+ * Check whether the response is
+ * a `ValidationError`.
+ *
+ * The `ValidationError` is an error
+ * from hapi itself. hapi throws these errors,
+ * because we told it so within the
+ * API server options (`server.js`)
+ *
+ * @param {Object} error instance
+ *
+ * @returns {boolean}
+ */
 function isValidationError (error) {
   return error.isBoom && error.name === 'ValidationError'
 }

@@ -123,6 +123,9 @@ const api = new Hapi.Server({
   routes: {
     validate: {
       failAction (request, h, error) {
+        // hapi v17 generates a default error response hiding all validation error details
+        // this will always throw the validation error
+        // the thrown validation error will be transformed within the `error-interceptor` plugin
         throw error
       }
     }

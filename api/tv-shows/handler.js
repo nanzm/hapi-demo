@@ -5,7 +5,7 @@ const Joi = require('joi')
 const Path = require('path')
 const Paginator = require(Path.resolve(__dirname, '..', '..', 'utils', 'paginator'))
 const Show = require(Path.resolve(__dirname, '..', '..', 'models')).Show
-const ValidationError = require(Path.resolve(__dirname, '..', 'errors')).ValidationError
+const APIValidationError = require(Path.resolve(__dirname, '..', 'errors')).APIValidationError
 
 const queryParamEpisodes = 'episodes'
 const queryParamSeasons = 'seasons'
@@ -65,7 +65,7 @@ const Handler = {
           .valid(['seasons', 'seasons,episodes'])
           .description('Extend the result by seasons or seasons and episodes.')
           .error(
-            new ValidationError(
+            new APIValidationError(
               'The extend query parameter value must be one of ["seasons", "seasons,episodes"]',
               '/docs#!/TV_shows/getShowsSlug'
             )
@@ -135,7 +135,7 @@ const Handler = {
           .valid(['seasons', 'seasons,episodes'])
           .description('Extend the result by seasons or seasons and episodes.')
           .error(
-            new ValidationError(
+            new APIValidationError(
               'The extend query parameter value must be one of ["seasons", "seasons,episodes"]',
               '/docs#!/TV_shows/getShowsSlug'
             )
