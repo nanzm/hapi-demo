@@ -27,7 +27,7 @@ function getPopulationOptions (extend = '') {
     return { path: 'seasons' }
   }
 
-  return {}
+  return ''
 }
 
 const Handler = {
