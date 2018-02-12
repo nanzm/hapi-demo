@@ -2,7 +2,7 @@
 
 const Hapi = require('hapi')
 const HapiSwagger = require('hapi-swagger')
-const Pack = require('./package')
+const Pkg = require('./package')
 const Path = require('path')
 const Laabr = require('laabr')
 const Dotenv = require('dotenv')
@@ -123,11 +123,11 @@ const api = new Hapi.Server({
 })
 
 // register plugins and start the API web instance
-async function startApi () {
+async function startAPI () {
   const swaggerOptions = {
     info: {
       title: 'Futureflix API Documentation',
-      version: Pack.version,
+      version: Pkg.version,
       description: 'Futureflix comes with a full-fledged API. You can find the documentation on all provided endpoints here.'
     },
     documentationPath: '/docs',
@@ -141,7 +141,7 @@ async function startApi () {
     }]
   }
 
-  // register plugins to web instance
+  // register plugins to API instance
   await api.register([
     {
       plugin: require('hapi-dev-errors'),
@@ -183,7 +183,7 @@ async function startApi () {
 }
 
 startWeb()
-startApi()
+startAPI()
 
 process.on('unhandledRejection', error => {
   console.log(error)
