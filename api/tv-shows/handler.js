@@ -6,15 +6,12 @@ const Path = require('path')
 const Paginator = require(Path.resolve(__dirname, '..', '..', 'utils', 'paginator'))
 const Show = require(Path.resolve(__dirname, '..', '..', 'models')).Show
 
-const queryParamEpisodes = 'episodes'
-const queryParamSeasons = 'seasons'
-
-function hasSeasonsOnly (extendParams) {
-  return !extendParams.includes(queryParamEpisodes) && extendParams.includes(queryParamSeasons)
+function hasSeasonsOnly (extend) {
+  return !extend.includes('episodes') && extend.includes('seasons')
 }
 
-function hasSeasonsAndEpisodes (extendParams) {
-  return extendParams.includes(queryParamEpisodes) && extendParams.includes(queryParamSeasons)
+function hasSeasonsAndEpisodes (extend) {
+  return extend.includes('episodes') && extend.includes('seasons')
 }
 
 function getPopulationOptions (extend = '') {
