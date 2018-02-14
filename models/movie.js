@@ -47,9 +47,10 @@ const movieSchema = new Schema(
       virtuals: true,
       transform: function (doc, ret, options) {
         delete ret._id
-        delete ret.__v
+        // delete ret.__v  // removed by "versionKey" option
         return ret
-      }
+      },
+      versionKey: false // remove the __v property from JSON response
     },
     toObject: { virtuals: true }
   }

@@ -1,9 +1,13 @@
 'use strict'
 
 const Hapi = require('hapi')
+const HapiSwagger = require('hapi-swagger')
+const Pkg = require('./package')
 const Path = require('path')
 const Laabr = require('laabr')
 const Dotenv = require('dotenv')
+const Inert = require('inert')
+const Vision = require('vision')
 const Handlebars = require('handlebars')
 const HandlebarsRepeatHelper = require('handlebars-helper-repeat')
 
@@ -27,12 +31,8 @@ const web = new Hapi.Server({
 async function startWeb () {
   // register plugins to web instance
   await web.register([
-    {
-      plugin: require('inert')
-    },
-    {
-      plugin: require('vision')
-    },
+    Inert,
+    Vision,
     {
       plugin: require('crumb'),
       options: {
@@ -119,12 +119,39 @@ async function startWeb () {
 
 const api = new Hapi.Server({
   host: 'localhost',
-  port: process.env.PORT_API || 3001
+  port: process.env.PORT_API || 3001,
+  routes: {
+    validate: {
+      failAction (request, h, error) {
+        // hapi v17 generates a default error response hiding all validation error details
+        // this will always throw the validation error
+        // the thrown validation error will be transformed within the `error-interceptor` plugin
+        throw error
+      }
+    }
+  }
 })
 
 // register plugins and start the API web instance
-async function startApi () {
-  // register plugins to web instance
+async function startAPI () {
+  const swaggerOptions = {
+    info: {
+      title: 'Futureflix API Documentation',
+      version: Pkg.version,
+      description: 'Futureflix comes with a full-fledged API. You can find the documentation on all provided endpoints here.'
+    },
+    documentationPath: '/docs',
+    grouping: 'tags',
+    tags: [{
+      'name': 'Movies',
+      'description': 'Access movie data'
+    }, {
+      'name': 'TV shows',
+      'description': 'Access TV show data'
+    }]
+  }
+
+  // register plugins to API instance
   await api.register([
     {
       plugin: require('hapi-dev-errors'),
@@ -141,6 +168,15 @@ async function startApi () {
           logPayload: false
         }
       }
+    },
+    Inert,
+    Vision,
+    {
+      plugin: HapiSwagger,
+      options: swaggerOptions
+    },
+    {
+      plugin: require('./api/error-interceptor')
     },
     {
       plugin: require('./api/movies')
@@ -160,7 +196,7 @@ async function startApi () {
 }
 
 startWeb()
-startApi()
+startAPI()
 
 process.on('unhandledRejection', error => {
   console.log(error)

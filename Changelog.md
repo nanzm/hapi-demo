@@ -1,5 +1,21 @@
 # Changelog
 
+## 2.3.0 — 2017-02-14
+
+* `add` custom API error classes: `APIError` and `APIValidationError`
+* `add` API error interceptor to respond a detailed error message
+* `update` API TV show handler: use hapi's validation to restrict allowed path parameters
+
+## 2.2.0 — 2017-02-07
+
+* `add` API docs
+* `add` API endpoint validation
+* `add` API endpoint descriptions and tags to group API related endpoints
+
+## 2.1.0 — 2017-01-16
+
+* `add` API endpoints for movies and TV shows
+
 ## 2.0.0 — 2017-12-15
 
 * `add` thank you section in readme
