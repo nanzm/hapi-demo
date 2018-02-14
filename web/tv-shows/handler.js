@@ -39,7 +39,10 @@ const Handler = {
     },
     handler: async (request, h) => {
       const slug = request.params.slug
-      const show = await Show.findOne({ 'ids.slug': slug }).populate({path: 'seasons', populate: {path: 'episodes'}})
+      const show = await Show.findOne({ 'ids.slug': slug }).populate({
+        path: 'seasons',
+        populate: { path: 'episodes' }
+      })
 
       if (!show) {
         return h.view('404')
