@@ -1,7 +1,9 @@
 # Changelog
 
-## 2.2.1 — 2017-02-12
+## 2.3.0 — 2017-02-14
 
+* `add` custom API error classes: `APIError` and `APIValidationError`
+* `add` API error interceptor to respond a detailed error message
 * `update` API TV show handler: use hapi's validation to restrict allowed path parameters
 
 ## 2.2.0 — 2017-02-07
