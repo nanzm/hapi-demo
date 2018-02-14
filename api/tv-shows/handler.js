@@ -5,6 +5,7 @@ const Joi = require('joi')
 const Path = require('path')
 const Paginator = require(Path.resolve(__dirname, '..', '..', 'utils', 'paginator'))
 const Show = require(Path.resolve(__dirname, '..', '..', 'models')).Show
+const APIValidationError = require(Path.resolve(__dirname, '..', 'errors')).APIValidationError
 
 function hasSeasonsOnly (extend) {
   return !extend.includes('episodes') && extend.includes('seasons')
@@ -59,7 +60,13 @@ const Handler = {
           .default('1'),
         extend: Joi.string()
           .valid(['seasons', 'seasons,episodes'])
-          .description('Extend the return models by seasons or seasons and episodes.')
+          .description('Extend the result by seasons or seasons and episodes.')
+          .error(
+            new APIValidationError(
+              'The extend query parameter value must be one of ["seasons", "seasons,episodes"]',
+              '/docs#!/TV_shows/getShowsSlug'
+            )
+          )
       }
     }
   },
@@ -123,7 +130,13 @@ const Handler = {
       query: {
         extend: Joi.string()
           .valid(['seasons', 'seasons,episodes'])
-          .description('Extend the return model by seasons or seasons and episodes.')
+          .description('Extend the result by seasons or seasons and episodes.')
+          .error(
+            new APIValidationError(
+              'The extend query parameter value must be one of ["seasons", "seasons,episodes"]',
+              '/docs#!/TV_shows/getShowsSlug'
+            )
+          )
       }
     }
   }

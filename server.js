@@ -119,7 +119,17 @@ async function startWeb () {
 
 const api = new Hapi.Server({
   host: 'localhost',
-  port: process.env.PORT_API || 3001
+  port: process.env.PORT_API || 3001,
+  routes: {
+    validate: {
+      failAction (request, h, error) {
+        // hapi v17 generates a default error response hiding all validation error details
+        // this will always throw the validation error
+        // the thrown validation error will be transformed within the `error-interceptor` plugin
+        throw error
+      }
+    }
+  }
 })
 
 // register plugins and start the API web instance
@@ -164,6 +174,9 @@ async function startAPI () {
     {
       plugin: HapiSwagger,
       options: swaggerOptions
+    },
+    {
+      plugin: require('./api/error-interceptor')
     },
     {
       plugin: require('./api/movies')
