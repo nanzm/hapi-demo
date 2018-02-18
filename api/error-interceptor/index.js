@@ -30,7 +30,7 @@ function isApiError (error) {
  *
  * @returns {boolean}
  */
-function isValidationError (error) {
+function isHapiValidationError (error) {
   return error.isBoom && error.name === 'ValidationError'
 }
 
@@ -65,7 +65,7 @@ function register (server, options) {
 
     // the API server instance globally throws all validation errors
     // find the global throw-up config in the `server.js` ;-)
-    if (isValidationError(response)) {
+    if (isHapiValidationError(response)) {
       // validation errors in hapi contain an array called "details"
       // this "details" array contains all validation errors
       // pick the first error
