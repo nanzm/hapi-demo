@@ -11,10 +11,10 @@ async function register (server, options) {
     },
     {
       plugin: require('hapi-auth-basic')
+    },
+    {
+      plugin: require('@now-ims/hapi-now-auth') // JWT
     }
-    // {
-    //   register: require('bell')
-    // }
   ])
 
   /**
@@ -22,19 +22,15 @@ async function register (server, options) {
    */
   server.auth.strategy('basic', 'basic', {
     validate: async (request, email, password) => {
-      try {
-        const user = await User.findByEmail(email)
+      const user = await User.findByEmail(email)
 
-        if (!user) {
-          throw Boom.notFound('There is no user with the given email address')
-        }
-
-        await user.comparePassword(password)
-
-        return { credentials: user, isValid: true }
-      } catch (err) {
-        throw err
+      if (!user) {
+        throw Boom.notFound('There is no user with the given email address')
       }
+
+      await user.comparePassword(password)
+
+      return { credentials: user, isValid: true }
     }
   })
 
@@ -60,6 +56,28 @@ async function register (server, options) {
       }
 
       return { credentials: null, valid: false }
+    }
+  })
+
+  /**
+   * JWT strategy (for API requests)
+   */
+  server.auth.strategy('jwt', 'hapi-now-auth', {
+    verifyJWT: true,
+    keychain: [ process.env.JWT_SECRET_KEY ],
+    tokenType: 'Bearer',
+    verifyOptions: {
+      algorithms: ['HS256']
+    },
+    validate: async (request, { decodedJWT, token }, h) => {
+      const userId = decodedJWT.id
+      const user = await User.findById(userId)
+
+      if (user) {
+        return { credentials: user, isValid: true }
+      }
+
+      return { credentials: null, isValid: false }
     }
   })
 
