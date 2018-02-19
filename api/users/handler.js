@@ -31,7 +31,6 @@ const Handler = {
   show: {
     auth: 'jwt',
     handler: async (request, h) => {
-      // shortcut
       const username = request.params.username
       const user = await User.findOne({ username })
 
