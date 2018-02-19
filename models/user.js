@@ -51,21 +51,27 @@ const userSchema = new Schema(
       sparse: true // this makes sure the unique index applies to not null values only (= unique if not null)
     },
     passwordResetDeadline: Date,
-    authToken: {
-      type: String,
-      default: Crypto.randomBytes(20).toString('hex')
-    },
-    authTokenIssued: {
-      type: Date,
-      default: Date.now()
-    },
+    // authToken: {
+    //   type: String,
+    //   default: Crypto.randomBytes(20).toString('hex')
+    // },
+    // authTokenIssued: {
+    //   type: Date,
+    //   default: Date.now()
+    // },
     scope: [String]
-    // hearts: [
-    //   { type: Mongoose.Schema.ObjectId, ref: 'Movie' }
-    // ]
   },
   {
-    toJSON: { virtuals: true },
+    toJSON: {
+      virtuals: true,
+      transform: function (doc, ret, options) {
+        delete ret._id
+        delete ret.password
+
+        return ret
+      },
+      versionKey: false // remove the __v property from JSON response
+    },
     toObject: { virtuals: true }
   }
 )
