@@ -138,17 +138,21 @@ async function startAPI () {
     info: {
       title: 'Futureflix API Documentation',
       version: Pkg.version,
-      description: 'Futureflix comes with a full-fledged API. You can find the documentation on all provided endpoints here.'
+      description:
+        'Futureflix comes with a full-fledged API. You can find the documentation on all provided endpoints here.'
     },
     documentationPath: '/docs',
     grouping: 'tags',
-    tags: [{
-      'name': 'Movies',
-      'description': 'Access movie data'
-    }, {
-      'name': 'TV shows',
-      'description': 'Access TV show data'
-    }]
+    tags: [
+      {
+        name: 'Movies',
+        description: 'Access movie data'
+      },
+      {
+        name: 'TV shows',
+        description: 'Access TV show data'
+      }
+    ]
   }
 
   // register plugins to API instance
@@ -179,6 +183,9 @@ async function startAPI () {
       plugin: require('./common/authentication')
     },
     {
+      plugin: require('./common/add-user-to-request')
+    },
+    {
       plugin: require('./api/error-interceptor')
     },
     {
@@ -186,6 +193,9 @@ async function startAPI () {
     },
     {
       plugin: require('./api/tv-shows')
+    },
+    {
+      plugin: require('./api/users')
     }
   ])
 
