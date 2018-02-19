@@ -59,13 +59,13 @@ async function startWeb () {
       }
     },
     {
-      plugin: require('./web/authentication')
+      plugin: require('./common/authentication')
+    },
+    {
+      plugin: require('./common/add-user-to-request')
     },
     {
       plugin: require('./web/base')
-    },
-    {
-      plugin: require('./web/add-user-to-request')
     },
     {
       plugin: require('./web/add-user-to-views')
@@ -174,6 +174,9 @@ async function startAPI () {
     {
       plugin: HapiSwagger,
       options: swaggerOptions
+    },
+    {
+      plugin: require('./common/authentication')
     },
     {
       plugin: require('./api/error-interceptor')
