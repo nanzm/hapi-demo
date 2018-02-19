@@ -39,6 +39,7 @@
     "html-to-text": "~3.3.0",
     "inert": "~5.0.1",
     "joi": "~13.0.2",
+    "jsonwebtoken": "~8.1.1",
     "laabr": "~3.0.2",
     "listr": "~0.13.0",
     "lodash": "~4.17.4",
