@@ -67,9 +67,11 @@ async function register (server, options) {
     keychain: [ process.env.JWT_SECRET_KEY ],
     tokenType: 'Bearer',
     verifyOptions: {
-      algorithms: ['HS256']
+      algorithms: [ 'HS256' ]
     },
     validate: async (request, { decodedJWT, token }, h) => {
+      // decodedJWT = JWT payload
+      // the payload contains the user's ID
       const userId = decodedJWT.id
       const user = await User.findById(userId)
 
