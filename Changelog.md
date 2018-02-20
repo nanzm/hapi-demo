@@ -15,6 +15,12 @@
 ## 2.1.0 — 2017-01-16
 
 * `add` API endpoints for movies and TV shows
+* `add` views for watchlist and search results
+* `add` Handlebars helper `isOnWatchlist`
+* `update` Bulma from `0.5` to `0.6`
+* `update` to Bulma's new navbar and add search input
+* `update` Handlebars partials for hero and navbar
+* `update` design for movie and TV show detail pages
 
 ## 2.0.0 — 2017-12-15
 
