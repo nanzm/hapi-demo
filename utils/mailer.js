@@ -53,6 +53,7 @@ const prepareTemplate = (filename, options = {}) => {
  * @param  {object} user     the user model, required for the recipient
  * @param  {string} subject  subject line
  * @param  {object} data     view specific data that will be rendered into the view
+ *
  * @return {Promise}
  */
 exports.send = async (template, user, subject, data) => {
@@ -68,5 +69,10 @@ exports.send = async (template, user, subject, data) => {
   // fire and forget
   // will be changed later to use a queue with retries
   // to handle the case of downtimes on the email delivery service
-  return Transporter.sendMail(mailOptions)
+  // send if at all possible with an existing Postmark API key
+  if (process.env.POSTMARK_API_KEY) {
+    return Transporter.sendMail(mailOptions)
+  }
+
+  return Promise.resolve()
 }
