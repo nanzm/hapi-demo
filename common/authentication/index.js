@@ -63,12 +63,16 @@ async function register (server, options) {
   /**
    * JWT strategy (for API requests)
    */
+  if (!process.env.JWT_SECRET_KEY) {
+    throw new Boom('Missing JWT_SECRET_KEY environment variable. Add it to your ENV vars')
+  }
+
   server.auth.strategy('jwt', 'hapi-now-auth', {
-    keychain: [ process.env.JWT_SECRET_KEY ],
+    keychain: [process.env.JWT_SECRET_KEY],
     tokenType: 'Bearer',
     verifyJWT: true,
     verifyOptions: {
-      algorithms: [ 'HS256' ]
+      algorithms: ['HS256']
     },
     validate: async (request, { decodedJWT, token }, h) => {
       // decodedJWT = JWT payload
@@ -81,6 +85,9 @@ async function register (server, options) {
       }
 
       return { credentials: null, isValid: false }
+    },
+    unauthorized: message => {
+      throw Boom.unauthorized(message || 'Invalid or expired JWT')
     }
   })
 
