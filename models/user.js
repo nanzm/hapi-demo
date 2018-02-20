@@ -51,14 +51,6 @@ const userSchema = new Schema(
       sparse: true // this makes sure the unique index applies to not null values only (= unique if not null)
     },
     passwordResetDeadline: Date,
-    // authToken: {
-    //   type: String,
-    //   default: Crypto.randomBytes(20).toString('hex')
-    // },
-    // authTokenIssued: {
-    //   type: Date,
-    //   default: Date.now()
-    // },
     scope: [String]
   },
   {
