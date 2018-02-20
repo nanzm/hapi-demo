@@ -1,5 +1,11 @@
 [![Futureflix](https://futurestud.io/blog/content/images/2018/01/futureflix-teaser.jpg)](http://learnhapi.com)
 
+[Demo](https://futureflix.space) &nbsp;&middot;&nbsp;
+[Setup](https://github.com/fs-opensource/futureflix-starter-kit#setup-and-run) &nbsp;&middot;&nbsp;
+[Hugs](https://github.com/fs-opensource/futureflix-starter-kit#thank-you-with-a-hug)
+
+---
+
 # learn hapi — Starter Files &nbsp; [![Build Status](https://travis-ci.org/fs-opensource/futureflix-starter-kit.svg?branch=master)](https://travis-ci.org/fs-opensource/futureflix-starter-kit)
 
 This repository contains the **Futureflix Starter Kit** for the **[learn hapi](http://learnhapi.com)** learning path.
@@ -9,6 +15,8 @@ You’ll implement Futureflix as a sample app while following the tutorials in t
 The finished project’s implementation is only available for Future Students. If you’re part of the Future Studio University, you’ve access to the code (hosted on GitLab).
 
 ## Requirements
+
+> Node.js v8.x with `async/await` support for hapi v17
 
 The **Futureflix Starter Kit** uses hapi v17 and has full support for `async/await` and therefore requires Node.js v8.x.
 
@@ -51,6 +59,8 @@ The starter kit doesn’t contain any logging. If you don’t see any errors whi
 [visit localhost:3000](http://localhost:3000). Have fun!
 
 ## Getting Help
+
+At this point, there’s no Slack channel or support group. If you need help with your implementation, please email us or send a tweet [@futurestud_io](https://twitter.com/futurestud_io). We’re active on emails and reply as soon as possible.
 
 At this point, there’s no Slack channel or support group. If you need help with your implementation, please email us. We’re active on emails and reply as soon as possible.
 
