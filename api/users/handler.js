@@ -12,7 +12,7 @@ const Handler = {
     handler: (request, h) => {
       const user = request.user
 
-      const token = JWT.sign({ id: user.id }, process.env.JWT_SECRET_KEY, {
+      const token = JWT.sign({ user }, process.env.JWT_SECRET_KEY, {
         algorithm: 'HS256',
         expiresIn: '7d'
       })
