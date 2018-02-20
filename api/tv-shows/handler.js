@@ -62,7 +62,7 @@ const Handler = {
           .error(
             new APIValidationError(
               'The extend query parameter value must be one of ["seasons", "seasons,episodes"]',
-              '/docs#!/TV_shows/getShowsSlug'
+              '/docs#!/TV_shows/getShows'
             )
           )
       }
