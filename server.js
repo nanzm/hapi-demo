@@ -186,7 +186,7 @@ async function startAPI () {
       plugin: require('./common/add-user-to-request')
     },
     {
-      plugin: require('./api/error-interceptor')
+      plugin: require('./api/error-interceptors')
     },
     {
       plugin: require('./api/movies')
