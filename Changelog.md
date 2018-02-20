@@ -1,5 +1,13 @@
 # Changelog
 
+## 2.4.0 — 2017-02-xx
+
+* `add` dependencies for JWT auth
+* `add` JWT auth strategy
+* `add` basic API plugin for users including endpoints for basic auth login and `/me`
+* `update` `secrets.env.sample` with key for `JWT_SECRET_KEY`
+* `update` project structure: move plugins used in web and api to `common` folder
+
 ## 2.3.0 — 2017-02-14
 
 * `add` custom API error classes: `APIError` and `APIValidationError`
