@@ -115,14 +115,6 @@ userSchema.virtual('watchlist', {
   justOne: true
 })
 
-// this is a helper function to populate “seasons” on queries
-function autopopulate (next) {
-  this.populate('watchlist')
-  next()
-}
-
-userSchema.pre('findOne', autopopulate)
-
 /**
  * Statics
  *

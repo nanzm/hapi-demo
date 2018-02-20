@@ -49,7 +49,8 @@ async function register (server, options) {
       const userId = session.id
 
       // user lookup and return credentials if available
-      const user = await User.findById(userId)
+      // populate watchlist
+      const user = await User.findById(userId).populate('watchlist')
 
       if (user) {
         return { credentials: user, valid: true }
@@ -63,17 +64,17 @@ async function register (server, options) {
    * JWT strategy (for API requests)
    */
   server.auth.strategy('jwt', 'hapi-now-auth', {
-    verifyJWT: true,
     keychain: [ process.env.JWT_SECRET_KEY ],
     tokenType: 'Bearer',
+    verifyJWT: true,
     verifyOptions: {
       algorithms: [ 'HS256' ]
     },
     validate: async (request, { decodedJWT, token }, h) => {
       // decodedJWT = JWT payload
-      // the payload contains the user's ID
-      const userId = decodedJWT.id
-      const user = await User.findById(userId)
+      // the payload contains the user object
+      // no further database lookup required
+      const user = decodedJWT.user
 
       if (user) {
         return { credentials: user, isValid: true }
