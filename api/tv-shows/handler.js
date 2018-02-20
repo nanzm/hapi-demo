@@ -29,6 +29,7 @@ function getPopulationOptions (extend = '') {
 
 const Handler = {
   index: {
+    auth: 'jwt',
     handler: async (request, h) => {
       const totalCount = await Show.count()
       const pagination = new Paginator(request, totalCount)
@@ -70,6 +71,7 @@ const Handler = {
   },
 
   show: {
+    auth: 'jwt',
     handler: async (request, h) => {
       const slug = request.params.slug
       const options = getPopulationOptions(request.query.extend)
