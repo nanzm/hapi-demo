@@ -8,6 +8,7 @@ const Paginator = require(Path.resolve(__dirname, '..', '..', 'utils', 'paginato
 
 const Handler = {
   index: {
+    auth: 'jwt',
     handler: async (request, h) => {
       const totalCount = await Movie.count()
       const pagination = new Paginator(request, totalCount)
@@ -35,6 +36,7 @@ const Handler = {
   },
 
   show: {
+    auth: 'jwt',
     handler: async (request, h) => {
       const slug = request.params.slug
       const movie = await Movie.findOne({ 'ids.slug': slug })
