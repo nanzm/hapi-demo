@@ -74,7 +74,7 @@ async function register (server, options) {
     verifyOptions: {
       algorithms: ['HS256']
     },
-    validate: async (request, { decodedJWT, token }, h) => {
+    validate: (request, { decodedJWT, token }, h) => {
       // decodedJWT = JWT payload
       // the payload contains the user object
       // no further database lookup required
@@ -84,7 +84,7 @@ async function register (server, options) {
         return { credentials: user, isValid: true }
       }
 
-      return { credentials: null, isValid: false }
+      return { isValid: false }
     },
     unauthorized: message => {
       throw Boom.unauthorized(message || 'Invalid or expired JWT')
