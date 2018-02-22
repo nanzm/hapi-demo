@@ -13,19 +13,19 @@ const levelColors = [
   Chalk.green,
   Chalk.yellow,
   Chalk.red,
-  Chalk.red
+  Chalk.bold.red // this second bold red is for "fatal" errors
 ]
 
 /**
  * Pino uses integers (e.g., 30, 40, etc.)
  * to represent log levels:
  *
- * trace = 10
- * debug = 20
- * info  = 30
- * warn  = 40
- * error = 50
- * fatal = 60
+ * trace = 10 (grey)
+ * debug = 20 (blue)
+ * info  = 30 (green)
+ * warn  = 40 (yellow)
+ * error = 50 (red)
+ * fatal = 60 (bold red)
  *
  * Return a chalk function for the
  * related log level, e.g.:
