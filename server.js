@@ -135,6 +135,8 @@ const api = new Hapi.Server({
 // register plugins and start the API web instance
 async function startAPI () {
   const swaggerOptions = {
+    schemes: ['https'],
+    host: 'api.futureflix.space',
     info: {
       title: 'Futureflix API Documentation',
       version: Pkg.version,
