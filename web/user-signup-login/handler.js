@@ -63,7 +63,7 @@ const Handler = {
         request.cookieAuth.set({ id: user.id })
 
         const discoverURL = `http://${request.headers.host}/discover`
-        Mailer.send('welcome', user, '📺 Futureflix — Great to see you!', { discoverURL })
+        Mailer.fireAndForget('welcome', user, '📺 Futureflix — Great to see you!', { discoverURL })
 
         // \o/ wohoo, sign up successful
         return h.view('signup-success')
@@ -240,16 +240,25 @@ const Handler = {
 
         // compose the user specific password reset URL
         const resetURL = `http://${request.headers.host}/reset-password/${encodedEmail}/${passwordResetToken}`
-        await Mailer.send('password-reset', user, '📺 Futureflix - Password Reset', { resetURL })
+
+        try {
+          await Mailer.send('password-reset', user, '📺 Futureflix - Password Reset', { resetURL })
+        } catch (err) {
+          throw new Boom('We have issues sending the password reset email.')
+        }
 
         return h.view('forgot-password-email-sent')
       } catch (err) {
         const status = err.isBoom ? err.output.statusCode : 400
 
+        // check if thrown error has
+        const errormessage = !err.data ? err.message : null
+
         return h
           .view('forgot-password', {
             email: payload.email,
-            errors: err.data
+            errors: err.data,
+            errormessage
           })
           .code(status)
       }

@@ -4,10 +4,12 @@ const Fs = require('fs')
 const Path = require('path')
 const Boom = require('boom')
 const Util = require('util')
-const ReadFile = Util.promisify(Fs.readFile)
+const Bounce = require('bounce')
 const Nodemailer = require('nodemailer')
 const Handlebars = require('handlebars')
 const HtmlToText = require('html-to-text')
+const ReadFile = Util.promisify(Fs.readFile)
+const Logger = require(Path.resolve(__dirname, 'logger'))
 const PostmarkTransport = require('nodemailer-postmark-transport')
 const Transporter = Nodemailer.createTransport(
   PostmarkTransport({
@@ -46,16 +48,16 @@ async function prepareTemplate (filename, options = {}) {
 }
 
 /**
- * Send emails with Node.js using Nodemailer
+ * Send an email using Nodemailer
  *
- * @param  {string} template the template name which will be used to render an HTML mail
- * @param  {object} user     the user model, required for the recipient
- * @param  {string} subject  subject line
- * @param  {object} data     view specific data that will be rendered into the view
+ * @param {String} template the template name which will be used to render an HTML mail
+ * @param {Object} user     the user model, required for the recipient
+ * @param {String} subject  subject line
+ * @param {Object} data     view specific data that will be rendered into the view
  *
- * @return {Promise}
+ * @throws
  */
-exports.send = async (template, user, subject, data) => {
+async function send (template, user, subject, data) {
   const { html, text } = await prepareTemplate(template, data)
   const mailOptions = {
     from: `Marcus Poehls <marcus@futurestud.io>`,
@@ -65,13 +67,27 @@ exports.send = async (template, user, subject, data) => {
     text
   }
 
-  // fire and forget
-  // will be changed later to use a queue with retries
-  // to handle the case of downtimes on the email delivery service
-  // send if at all possible with an existing Postmark API key
-  if (process.env.POSTMARK_API_KEY) {
-    return Transporter.sendMail(mailOptions)
+  try {
+    await Transporter.sendMail(mailOptions)
+  } catch (err) {
+    Logger.error(err.message)
+    throw err
   }
-
-  return Promise.resolve()
 }
+
+/**
+ * Send an email and don’t worry
+ * about success or failure
+ */
+async function fireAndForget (template, user, subject, data) {
+  try {
+    await send(template, user, subject, data)
+  } catch (err) {
+    // this catches application errors (we don’t care about)
+    // and still throw system errors
+    Bounce.rethrow(err, 'system')
+  }
+}
+
+exports.send = send
+exports.fireAndForget = fireAndForget

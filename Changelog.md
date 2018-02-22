@@ -5,8 +5,10 @@
 * `add` dependencies for JWT auth
 * `add` JWT auth strategy
 * `add` basic API plugin for users including endpoints for basic auth login and `/me`
+* `add` Logger utility
 * `update` `secrets.env.sample` with key for `JWT_SECRET_KEY`
 * `update` project structure: move plugins used in web and api to `common` folder
+* `update` Mailer utility: catch errors when sending an email and log the error message
 
 ## 2.3.0 — 2017-02-14
 
