@@ -35,7 +35,9 @@ const Handler = {
       const pagination = new Paginator(request, totalCount)
 
       if (pagination.currentPage > pagination.lastPage) {
-        return Boom.notFound(`The requested page does not exist. The last available page is: ${pagination.lastPage}`)
+        return Boom.notFound(
+          `The requested page does not exist. The last available page is: ${pagination.lastPage}`
+        )
       }
 
       const options = getPopulationOptions(request.query.extend)

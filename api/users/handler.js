@@ -14,7 +14,7 @@ const Handler = {
 
       const token = JWT.sign({ user }, process.env.JWT_SECRET_KEY, {
         algorithm: 'HS256',
-        expiresIn: '7d'
+        expiresIn: '14d'
       })
 
       return { authToken: token }
