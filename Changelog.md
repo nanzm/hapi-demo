@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.4.2 — 2017-xx-xx
+- `add` teaser for [learn hapi learning path](http://learnhapi.com) on 404 page
+
+
 ## 2.4.1 — 2017-02-22
 - `add` API URL in Swagger options to try requests against endpoints in the Swagger UI
 
