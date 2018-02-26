@@ -13,6 +13,7 @@
 - `add` JWT auth strategy
 - `add` basic API plugin for users including endpoints for basic auth login and `/me`
 - `add` Logger utility
+- `add` `.prettierignore` file to ignore markdown
 - `update` `secrets.env.sample` with key for `JWT_SECRET_KEY`
 - `update` project structure: move plugins used in web and api to `common` folder
 - `update` Mailer utility: catch errors when sending an email and log the error message
