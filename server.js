@@ -59,7 +59,7 @@ async function startWeb () {
       }
     },
     {
-      plugin: require('./common/authentication')
+      plugin: require('./web/authentication')
     },
     {
       plugin: require('./common/add-user-to-request')
@@ -182,7 +182,7 @@ async function startAPI () {
       options: swaggerOptions
     },
     {
-      plugin: require('./common/authentication')
+      plugin: require('./api/authentication')
     },
     {
       plugin: require('./common/add-user-to-request')

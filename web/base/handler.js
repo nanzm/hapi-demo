@@ -62,6 +62,11 @@ const Handler = {
   },
 
   missing: {
+    plugins: {
+      'hapi-auth-cookie': {
+        redirectTo: false
+      }
+    },
     handler: (request, h) => {
       const accept = request.headers.accept
 
