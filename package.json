@@ -28,7 +28,7 @@
     "bounce": "~1.2.0",
     "chalk": "~2.3.1",
     "crumb": "~7.0.0",
-    "dotenv": "~5.0.0",
+    "dotenv": "~5.0.1",
     "haikunator": "~2.0.0",
     "handlebars": "~4.0.11",
     "handlebars-helper-repeat": "~1.0.0",
@@ -62,8 +62,8 @@
     "eslint-plugin-node": "~6.0.1",
     "eslint-plugin-promise": "~3.6.0",
     "eslint-plugin-standard": "~3.0.1",
-    "lab": "~15.2.2",
-    "prettier": "~1.10.2"
+    "lab": "~15.3.0",
+    "prettier": "~1.11.0"
   },
   "engines": {
     "node": ">= 8.9.0"
