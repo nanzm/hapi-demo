@@ -82,19 +82,15 @@ userSchema.pre('save', async function (next) {
 
     // find existing user with the same username
     const existingUser = await this.constructor.findOne({ username: this.username })
+
     // TODO this can lead to duplicated keys if haikunate generates the same slug twice
     if (existingUser) {
       this.username = `${this.username}-${haikunator.haikunate()}`
     }
-
-    // tell mongoose to proceed
-    next()
-  } else {
-    // save on an existing document, don't change the username
-    // skip middelware by calling next()
-    // stop here by returning
-    next()
   }
+
+  // tell mongoose to proceed
+  next()
 })
 
 /**
