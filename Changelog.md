@@ -3,6 +3,7 @@
 ## 2.4.2 — 2017-xx-xx
 - `add` teaser for [learn hapi learning path](http://learnhapi.com) on 404 page
 - `update` dependencies
+- `update` Readme
 
 
 ## 2.4.1 — 2017-02-22
