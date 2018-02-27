@@ -39,10 +39,10 @@ function register (server, options) {
     const data = error.data
 
     // create error response payload
-    // resolve full API documentation URL
     const payload = Object.assign(data, {
-      message: data.message,
-      documentationUrl: data.documentationUrl && composeUrl(request, data.documentationUrl) // add "documentationUrl" if available
+      // add "documentationUrl" if available
+      // resolve full API documentation URL
+      documentationUrl: data.documentationUrl && composeUrl(request, data.documentationUrl)
     })
 
     return h.response(payload).code(data.statusCode)
