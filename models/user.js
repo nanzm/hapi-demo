@@ -160,7 +160,7 @@ userSchema.methods.resetPassword = async function () {
     await this.save()
 
     return passwordResetToken
-  } catch (ignored) {
+  } catch (ignoreError) {
     const message = 'An error occurred while hashing your password reset token.'
 
     throw new Boom(message, {
