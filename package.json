@@ -24,7 +24,7 @@
     "@now-ims/hapi-now-auth": "~1.0.1",
     "axios": "~0.18.0",
     "bcrypt": "~1.0.3",
-    "boom": "~7.1.1",
+    "boom": "~7.2.0",
     "bounce": "~1.2.0",
     "chalk": "~2.3.1",
     "crumb": "~7.0.0",
@@ -32,7 +32,7 @@
     "haikunator": "~2.0.0",
     "handlebars": "~4.0.11",
     "handlebars-helper-repeat": "~1.0.0",
-    "hapi": "~17.2.0",
+    "hapi": "~17.2.1",
     "hapi-auth-basic": "~5.0.0",
     "hapi-auth-cookie": "~8.1.0",
     "hapi-dev-errors": "~2.1.0",
@@ -63,7 +63,7 @@
     "eslint-plugin-promise": "~3.6.0",
     "eslint-plugin-standard": "~3.0.1",
     "lab": "~15.3.0",
-    "prettier": "~1.11.0"
+    "prettier": "~1.11.1"
   },
   "engines": {
     "node": ">= 8.9.0"
